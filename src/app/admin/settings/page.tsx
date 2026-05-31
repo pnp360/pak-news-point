@@ -17,7 +17,7 @@ export default function AdminSettingsPage() {
     const data = await res.json();
     setSettings(data);
     setDailyLimit(data.daily_news_limit || '100');
-    setSiteName(data.site_name || 'PNP365');
+    setSiteName(data.site_name || 'Azad Khabar');
     setSiteDescription(data.site_description || '');
   };
 

@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
   try {
     const response = await fetch(url, {
       headers: {
-        'User-Agent': 'PNP365/1.0',
+        'User-Agent': 'Azad Khabar/1.0',
         'Accept': 'image/*',
       },
     });

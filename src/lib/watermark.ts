@@ -2,7 +2,7 @@ import sharp from 'sharp';
 
 const ALLOWED_HOSTS = ['images.pexels.com', 'images.unsplash.com', 'plus.unsplash.com', 'source.unsplash.com'];
 
-const WATERMARK_TEXT = 'PNP365';
+const WATERMARK_TEXT = 'Azad Khabar';
 
 function generateWatermarkSvg(width: number): Buffer {
   const fontSize = Math.max(14, Math.round(width * 0.035));

@@ -51,7 +51,7 @@ export default function AdminSidebar() {
       `}>
         <div className="p-5 border-b border-gray-800">
           <Link href="/admin/dashboard" className="text-xl font-bold text-white block">
-            PNP365
+            Azad Khabar
           </Link>
           <span className="text-sm text-gray-400">ایڈمن پینل</span>
         </div>

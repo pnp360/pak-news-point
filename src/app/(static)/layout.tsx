@@ -1,5 +1,5 @@
 export const metadata = {
-  title: 'PNP365',
+  title: 'Azad Khabar',
   description: 'پاکستان کی تازہ ترین خبریں',
 };
 

@@ -8,7 +8,7 @@ interface Props {
   searchParams: { q?: string; page?: string };
 }
 
-export const metadata = { title: 'تلاش - PNP365' };
+export const metadata = { title: 'تلاش - Azad Khabar' };
 
 export default async function SearchPage({ searchParams }: Props) {
   const query = searchParams.q || '';

@@ -152,7 +152,7 @@ async function main() {
 
   const defaultSettings = [
     { key: 'daily_news_limit', value: '100' },
-    { key: 'site_name', value: 'PNP365' },
+    { key: 'site_name', value: 'Azad Khabar' },
     { key: 'site_description', value: 'پاکستان کی تازہ ترین خبریں، بریکنگ نیوز، کھیل، کاروبار، شوبز، سائنس و ٹیکنالوجی' },
   ];
 

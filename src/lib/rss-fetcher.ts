@@ -4,7 +4,7 @@ import { translateToEnglish, extractEnglishKeywords } from './translate';
 const parser = new Parser({
   timeout: 15000,
   headers: {
-    'User-Agent': 'PNP365/1.0 (RSS Image Aggregator)',
+    'User-Agent': 'Azad Khabar/1.0 (RSS Image Aggregator)',
     'Accept': 'application/rss+xml, application/xml, text/xml',
   },
   customFields: {

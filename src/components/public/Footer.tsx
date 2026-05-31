@@ -6,7 +6,7 @@ export default function Footer() {
       <div className="container mx-auto px-4 py-10">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
-            <h3 className="text-white text-xl font-bold mb-4">PNP365</h3>
+            <h3 className="text-white text-xl font-bold mb-4">Azad Khabar</h3>
             <p className="text-sm leading-loose">
               پاکستان کی معروف خبروں کی ویب سائٹ۔ تازہ ترین، بریکنگ اور مستند خبریں پڑھیں۔
             </p>
@@ -50,7 +50,7 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm">
-          <p>&copy; {new Date().getFullYear()} PNP365 - جملہ حقوق محفوظ ہیں</p>
+          <p>&copy; {new Date().getFullYear()} Azad Khabar - جملہ حقوق محفوظ ہیں</p>
         </div>
       </div>
     </footer>
