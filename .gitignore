@@ -9,3 +9,5 @@ public/uploads/
 *.sqlite
 *.sqlite-journal
 prisma/prisma/
+
+.vercel
