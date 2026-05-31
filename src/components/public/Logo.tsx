@@ -8,10 +8,10 @@ interface LogoProps {
 export default function Logo({ className = '', showTagline = false }: LogoProps) {
   return (
     <Link href="/" className={`flex flex-col items-start ${className}`}>
-      <span className="font-nastaliq text-3xl md:text-4xl font-bold text-primary-600 leading-tight">
+      <span className="font-nastaliq text-3xl md:text-4xl font-bold text-primary-600 leading-relaxed mb-1">
         آزاد خبر
       </span>
-      <span className="flex items-center gap-2 mt-0.5">
+      <span className="flex items-center gap-2 mt-1">
         <span className="w-6 h-0.5 bg-primary-600 inline-block flex-shrink-0" />
         <span className="text-xs md:text-sm font-semibold text-gray-600 tracking-[0.15em] uppercase">
           Azad Khabar
