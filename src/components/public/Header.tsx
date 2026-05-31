@@ -19,11 +19,21 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [todayDate, setTodayDate] = useState('');
+  const [todayDateUrdu, setTodayDateUrdu] = useState('');
+  const [todayDateIntl, setTodayDateIntl] = useState('');
 
   useEffect(() => {
-    setTodayDate(
+    setTodayDateUrdu(
       new Date().toLocaleDateString('ur-PK', {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+        timeZone: 'Asia/Karachi',
+      })
+    );
+    setTodayDateIntl(
+      new Date().toLocaleDateString('en-GB', {
         weekday: 'long',
         day: 'numeric',
         month: 'long',
@@ -45,7 +55,7 @@ export default function Header() {
       {/* Top bar */}
       <div className="bg-primary-600 text-white">
         <div className="container mx-auto px-4 py-1 flex justify-between items-center text-sm">
-          <span>{todayDate}</span>
+          <span>{todayDateUrdu} | {todayDateIntl}</span>
           <span>PNP365</span>
         </div>
       </div>
