@@ -26,6 +26,7 @@ function getHijriDate(date: Date): string {
       day: 'numeric',
       month: 'long',
       year: 'numeric',
+      timeZone: 'Asia/Karachi',
     }).format(date);
     return hijri;
   } catch {
@@ -44,7 +45,8 @@ function formatTime(date: Date): string {
 
 function calculatePrayerTimes(methodName: 'jafari' | 'sunni') {
   const coords = new Coordinates(LATITUDE, LONGITUDE);
-  const date = new Date();
+  const now = new Date();
+  const date = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Karachi' }));
 
   const params =
     methodName === 'jafari'
@@ -79,6 +81,7 @@ export async function GET() {
       day: 'numeric',
       month: 'long',
       year: 'numeric',
+      timeZone: 'Asia/Karachi',
     });
     const hijriDate = getHijriDate(new Date());
 

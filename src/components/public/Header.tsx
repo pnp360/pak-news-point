@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { HiMenu, HiX, HiSearch } from 'react-icons/hi';
 
 const categories = [
@@ -19,6 +19,19 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [todayDate, setTodayDate] = useState('');
+
+  useEffect(() => {
+    setTodayDate(
+      new Date().toLocaleDateString('ur-PK', {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+        timeZone: 'Asia/Karachi',
+      })
+    );
+  }, []);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,7 +45,7 @@ export default function Header() {
       {/* Top bar */}
       <div className="bg-primary-600 text-white">
         <div className="container mx-auto px-4 py-1 flex justify-between items-center text-sm">
-          <span>جمعرات، ۲۹ مئی ۲۰۲۶</span>
+          <span>{todayDate}</span>
           <span>PNP365</span>
         </div>
       </div>
