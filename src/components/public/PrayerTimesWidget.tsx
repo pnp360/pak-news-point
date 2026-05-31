@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface PrayerTime {
   name: string;
@@ -35,6 +35,8 @@ export default function PrayerTimesWidget() {
   const [data, setData] = useState<PrayerTimesData | null>(null);
   const [loading, setLoading] = useState(true);
   const [method, setMethod] = useState<'sunni' | 'jafari'>('sunni');
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     fetch('/api/prayer-times')
@@ -47,6 +49,26 @@ export default function PrayerTimesWidget() {
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
+
+  useEffect(() => {
+    setCurrentIndex(0);
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    intervalRef.current = setInterval(() => {
+      setCurrentIndex((prev) => {
+        const prayers = getMainPrayers();
+        return (prev + 1) % prayers.length;
+      });
+    }, 3000);
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [method, data]);
+
+  function getMainPrayers() {
+    if (!data) return [];
+    return data[method].prayerTimes.filter((p) => p.name !== 'Sunrise');
+  }
 
   if (loading) {
     return (
@@ -66,14 +88,12 @@ export default function PrayerTimesWidget() {
     );
   }
 
-  const current = data[method];
-  const other = method === 'sunni' ? 'jafari' : 'sunni';
-  const mainPrayers = current.prayerTimes.filter(
-    (p) => p.name !== 'Sunrise'
-  );
+  const mainPrayers = getMainPrayers();
+  const currentPrayer = mainPrayers[currentIndex];
 
   return (
     <div className="bg-gradient-to-br from-green-50 to-emerald-100 rounded-xl p-4">
+      {/* Header */}
       <div className="text-center mb-3 pb-3 border-b border-green-200">
         <div className="flex items-center justify-center gap-2 mb-1">
           <button
@@ -101,35 +121,40 @@ export default function PrayerTimesWidget() {
           <p className="text-xs text-green-700">{data.hijriDate}</p>
         )}
       </div>
-      <div className="space-y-1.5">
-        {mainPrayers.map((prayer) => {
-          const otherPrayer = other
-            ? data[other].prayerTimes.find((p) => p.name === prayer.name)
-            : null;
-          return (
-            <div
-              key={prayer.name}
-              className="flex items-center justify-between py-1.5 px-2 rounded-lg hover:bg-white/50 transition-colors"
-            >
-              <div className="flex items-center gap-2">
-                <span>{PRAYER_ICONS[prayer.name] || '🕋'}</span>
-                <span className="text-sm font-medium text-gray-700">
-                  {prayer.nameUrdu}
-                </span>
-              </div>
-              <div className="flex items-center gap-2" dir="ltr">
-                {otherPrayer && otherPrayer.time !== prayer.time && (
-                  <span className="text-xs text-gray-400 line-through">
-                    {otherPrayer.time}
-                  </span>
-                )}
-                <span className="text-sm font-bold text-green-800">
-                  {prayer.time}
-                </span>
-              </div>
-            </div>
-          );
-        })}
+
+      {/* Scrolling prayer display */}
+      <div className="relative h-16 overflow-hidden">
+        <div
+          key={currentPrayer?.name || 0}
+          className="flex items-center justify-between py-3 px-3 bg-white/60 rounded-lg transition-all duration-500 animate-slideDown absolute inset-x-0"
+        >
+          <div className="flex items-center gap-2">
+            <span className="text-lg">
+              {PRAYER_ICONS[currentPrayer?.name || ''] || '🕋'}
+            </span>
+            <span className="text-sm font-medium text-gray-700">
+              {currentPrayer?.nameUrdu || ''}
+            </span>
+          </div>
+          <span className="text-sm font-bold text-green-800 font-mono" dir="ltr">
+            {currentPrayer?.time || ''}
+          </span>
+        </div>
+      </div>
+
+      {/* Dots indicator */}
+      <div className="flex justify-center gap-1.5 mt-3">
+        {mainPrayers.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setCurrentIndex(i)}
+            className={`w-2 h-2 rounded-full transition-all ${
+              i === currentIndex
+                ? 'bg-green-700 w-4'
+                : 'bg-green-300 hover:bg-green-400'
+            }`}
+          />
+        ))}
       </div>
     </div>
   );
