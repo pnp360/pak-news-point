@@ -7,14 +7,14 @@ interface LogoProps {
 
 export default function Logo({ className = '', showTagline = false }: LogoProps) {
   return (
-    <Link href="/" className={`flex flex-col items-start ${className}`}>
-      <span className="font-nastaliq text-3xl md:text-4xl font-bold text-primary-600 leading-relaxed mb-1">
-        آزاد خبر
-      </span>
-      <span className="flex items-center gap-2 mt-1">
-        <span className="w-6 h-0.5 bg-primary-600 inline-block flex-shrink-0" />
-        <span className="text-xs md:text-sm font-semibold text-gray-600 tracking-[0.15em] uppercase">
+    <Link href="/" className={`flex flex-col ${className}`}>
+      <span className="flex flex-row items-center gap-3" dir="ltr">
+        <span className="text-sm md:text-base font-semibold text-gray-700 tracking-[0.15em] uppercase whitespace-nowrap">
           Azad Khabar
+        </span>
+        <span className="w-6 h-[3px] bg-primary-600 inline-block flex-shrink-0 rounded-full" />
+        <span className="font-nastaliq text-2xl md:text-3xl font-bold text-primary-600 leading-none">
+          آزاد خبر
         </span>
       </span>
       {showTagline && (
