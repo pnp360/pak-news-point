@@ -63,26 +63,40 @@ function buildSearchQueries(title: string, categoryName?: string): string[] {
     : '';
   const sceneHint = categoryKey ? CATEGORY_SCENE_MAP[categoryKey] || '' : '';
 
+  const GENERIC = new Set([
+    'announcement','announced','announces','expected','soon',
+    'new','latest','update','today','year','month','week','day',
+    'first','last','next','previous','current','ongoing','future',
+    'major','significant','important','key','top','main',
+    'meeting','session','event','program','project','plan','scheme',
+    'campaign','increase','decrease','decline','growth','rise','fall',
+    'drop','improvement','reduction','development','progress',
+    'start','begin','continue','launch','introduce','release',
+    'hold','held','take','make','made','set','see','show',
+    'include','provide','report','review','study','area','focus',
+    'work','also','preparation','preparations','preventive','prevention',
+    'arrival','departure','purpose','effort','bid','step','move',
+    'call','planning','aim','target','goal','feature','special',
+    'total','overall','general','various','several','number',
+  ]);
+
+  const keywords = extractEnglishKeywords(title)
+    .filter((k) => !GENERIC.has(k))
+    .slice(0, 3);
+
   const queries: string[] = [];
 
-  // Primary: title + category scene
-  if (categoryKey && sceneHint) {
-    queries.push(`${englishTitle} ${sceneHint.split(',')[0]}`);
+  if (keywords.length >= 2) {
+    const kw = [...keywords, categoryKey].filter(Boolean);
+    queries.push(kw.join(' '));
+  }
+  if (keywords.length >= 1) {
+    const kw = [...keywords, categoryKey].filter(Boolean);
+    queries.push(kw.join(' '));
   }
 
-  // Title alone
-  queries.push(englishTitle);
-
-  // Category + key terms from title
-  const keywords = extractEnglishKeywords(title);
-  const keyPhrase = keywords.slice(0, 3).join(' ');
-  if (keyPhrase) {
-    if (categoryKey) queries.push(`${categoryKey} ${keyPhrase}`);
-    queries.push(keyPhrase);
-  }
-
-  // Category alone as last resort
   if (categoryKey) {
+    if (sceneHint) queries.push(`${categoryKey} ${sceneHint.split(',')[0]}`);
     queries.push(categoryKey);
   }
 
