@@ -13,7 +13,7 @@ export default function BreakingNews({ articles }: BreakingNewsProps) {
       <div className="bg-red-600 text-white py-2 overflow-hidden">
         <div className="container mx-auto px-4 flex items-center">
           <span className="bg-white text-red-600 px-3 py-1 rounded font-bold text-sm shrink-0">
-            بریکنگ
+            اہم خبر
           </span>
           <div className="overflow-hidden flex-1 mr-4">
             <div className="news-ticker-reverse whitespace-nowrap flex gap-12" style={{ direction: 'ltr' }}>
@@ -32,10 +32,13 @@ export default function BreakingNews({ articles }: BreakingNewsProps) {
         </div>
       </div>
 
-      {/* English breaking ticker — separate bar, badge on the right */}
+      {/* English breaking ticker — separate bar, badge on the left */}
       <div className="bg-gray-900 text-gray-200 py-1.5 overflow-hidden border-t border-red-800">
         <div className="container mx-auto px-4 flex items-center" dir="ltr">
-          <div className="overflow-hidden flex-1 ml-4">
+          <span className="bg-red-600 text-white px-3 py-0.5 rounded font-bold text-xs shrink-0 uppercase tracking-wider ml-4">
+            Breaking
+          </span>
+          <div className="overflow-hidden flex-1">
             <div
               className="news-ticker whitespace-nowrap flex gap-12"
               style={{ animationDuration: '40s' }}
@@ -51,9 +54,6 @@ export default function BreakingNews({ articles }: BreakingNewsProps) {
               ))}
             </div>
           </div>
-          <span className="bg-red-600 text-white px-3 py-0.5 rounded font-bold text-xs shrink-0 uppercase tracking-wider">
-            Breaking
-          </span>
         </div>
       </div>
     </>
