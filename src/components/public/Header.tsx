@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { HiMenu, HiX, HiSearch } from 'react-icons/hi';
+import Logo from './Logo';
 
 const categories = [
   { name: 'پاکستان', slug: 'pakistan' },
@@ -62,9 +63,7 @@ export default function Header() {
 
       {/* Logo and search */}
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-        <Link href="/" className="text-2xl md:text-3xl font-bold text-primary-600">
-          Azad Khabar
-        </Link>
+        <Logo />
 
         <div className="flex items-center gap-3">
           <button

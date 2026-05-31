@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Logo from './Logo';
 
 export default function Footer() {
   return (
@@ -6,10 +7,7 @@ export default function Footer() {
       <div className="container mx-auto px-4 py-10">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
-            <h3 className="text-white text-xl font-bold mb-4">Azad Khabar</h3>
-            <p className="text-sm leading-loose">
-              پاکستان کی معروف خبروں کی ویب سائٹ۔ تازہ ترین، بریکنگ اور مستند خبریں پڑھیں۔
-            </p>
+            <Logo showTagline />
           </div>
           <div>
             <h4 className="text-white font-bold mb-4">اہم زمرے</h4>
