@@ -1,0 +1,132 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-nastaliq: 'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-nastaliq);
+  direction: rtl;
+  text-align: right;
+}
+
+.ProseMirror {
+  min-height: 400px;
+  padding: 1rem;
+  outline: none;
+  font-family: var(--font-nastaliq);
+}
+
+.ProseMirror p {
+  margin-bottom: 0.75rem;
+  line-height: 2;
+}
+
+.ProseMirror h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  margin-top: 1.5rem;
+}
+
+.ProseMirror h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+.ProseMirror img {
+  max-width: 100%;
+  height: auto;
+  margin: 1rem 0;
+  border-radius: 0.5rem;
+}
+
+.ProseMirror ul,
+.ProseMirror ol {
+  padding-right: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.ProseMirror a {
+  color: #dc2626;
+  text-decoration: underline;
+}
+
+.news-ticker {
+  animation: ticker 30s linear infinite;
+}
+
+@keyframes ticker {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+@media (max-width: 768px) {
+  .news-ticker {
+    animation-duration: 20s;
+  }
+}
+
+.article-content p {
+  margin-bottom: 1rem;
+  line-height: 2;
+  font-size: 1.1rem;
+}
+
+.article-content h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 1.5rem 0 1rem;
+}
+
+.article-content h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 1.25rem 0 0.75rem;
+}
+
+.article-content img {
+  max-width: 100%;
+  height: auto;
+  margin: 1.5rem auto;
+  border-radius: 0.5rem;
+}
+
+.article-content ul,
+.article-content ol {
+  padding-right: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.article-content a {
+  color: #dc2626;
+  text-decoration: underline;
+}
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
