@@ -9,24 +9,24 @@ async function main() {
 
   const adminPassword = await bcrypt.hash('admin123', 12);
   const admin = await prisma.user.upsert({
-    where: { email: 'admin@paknewspoint.com' },
+    where: { email: 'admin@pnp365.com' },
     update: {},
     create: {
       name: 'ایڈمن',
-      email: 'admin@paknewspoint.com',
+      email: 'admin@pnp365.com',
       password: adminPassword,
       role: 'ADMIN',
     },
   });
-  console.log('✅ Admin: admin@paknewspoint.com / admin123');
+  console.log('✅ Admin: admin@pnp365.com / admin123');
 
   const editorPassword = await bcrypt.hash('editor123', 12);
   await prisma.user.upsert({
-    where: { email: 'editor@paknewspoint.com' },
+    where: { email: 'editor@pnp365.com' },
     update: {},
     create: {
       name: 'ایڈیٹر',
-      email: 'editor@paknewspoint.com',
+      email: 'editor@pnp365.com',
       password: editorPassword,
       role: 'EDITOR',
     },
@@ -152,7 +152,7 @@ async function main() {
 
   const defaultSettings = [
     { key: 'daily_news_limit', value: '100' },
-    { key: 'site_name', value: 'پاکستان نیوز پوائنٹ' },
+    { key: 'site_name', value: 'PNP365' },
     { key: 'site_description', value: 'پاکستان کی تازہ ترین خبریں، بریکنگ نیوز، کھیل، کاروبار، شوبز، سائنس و ٹیکنالوجی' },
   ];
 

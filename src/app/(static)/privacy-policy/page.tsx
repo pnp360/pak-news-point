@@ -1,6 +1,6 @@
 export const metadata = {
   title: 'پرائیویسی پالیسی',
-  description: 'پاکستان نیوز پوائنٹ کی پرائیویسی پالیسی',
+  description: 'PNP365 کی پرائیویسی پالیسی',
 };
 
 export default function PrivacyPolicyPage() {
@@ -10,7 +10,7 @@ export default function PrivacyPolicyPage() {
         <h1 className="text-3xl font-bold mb-6">پرائیویسی پالیسی</h1>
         <div className="space-y-4 leading-loose">
           <p>
-            پاکستان نیوز پوائنٹ آپ کی پرائیویسی کا احترام کرتا ہے۔ یہ پالیسی
+            PNP365 آپ کی پرائیویسی کا احترام کرتا ہے۔ یہ پالیسی
             بتاتی ہے کہ ہم آپ کی ذاتی معلومات کیسے جمع، استعمال اور محفوظ کرتے
             ہیں۔
           </p>

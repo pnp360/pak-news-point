@@ -1,7 +1,7 @@
 import AdminSidebar from '@/components/admin/AdminSidebar';
 
 export const metadata = {
-  title: 'ایڈمن پینل - پاکستان نیوز پوائنٹ',
+  title: 'ایڈمن پینل - PNP365',
   robots: { index: false, follow: false },
 };
 

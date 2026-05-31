@@ -33,14 +33,14 @@ export default function Header() {
       <div className="bg-primary-600 text-white">
         <div className="container mx-auto px-4 py-1 flex justify-between items-center text-sm">
           <span>جمعرات، ۲۹ مئی ۲۰۲۶</span>
-          <span>پاکستان نیوز پوائنٹ</span>
+          <span>PNP365</span>
         </div>
       </div>
 
       {/* Logo and search */}
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
         <Link href="/" className="text-2xl md:text-3xl font-bold text-primary-600">
-          پاکستان نیوز پوائنٹ
+          PNP365
         </Link>
 
         <div className="flex items-center gap-3">

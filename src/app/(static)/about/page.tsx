@@ -1,6 +1,6 @@
 export const metadata = {
   title: 'ہمارے بارے میں',
-  description: 'پاکستان نیوز پوائنٹ کے بارے میں معلومات',
+  description: 'PNP365 کے بارے میں معلومات',
 };
 
 export default function AboutPage() {
@@ -10,7 +10,7 @@ export default function AboutPage() {
         <h1 className="text-3xl font-bold mb-6">ہمارے بارے میں</h1>
         <div className="prose prose-lg leading-loose space-y-4">
           <p>
-            پاکستان نیوز پوائنٹ ایک معروف اردو خبروں کی ویب سائٹ ہے جو پاکستان
+            PNP365 ایک معروف اردو خبروں کی ویب سائٹ ہے جو پاکستان
             بھر سے تازہ ترین خبریں فراہم کرتی ہے۔
           </p>
           <p>
