@@ -70,6 +70,10 @@ body {
   animation: ticker 30s linear infinite;
 }
 
+.news-ticker-reverse {
+  animation: ticker-reverse 30s linear infinite;
+}
+
 @keyframes ticker {
   0% {
     transform: translateX(100%);
@@ -79,8 +83,20 @@ body {
   }
 }
 
+@keyframes ticker-reverse {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
 @media (max-width: 768px) {
   .news-ticker {
+    animation-duration: 20s;
+  }
+  .news-ticker-reverse {
     animation-duration: 20s;
   }
 }
