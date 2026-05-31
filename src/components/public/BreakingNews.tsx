@@ -1,3 +1,5 @@
+import { translateToEnglish } from '@/lib/translate';
+
 interface BreakingNewsProps {
   articles: { id: string; title: string; slug: string }[];
 }
@@ -12,15 +14,32 @@ export default function BreakingNews({ articles }: BreakingNewsProps) {
           بریکنگ
         </span>
         <div className="overflow-hidden flex-1 relative">
+          {/* Urdu ticker */}
           <div className="news-ticker whitespace-nowrap flex gap-12" style={{ direction: 'ltr' }}>
             {[...articles, ...articles].map((article, i) => (
               <a
-                key={`${article.id}-${i}`}
+                key={`ur-${article.id}-${i}`}
                 href={`/news/${article.slug}`}
-                className="hover:underline inline-block"
+                className="hover:underline inline-block text-sm md:text-base"
                 style={{ direction: 'rtl' }}
               >
                 {article.title}
+              </a>
+            ))}
+          </div>
+          {/* English ticker */}
+          <div
+            className="news-ticker whitespace-nowrap flex gap-12"
+            style={{ direction: 'ltr', animationDuration: '40s' }}
+          >
+            {[...articles, ...articles].map((article, i) => (
+              <a
+                key={`en-${article.id}-${i}`}
+                href={`/news/${article.slug}`}
+                className="hover:underline inline-block text-xs md:text-sm opacity-80"
+                style={{ direction: 'ltr' }}
+              >
+                {translateToEnglish(article.title)}
               </a>
             ))}
           </div>
