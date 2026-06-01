@@ -2245,79 +2245,42 @@ const EXTENDED: Record<string, string> = {
   'receipt': 'رسید', 'invoice': 'انوائس',
   'cash': 'نقد', 'credit': 'کریڈٹ',
   'debit': 'ڈیبٹ', 'balance': 'بیلنس',
+  // ── Frequently missing words from RSS headlines ──
+  'years': 'سال', 'tells': 'بتاتا ہے', 'prices': 'قیمتیں',
+  'labour': 'لیبر', 'wins': 'جیت', 'offensive': 'جارحانہ',
+  'terms': 'شرائط', 'sees': 'دیکھتا ہے', 'work': 'کام',
+  'most': 'زیادہ تر', 'jobs': 'نوکریاں', 'them': 'انہیں',
+  'former': 'سابق', 'fear': 'خوف', 'sky': 'آسمان',
+  'hundreds': 'سینکڑوں', 'suspected': 'مشتبہ', 'staff': 'عملہ',
+  'star': 'سٹار', 'house': 'گھر', 'middle': 'وسط',
+  'east': 'مشرق', 'north': 'شمال', 'south': 'جنوب',
+  'good': 'اچھا', 'age': 'عمر', 'generation': 'نسل',
+  'england': 'انگلینڈ', 'deadly': 'مہلک', 'huge': 'بہت بڑا',
+  'nearly': 'تقریبا', 'access': 'رسائی', 'experts': 'ماہرین',
+  'study': 'مطالعہ', 'costs': 'اخراجات', 'secret': 'خفیہ',
+  'workers': 'کارکنان', 'big': 'بڑا', 'hard': 'مشکل',
+  'parents': 'والدین', 'solar': 'شمسی', 'flight': 'پرواز',
+  'sets': 'سیٹ', 'line': 'لائن', 'hit': 'مارا',
+  'open': 'کھلا', 'chip': 'چپ', 'car': 'گاڑی',
+  'goes': 'جاتا ہے', 'reveals': 'انکشاف', 'bid': 'بولی',
+  'silence': 'خاموشی', 'images': 'تصاویر', 'scale': 'پیمانہ',
+  'use': 'استعمال', 'get': 'حاصل', 'waste': 'فضول',
+  'sit': 'بیٹھنا', 'association': 'ایسوسی ایشن',
+  'classic': 'کلاسک', 'grand': 'عظیم', 'guide': 'گائیڈ',
+  'hits': 'مارتا ہے', 'getting': 'مل رہا', 'expose': 'بے نقاب',
+  'suggests': 'ظاہر کرتا ہے', 'hikes': 'اضافہ',
+  'watchdog': 'نگران',
+  'campus': 'کیمپس', 'tour': 'دورہ',
+  'producers': 'پروڈیوسرز', 'controversial': 'متنازعہ',
+  'bans': 'پابندیاں', 'greater': 'زیادہ', 'rocked': 'ہل گیا',
+  'rollout': 'اجراء', 'using': 'استعمال کرتے ہوئے',
 };
 for (const [en, ur] of Object.entries(EXTENDED)) {
   ENGLISH_TO_URDU[en] = ur;
 }
 
 function transliterateWord(word: string): string {
-  if (!word) return word;
-  const lower = word.toLowerCase();
-  if (/^[a-z\d]+$/.test(lower) && /\d/.test(lower)) return word;
-  const KEEP = new Set([
-    'us','uk','un','eu','ai','tv','pc','5g','4g','psl','imf','odi',
-    't20','icc','bcci','pcb','fifa','nato','who','wto','uae','usa',
-  ]);
-  if (KEEP.has(lower)) return lower.toUpperCase();
-
-  const C: Record<string, string> = {
-    'b':'ب','c':'ک','d':'ڈ','f':'ف','g':'گ',
-    'h':'ہ','j':'ج','k':'ک','l':'ل','m':'م',
-    'n':'ن','p':'پ','q':'ق','r':'ر','s':'س',
-    't':'ٹ','v':'و','w':'و','x':'کس','z':'ز',
-  };
-
-  // Suffix patterns (applied first so they don't interfere with other rules)
-  let w = lower;
-  w = w.replace(/(?:tion|sion)$/, 'شن');
-  w = w.replace(/ture$/, 'چر');
-  w = w.replace(/dge$/, 'ج');
-  w = w.replace(/ing$/, 'نگ');
-  w = w.replace(/(?:ed|ied)$/, 'ڈ');
-  w = w.replace(/er$/, 'ر');
-  w = w.replace(/ly$/, 'لی');
-  w = w.replace(/le$/, 'ل');
-  w = w.replace(/([bdfgklmnprstvz])\1/g, '$1');
-
-  // Now process char by char
-  const M: [string, string][] = [
-    ['th','تھ'], ['ch','چ'], ['sh','ش'],
-    ['gh','گھ'], ['ph','ف'], ['qu','ق'],
-    ['wh','و'], ['kn','ن'], ['ng','نگ'], ['mb','م'],
-    ['oo','و'], ['ee','ی'], ['ea','یا'], ['oa','وا'],
-    ['ai','ے'], ['ay','ے'], ['oi','وئ'], ['oy','وئ'],
-    ['au','آ'], ['aw','آ'], ['ou','آو'], ['ow','آو'],
-    ['ew','یو'], ['ie','ی'], ['ei','ی'],
-    ['ua','وا'], ['ue','و'], ['ui','وئ'],
-    ['ia','یا'], ['io','یو'],
-  ];
-
-  let result = '';
-  let i = 0;
-  while (i < w.length) {
-    let matched = false;
-    for (const [pat, rep] of M) {
-      if (i + pat.length <= w.length && w.substring(i, i + pat.length) === pat) {
-        result += rep; i += pat.length; matched = true; break;
-      }
-    }
-    if (matched) continue;
-
-    const ch = w[i]; i++;
-    // Map vowels contextually
-    if (ch === 'a') { result += result === '' ? 'ا' : 'ا'; continue; }
-    if (ch === 'e') { // silent e - skip unless at start
-      if (!result || (i < w.length)) { continue; }
-      result += 'ی'; continue;
-    }
-    if (ch === 'i') { result += 'ی'; continue; }
-    if (ch === 'o') { result += 'و'; continue; }
-    if (ch === 'u') { result += 'و'; continue; }
-    if (ch === 'y') { result += 'ی'; continue; }
-    result += C[ch] || ch;
-  }
-
-  return result;
+  return word;
 }
 
 function stemWord(word: string): string | null {
