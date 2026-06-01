@@ -5,6 +5,7 @@ import { getTodayPublishedCount, getDailyLimit } from '@/lib/daily-limit';
 import { toUrduNumber } from '@/lib/urdu';
 import Link from 'next/link';
 import { HiDocumentText, HiEye, HiCollection, HiTag, HiUserGroup, HiExclamation } from 'react-icons/hi';
+import FetchNewsButton from '@/components/admin/FetchNewsButton';
 
 async function getDashboardStats() {
   const [
@@ -106,6 +107,7 @@ export default async function AdminDashboard() {
           >
             نئی خبر تحریر کریں
           </Link>
+          <FetchNewsButton />
           <Link
             href="/admin/categories"
             className="bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700"

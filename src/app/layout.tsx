@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import Header from '@/components/public/Header';
 import Footer from '@/components/public/Footer';
+import AutoFetchTrigger from '@/components/public/AutoFetchTrigger';
 import { Providers } from './providers';
 
 export const metadata: Metadata = {
@@ -40,6 +41,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Header />
           <main>{children}</main>
           <Footer />
+          <AutoFetchTrigger />
         </Providers>
       </body>
     </html>

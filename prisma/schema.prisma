@@ -35,6 +35,7 @@ model Category {
 model Article {
   id           String     @id @default(cuid())
   title        String
+  originalTitle String?
   slug         String     @unique
   excerpt      String?
   content      String

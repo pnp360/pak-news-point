@@ -1,7 +1,7 @@
 import Parser from 'rss-parser';
 import { translateToEnglish, extractEnglishKeywords } from './translate';
 
-const parser = new Parser({
+export const parser = new Parser({
   timeout: 15000,
   headers: {
     'User-Agent': 'Azad Khabar/1.0 (RSS Image Aggregator)',
@@ -17,7 +17,7 @@ const parser = new Parser({
   },
 });
 
-const FEED_CONFIG: { url: string; name: string; category: string }[] = [
+export const FEED_CONFIG: { url: string; name: string; category: string }[] = [
   // BBC - all categories
   { url: 'https://feeds.bbci.co.uk/news/world/rss.xml', name: 'BBC', category: 'World' },
   { url: 'https://feeds.bbci.co.uk/news/politics/rss.xml', name: 'BBC', category: 'Politics' },

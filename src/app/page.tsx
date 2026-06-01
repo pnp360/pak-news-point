@@ -2,16 +2,23 @@ export const dynamic = 'force-dynamic';
 
 import { prisma } from '@/lib/prisma';
 import BreakingNews from '@/components/public/BreakingNews';
+import EnglishBreaking from '@/components/public/EnglishBreaking';
 import NewsCard from '@/components/public/NewsCard';
 import Sidebar from '@/components/public/Sidebar';
 
 async function getHomepageData() {
-  const [breakingArticles, featuredArticles, latestArticles, trendingArticles] = await Promise.all([
+  const [breakingArticles, englishArticles, featuredArticles, latestArticles, trendingArticles] = await Promise.all([
     prisma.article.findMany({
       where: { status: 'PUBLISHED', isBreaking: true },
       orderBy: { publishedAt: 'desc' },
       take: 10,
-      select: { id: true, title: true, slug: true },
+      select: { id: true, title: true, originalTitle: true, slug: true },
+    }),
+    prisma.article.findMany({
+      where: { status: 'PUBLISHED', originalTitle: { not: null } },
+      orderBy: { publishedAt: 'desc' },
+      take: 10,
+      select: { id: true, title: true, originalTitle: true, slug: true },
     }),
     prisma.article.findMany({
       where: { status: 'PUBLISHED', isFeatured: true },
@@ -56,7 +63,7 @@ async function getHomepageData() {
     }
   }
 
-  return { breakingArticles, featuredArticles, latestArticles, trendingArticles, categories, categoryArticles };
+  return { breakingArticles, englishArticles, featuredArticles, latestArticles, trendingArticles, categories, categoryArticles };
 }
 
 export default async function HomePage() {
@@ -66,6 +73,7 @@ export default async function HomePage() {
     <div className="container mx-auto px-4 py-6">
       {/* Breaking News */}
       <BreakingNews articles={data.breakingArticles} />
+      <EnglishBreaking articles={data.englishArticles} />
 
       {/* Featured Carousel */}
       {data.featuredArticles.length > 0 && (
