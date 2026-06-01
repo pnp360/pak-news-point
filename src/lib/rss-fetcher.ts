@@ -46,6 +46,10 @@ export const FEED_CONFIG: { url: string; name: string; category: string }[] = [
   { url: 'https://www.theguardian.com/culture/rss', name: 'Guardian', category: 'Entertainment' },
   { url: 'https://www.theguardian.com/education/rss', name: 'Guardian', category: 'Education' },
 
+  // Pakistani English news sources
+  { url: 'https://arynews.tv/en/feed/', name: 'ARY News', category: 'Pakistan' },
+  { url: 'https://www.bolnews.com/feed/', name: 'Bol News', category: 'Pakistan' },
+
   // Other world news
   { url: 'http://rss.cnn.com/rss/edition.rss', name: 'CNN', category: 'World' },
   { url: 'https://feeds.skynews.com/feeds/rss/home.xml', name: 'SkyNews', category: 'World' },

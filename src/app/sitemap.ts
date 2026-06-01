@@ -8,7 +8,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const articles = await prisma.article.findMany({
     where: { status: 'PUBLISHED' },
-    select: { slug: true, updatedAt: true },
+    select: { slug: true, updatedAt: true, views: true },
+    orderBy: { publishedAt: 'desc' },
   });
 
   const categories = await prisma.category.findMany({
@@ -16,11 +17,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   });
 
   const staticPages = [
-    { path: '', lastModified: new Date() },
-    { path: '/about', lastModified: new Date() },
-    { path: '/contact', lastModified: new Date() },
-    { path: '/privacy-policy', lastModified: new Date() },
-    { path: '/terms', lastModified: new Date() },
+    { path: '', lastModified: new Date(), priority: 1.0 },
+    { path: '/about', lastModified: new Date(), priority: 0.5 },
+    { path: '/contact', lastModified: new Date(), priority: 0.5 },
+    { path: '/search', lastModified: new Date(), priority: 0.7 },
+    { path: '/privacy-policy', lastModified: new Date(), priority: 0.3 },
+    { path: '/terms', lastModified: new Date(), priority: 0.3 },
   ];
 
   return [
@@ -28,7 +30,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: `${baseUrl}${page.path}`,
       lastModified: page.lastModified,
       changeFrequency: 'daily' as const,
-      priority: page.path === '' ? 1 : 0.5,
+      priority: page.priority,
     })),
     ...categories.map((cat) => ({
       url: `${baseUrl}/${cat.slug}`,
@@ -40,7 +42,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: `${baseUrl}/news/${article.slug}`,
       lastModified: article.updatedAt,
       changeFrequency: 'weekly' as const,
-      priority: 0.6,
+      priority: article.views > 100 ? 0.8 : article.views > 10 ? 0.6 : 0.5,
     })),
   ];
 }

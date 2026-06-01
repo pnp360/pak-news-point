@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import WeatherWidget from './WeatherWidget';
 import PrayerTimesWidget from './PrayerTimesWidget';
+import RatesWidget from './RatesWidget';
 
 interface SidebarArticle {
   id: string;
@@ -51,6 +52,15 @@ export default function Sidebar({ trending, latest }: SidebarProps) {
           موسم
         </h3>
         <WeatherWidget />
+      </div>
+
+      {/* Currency & Gold Rates */}
+      <div className="bg-white rounded-xl shadow-sm p-5">
+        <h3 className="text-lg font-bold border-b pb-3 mb-4 flex items-center gap-2">
+          <span className="w-1 h-6 bg-primary-600 rounded inline-block" />
+          زر مبادلہ کی شرح
+        </h3>
+        <RatesWidget />
       </div>
 
       {/* Prayer Times */}

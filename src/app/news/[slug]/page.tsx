@@ -21,12 +21,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     include: { category: true, author: true },
   });
   if (!article) return { title: 'خبر نہیں ملی' };
+  const articleUrl = `${process.env.NEXT_PUBLIC_SITE_URL || ''}/news/${article.slug}`;
   return {
     title: article.title,
     description: article.excerpt || article.title,
+    alternates: { canonical: articleUrl },
     openGraph: {
       title: article.title,
       description: article.excerpt || article.title,
+      url: articleUrl,
       type: 'article',
       publishedTime: article.publishedAt?.toISOString(),
       authors: [article.author.name || ''],
@@ -65,9 +68,43 @@ export default async function ArticlePage({ params }: Props) {
   });
 
   const articleUrl = `${process.env.NEXT_PUBLIC_SITE_URL || ''}/news/${article.slug}`;
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://azadkhabar.vercel.app';
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'NewsArticle',
+        headline: article.title,
+        description: article.excerpt || article.title,
+        image: article.featuredImage || undefined,
+        datePublished: article.publishedAt?.toISOString(),
+        dateModified: article.publishedAt?.toISOString(),
+        author: article.author.name ? { '@type': 'Person', name: article.author.name } : undefined,
+        publisher: {
+          '@type': 'Organization',
+          name: 'Azad Khabar',
+          url: siteUrl,
+        },
+        mainEntityOfPage: { '@type': 'WebPage', '@id': articleUrl },
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'صفحہ اول', item: siteUrl },
+          { '@type': 'ListItem', position: 2, name: article.category.nameUrdu, item: `${siteUrl}/category/${article.category.slug}` },
+          { '@type': 'ListItem', position: 3, name: article.title, item: articleUrl },
+        ],
+      },
+    ],
+  };
 
   return (
     <div className="container mx-auto px-4 py-6 max-w-7xl">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <div className="flex flex-col lg:flex-row gap-10">
         <article className="flex-1 min-w-0">
 
