@@ -55,8 +55,8 @@ function buildNewsPrompt(title: string, categoryName?: string): string {
     .join(' ');
 }
 
-function buildSearchQueries(title: string, categoryName?: string): string[] {
-  const englishTitle = translateToEnglish(title);
+function buildSearchQueries(title: string, categoryName?: string, englishTitle?: string): string[] {
+  const textForKeywords = englishTitle || translateToEnglish(title);
 
   const categoryKey = categoryName
     ? (CATEGORY_URDU_MAP[categoryName] || categoryName)
@@ -80,7 +80,7 @@ function buildSearchQueries(title: string, categoryName?: string): string[] {
     'total','overall','general','various','several','number',
   ]);
 
-  const keywords = extractEnglishKeywords(title)
+  const keywords = extractEnglishKeywords(textForKeywords)
     .filter((k) => !GENERIC.has(k))
     .slice(0, 3);
 
@@ -106,7 +106,8 @@ function buildSearchQueries(title: string, categoryName?: string): string[] {
 export async function fetchRelevantImage(
   title: string,
   categoryName?: string,
-  skipUrls?: Set<string>
+  skipUrls?: Set<string>,
+  englishTitle?: string
 ): Promise<FetchedImage | null> {
   const hfToken = process.env.HF_API_TOKEN;
 
@@ -120,7 +121,7 @@ export async function fetchRelevantImage(
   }
 
   try {
-    const rssImg = await findRssImage(title, categoryName, skipUrls);
+    const rssImg = await findRssImage(title, categoryName, skipUrls, englishTitle);
     if (rssImg?.url) {
       skipUrls?.add(rssImg.url);
       return {
@@ -134,7 +135,7 @@ export async function fetchRelevantImage(
     // RSS unavailable - fall through
   }
 
-  const queries = buildSearchQueries(title, categoryName);
+  const queries = buildSearchQueries(title, categoryName, englishTitle);
   const pexelsKey = process.env.PEXELS_API_KEY;
   const unsplashKey = process.env.UNSPLASH_ACCESS_KEY;
 
@@ -281,9 +282,10 @@ export function resetUsedUrls() {
 
 export async function autoFetchImageForArticle(
   title: string,
+  englishTitle?: string,
   categoryName?: string
 ): Promise<string | null> {
-  const image = await fetchRelevantImage(title, categoryName, _usedUrls);
+  const image = await fetchRelevantImage(title, categoryName, _usedUrls, englishTitle);
   if (image?.url) {
     _usedUrls.add(image.url);
     return image.url;

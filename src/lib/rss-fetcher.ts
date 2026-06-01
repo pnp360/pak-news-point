@@ -252,17 +252,17 @@ const CATEGORY_FEED_MAP: Record<string, string[]> = {
 export async function findRssImage(
   articleTitle: string,
   categoryNameUrdu?: string,
-  skipUrls?: Set<string>
+  skipUrls?: Set<string>,
+  englishTitle?: string
 ): Promise<{ url: string; source: string } | null> {
   try {
     const feedItems = await fetchAllFeeds();
     if (feedItems.length === 0) return null;
 
-    const englishTitle = translateToEnglish(articleTitle);
-    const keywords = extractEnglishKeywords(articleTitle);
-    const keyPhrase = keywords.slice(0, 4).join(' ');
-
-    const searchTexts = [englishTitle, keyPhrase].filter(Boolean);
+    const englishTitleBackup = translateToEnglish(articleTitle);
+    const searchTexts = englishTitle
+      ? [englishTitle, extractEnglishKeywords(articleTitle).slice(0, 4).join(' ')]
+      : [englishTitleBackup, extractEnglishKeywords(articleTitle).slice(0, 4).join(' ')];
     const englishCat = categoryNameUrdu ? getEnglishCategory(categoryNameUrdu) : '';
     const preferredFeeds = englishCat ? CATEGORY_FEED_MAP[englishCat] || [] : [];
 

@@ -153,7 +153,7 @@ export async function fetchAllFeeds(): Promise<{
             });
 
             try {
-              const img = await autoFetchImageForArticle(urduTitle, category.nameUrdu);
+              const img = await autoFetchImageForArticle(urduTitle, englishTitle, category.nameUrdu);
               if (img) {
                 await prisma.article.update({
                   where: { id: article.id },
