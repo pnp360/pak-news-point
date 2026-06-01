@@ -70,7 +70,7 @@ export async function fetchAllFeeds(): Promise<{
         let created = 0;
         let errors = 0;
 
-        for (const item of parsed.items.slice(0, 10)) {
+        for (const item of parsed.items.slice(0, 7)) {
           try {
             const englishTitle = (item.title || '').trim();
             if (!englishTitle) continue;

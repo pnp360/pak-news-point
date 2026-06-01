@@ -2575,21 +2575,21 @@ function getDailyChars(): number {
 }
 
 export async function translateToUrduAsync(englishText: string): Promise<string> {
-  const chars = englishText.length;
-  if (getDailyChars() + chars > DAILY_LIMIT) {
+  const sent = englishText.slice(0, 500);
+  if (getDailyChars() + sent.length > DAILY_LIMIT) {
     console.warn(`Daily API limit reached (${dailyCharsUsed}/${DAILY_LIMIT}), falling back to local`);
     return translateToUrdu(englishText);
   }
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 8000);
   try {
-    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(englishText.slice(0, 500))}&langpair=en|ur&de=admin@azadkhabar.com`;
+    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(sent)}&langpair=en|ur&de=admin@azadkhabar.com`;
     const res = await fetch(url, { signal: controller.signal });
     clearTimeout(timer);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = (await res.json()) as { responseData?: { translatedText?: string }; quotaFinished?: boolean };
+    const data = (await res.json()) as { responseData?: { translatedText?: string } };
     if (data.responseData?.translatedText) {
-      dailyCharsUsed = Math.min(dailyCharsUsed + chars, DAILY_LIMIT);
+      dailyCharsUsed = Math.min(dailyCharsUsed + sent.length, DAILY_LIMIT);
       return data.responseData.translatedText;
     }
     throw new Error('No translation');
