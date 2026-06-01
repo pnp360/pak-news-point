@@ -114,9 +114,9 @@ export async function fetchAllFeeds(): Promise<{
             const urduDescription = description ? await translateToUrduAsync(description.slice(0, 300)) : '';
             const excerpt = urduDescription.slice(0, 200) || urduTitle;
 
-            const content = item['content:encoded'] || item.content || description || '';
+            const content = item['content:encoded'] || item.content || description || englishTitle;
             const rawContent = content.replace(/<[^>]*>/g, '').slice(0, 1500);
-            const translatedContent = await translateToUrduAsync(rawContent);
+            const translatedContent = rawContent.trim() ? await translateToUrduAsync(rawContent) : urduTitle;
             const formattedParagraphs = translatedContent
               .split(/[۔\.\?\!]\s*/)
               .filter(Boolean)
@@ -129,7 +129,9 @@ export async function fetchAllFeeds(): Promise<{
               }, []);
             const urduContent = formattedParagraphs.length > 1
               ? formattedParagraphs.map(p => `<p>${p}</p>`).join('\n')
-              : `<p>${translatedContent}</p>`;
+              : translatedContent
+                ? `<p>${translatedContent}</p>`
+                : `<p>${urduTitle}</p>`;
 
             const admin = await prisma.user.findFirst({ where: { role: 'ADMIN' }, select: { id: true } });
             if (!admin?.id) continue;

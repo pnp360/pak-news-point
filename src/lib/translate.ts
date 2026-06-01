@@ -2562,22 +2562,29 @@ export function translateToUrdu(englishText: string): string {
 }
 
 export async function translateToUrduAsync(englishText: string): Promise<string> {
+  if (!englishText.trim()) return '';
   const sent = englishText.slice(0, 500);
-  try {
-    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ur&dt=t&q=${encodeURIComponent(sent)}`;
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 8000);
-    const res = await fetch(url, { signal: controller.signal });
-    clearTimeout(timer);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = (await res.json()) as [[[string, string]]];
-    const translated = data?.[0]?.[0]?.[0];
-    if (translated) return translated;
-    throw new Error('No translation');
-  } catch (e) {
-    console.warn('Google Translate failed, using local:', (e as Error)?.message || e);
-    return translateToUrdu(englishText);
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ur&dt=t&q=${encodeURIComponent(sent)}`;
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 10000);
+      const res = await fetch(url, { signal: controller.signal });
+      clearTimeout(timer);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = (await res.json()) as [[[string, string]]];
+      const translated = data?.[0]?.[0]?.[0];
+      if (translated) return translated;
+      throw new Error('No translation');
+    } catch (e) {
+      if (attempt === 1) {
+        console.warn('Google Translate failed, using local:', (e as Error)?.message || e);
+        return translateToUrdu(englishText);
+      }
+      await new Promise(r => setTimeout(r, 1000));
+    }
   }
+  return translateToUrdu(englishText);
 }
 
 const TWO_LETTER_KEEP = new Set(['ai', 'us', 'uk', 'eu', 'tv', 'pc', 'ceo', 'cfo', 'cto', '5g', '4g', 'psl', 'imf', 'cpec', 'odi', 't20']);
