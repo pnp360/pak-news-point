@@ -2561,6 +2561,26 @@ export function translateToUrdu(englishText: string): string {
   return parts.join(' ');
 }
 
+export async function translateToUrduAsync(englishText: string): Promise<string> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 8000);
+  try {
+    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(englishText)}&langpair=en|ur`;
+    const res = await fetch(url, { signal: controller.signal });
+    clearTimeout(timer);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json() as { responseData?: { translatedText?: string }; quotaFinished?: boolean };
+    if (data.responseData?.translatedText) {
+      return data.responseData.translatedText;
+    }
+    throw new Error('No translation');
+  } catch (e) {
+    clearTimeout(timer);
+    console.warn('Translation API failed, falling back to local:', (e as Error)?.message || e);
+    return translateToUrdu(englishText);
+  }
+}
+
 const TWO_LETTER_KEEP = new Set(['ai', 'us', 'uk', 'eu', 'tv', 'pc', 'ceo', 'cfo', 'cto', '5g', '4g', 'psl', 'imf', 'cpec', 'odi', 't20']);
 
 export function extractEnglishKeywords(text: string): string[] {

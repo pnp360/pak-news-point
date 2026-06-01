@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { FEED_CONFIG, parser } from '@/lib/rss-fetcher';
-import { translateToUrdu } from '@/lib/translate';
+import { translateToUrduAsync, translateToUrdu } from '@/lib/translate';
 import { autoFetchImageForArticle, resetUsedUrls } from '@/lib/image-fetcher';
 import { incrementPublishedCount } from '@/lib/daily-limit';
 
@@ -102,7 +102,7 @@ export async function fetchAllFeeds(): Promise<{
             }
             if (isDuplicate) continue;
 
-            const urduTitle = translateToUrdu(englishTitle);
+            const urduTitle = await translateToUrduAsync(englishTitle);
 
             const existingUrdu = await prisma.article.findFirst({
               where: { title: { contains: urduTitle.slice(0, 40) } },
