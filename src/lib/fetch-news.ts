@@ -111,12 +111,13 @@ export async function fetchAllFeeds(): Promise<{
             if (existingUrdu) continue;
 
             const description = item.contentSnippet || item.content || item.summary || '';
-            const urduDescription = description ? translateToUrdu(description.slice(0, 300)) : '';
+            const urduDescription = description ? await translateToUrduAsync(description.slice(0, 300)) : '';
             const excerpt = urduDescription.slice(0, 200) || urduTitle;
 
             const content = item['content:encoded'] || item.content || description || '';
+            const rawContent = content.replace(/<[^>]*>/g, '').slice(0, 1500);
             const urduContent = content
-              ? `<p>${translateToUrdu(content.replace(/<[^>]*>/g, '').slice(0, 1500))}</p>`
+              ? `<p>${await translateToUrduAsync(rawContent)}</p>`
               : `<p>${urduTitle}</p>`;
 
             const admin = await prisma.user.findFirst({ where: { role: 'ADMIN' }, select: { id: true } });
