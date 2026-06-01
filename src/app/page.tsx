@@ -235,9 +235,9 @@ export default async function HomePage() {
           <section className="mb-10 bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-8 text-white text-center">
             <h2 className="text-2xl font-bold mb-2">تازہ ترین خبریں اپنے ان باکس میں حاصل کریں</h2>
             <p className="text-gray-400 mb-5">روزانہ کی اہم خبریں اور اپ ڈیٹس براہ راست اپنی ای میل پر</p>
-            <form className="flex gap-3 max-w-md mx-auto" onSubmit={e => e.preventDefault()}>
+            <form className="flex gap-3 max-w-md mx-auto" action="#">
               <input type="email" placeholder="ای میل ایڈریس درج کریں" className="flex-1 px-4 py-3 rounded-xl text-gray-900 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500" />
-              <button type="submit" className="bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-xl text-sm font-semibold transition-colors">سبسکرائب</button>
+              <button type="button" className="bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-xl text-sm font-semibold transition-colors">سبسکرائب</button>
             </form>
           </section>
 
