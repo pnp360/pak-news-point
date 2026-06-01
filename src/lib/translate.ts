@@ -441,7 +441,7 @@ function buildReverseMap() {
     'beyond': 'سے باہر',
     'without': 'بغیر',
     'within': 'کے اندر',
-    'across': 'بھر',
+    'across': 'بھر میں',
     'despite': 'کے باوجود',
     'since': 'سے',
     'until': 'تک',
@@ -2345,6 +2345,135 @@ function stemWord(word: string): string | null {
   return null;
 }
 
+// ── Urdu grammar: postposition swap & SOV reordering ────────────
+
+const ENG_PREPOSITIONS = new Set([
+  'in','on','at','to','from','for','with','by','about','across',
+  'through','into','onto','within','without','against','between',
+  'among','during','after','before','since','until','throughout',
+  'around','above','below','under','over','beside','beyond',
+  'toward','towards','behind','beneath','via','despite','including',
+  'amid','amidst','along','upon','past',
+]);
+
+// Common English verbs (for "to" detection + verb-final move)
+const ENG_VERBS = new Set([
+  'visit','visits','visited','visiting',
+  'drop','drops','dropped','dropping',
+  'fall','falls','fell','fallen','falling',
+  'rise','rose','risen','rising','rises',
+  'surge','surges','surged','surging',
+  'kill','kills','killed','killing',
+  'arrest','arrests','arrested','arresting',
+  'injure','injures','injured','injuring',
+  'wound','wounds','wounded','wounding',
+  'detain','detains','detained','detaining',
+  'kidnap','kidnaps','kidnapped','kidnapping',
+  'expect','expects','expected','expecting',
+  'forecast','forecasts','forecasted','forecasting',
+  'announce','announces','announced','announcing',
+  'unveil','unveils','unveiled','unveiling',
+  'launch','launches','launched','launching',
+  'start','starts','started','starting',
+  'continue','continues','continued','continuing',
+  'plan','plans','planned','planning',
+  'consider','considers','considered','considering',
+  'face','faces','faced','facing',
+  'win','wins','won','winning',
+  'lose','loses','lost','losing',
+  'gain','gains','gained','gaining',
+  'hold','holds','held','holding',
+  'seek','seeks','sought','seeking',
+  'call','calls','called','calling',
+  'sign','signs','signed','signing',
+  'say','says','said','saying',
+  'tell','tells','told','telling',
+  'report','reports','reported','reporting',
+  'confirm','confirms','confirmed','confirming',
+  'deny','denies','denied','denying',
+  'claim','claims','claimed','claiming',
+  'accuse','accuses','accused','accusing',
+  'blame','blames','blamed','blaming',
+  'charge','charges','charged','charging',
+  'sentence','sentences','sentenced','sentencing',
+  'convict','convicts','convicted','convicting',
+  'commit','commits','committed','committing',
+  'attack','attacks','attacked','attacking',
+  'strike','strikes','struck','striking',
+  'target','targets','targeted','targeting',
+  'meet','meets','met','meeting',
+  'discuss','discusses','discussed','discussing',
+  'agree','agrees','agreed','agreeing',
+  'reject','rejects','rejected','rejecting',
+  'approve','approves','approved','approving',
+  'approve','approves','approved','approving',
+  'order','orders','ordered','ordering',
+  'warn','warns','warned','warning',
+  'urge','urges','urged','urging',
+  'demand','demands','demanded','demanding',
+  'declare','declares','declared','declaring',
+  'release','releases','released','releasing',
+  'publish','publishes','published','publishing',
+  'issue','issues','issued','issuing',
+  'join','joins','joined','joining',
+  'leave','leaves','left','leaving',
+  'return','returns','returned','returning',
+  'arrive','arrives','arrived','arriving',
+  'depart','departs','departed','departing',
+  'create','creates','created','creating',
+  'build','builds','built','building',
+  'develop','develops','developed','developing',
+  'produce','produces','produced','producing',
+  'increase','increases','increased','increasing',
+  'decrease','decreases','decreased','decreasing',
+  'grow','grows','grew','growing',
+  'remain','remains','remained','remaining',
+  'become','becomes','became','becoming',
+  'seem','seems','seemed','seeming',
+  'appear','appears','appeared','appearing',
+  'happen','happens','happened','happening',
+  'occur','occurs','occurred','occurring',
+  'take','takes','took','taking',
+  'make','makes','made','making',
+  'get','gets','got','getting',
+  'set','sets','setting',
+  'put','puts','putting',
+  'bring','brings','brought','bringing',
+  'offer','offers','offered','offering',
+  'provide','provides','provided','providing',
+  'allow','allows','allowed','allowing',
+  'help','helps','helped','helping',
+  'support','supports','supported','supporting',
+  'lead','leads','led','leading',
+  'follow','follows','followed','following',
+  'include','includes','included','including',
+  'involve','involves','involved','involving',
+  'suffer','suffers','suffered','suffering',
+  'affect','affects','affected','affecting',
+  'spark','sparks','sparked','sparking',
+  'trigger','triggers','triggered','triggering',
+  'survive','survives','survived','surviving',
+  'escape','escapes','escaped','escaping',
+  'sweep','sweeps','swept','sweeping',
+  'discover','discovers','discovered','discovering',
+  'bowl','bowls','bowled','bowling',
+  'rule','rules','ruled','ruling',
+  'sell','sells','sold','selling',
+  'buy','buys','bought','buying',
+  'trade','trades','traded','trading',
+  'invest','invests','invested','investing',
+  'score','scores','scored','scoring',
+  'gather','gathers','gathered','gathering',
+]);
+
+interface WordUnit {
+  eng: string;     // original English lowercase
+  urdu: string;    // Urdu translation
+  prep: boolean;   // is English preposition
+  verb: boolean;   // is English verb (non-auxiliary)
+  fixed: boolean;  // already reordered by a higher-priority rule
+}
+
 function translateWord(w: string): string {
   const clean = w.replace(/[^a-zA-Z0-9\-']/g, '');
   const lower = clean.toLowerCase();
@@ -2352,7 +2481,6 @@ function translateWord(w: string): string {
   if (urdu !== undefined) return w.replace(clean, urdu);
   const stemmed = stemWord(lower);
   if (stemmed) return w.replace(clean, stemmed);
-  // Split hyphenated words and translate each part
   if (lower.includes('-')) {
     const parts = lower.split('-');
     const translated = parts.map(p => {
@@ -2366,9 +2494,108 @@ function translateWord(w: string): string {
   return w.replace(clean, transliterateWord(clean));
 }
 
+function getUrdu(word: string): string {
+  const lower = word.toLowerCase();
+  const urdu = ENGLISH_TO_URDU[lower];
+  if (urdu !== undefined) return urdu;
+  const stemmed = stemWord(lower);
+  if (stemmed) return stemmed;
+  return transliterateWord(word);
+}
+
+function swapNounPhraseAndPostposition(units: WordUnit[]): void {
+  for (let i = 0; i < units.length; i++) {
+    if (!units[i].prep || units[i].eng === 'to' || units[i].fixed) continue;
+    if (i + 1 >= units.length) continue;
+    let end = i + 1;
+    while (end < units.length && !units[end].prep && !units[end].verb) end++;
+    if (end > i + 1) {
+      const prep = units.splice(i, 1)[0];
+      units.splice(end - 1, 0, prep);
+      i = end - 1;
+    }
+  }
+}
+
+const PASSIVE_VERBS = new Set(['killed','injured','dead','arrested','wounded','detained','kidnapped','found','expected']);
+
 export function translateToUrdu(englishText: string): string {
-  const words = englishText.split(/\s+/);
-  return words.map(w => translateWord(w)).filter(Boolean).join(' ');
+  const tokens = englishText.split(/\s+/);
+  const units: WordUnit[] = [];
+
+  // Phase 1: translate
+  for (const tok of tokens) {
+    const eng = tok.replace(/[^a-zA-Z0-9\-']/g, '').toLowerCase();
+    units.push({
+      eng,
+      urdu: getUrdu(tok),
+      prep: ENG_PREPOSITIONS.has(eng),
+      verb: ENG_VERBS.has(eng),
+      fixed: false,
+    });
+  }
+
+  // Phase 2: remove "to" before verbs (infinitive marker)
+  for (let i = 0; i < units.length - 1; i++) {
+    if (units[i].eng === 'to' && units[i + 1].verb) {
+      units[i].urdu = '';
+    }
+  }
+
+  // Phase 3: passive reordering — [X] killed [prep] [Y] → [Y] [prep] [X] killed
+  for (let i = 0; i < units.length; i++) {
+    if (PASSIVE_VERBS.has(units[i].eng)) {
+      let prepIdx = -1;
+      for (let j = i + 1; j < units.length; j++) {
+        if (units[j].prep && units[j].eng !== 'to') { prepIdx = j; break; }
+      }
+      if (prepIdx !== -1 && prepIdx < units.length - 1) {
+        const before = units.slice(0, i);
+        const verb = units[i];
+        const prep = units[prepIdx];
+        const afterPrep = units.slice(prepIdx + 1);
+        const middle = units.slice(i + 1, prepIdx);
+        // Correct Urdu order: location + prep + subject + verb
+        const reordered = [...afterPrep, prep, ...before, ...middle, verb];
+        prep.fixed = true;
+        units.length = 0;
+        units.push(...reordered);
+        break;
+      }
+    }
+  }
+
+  // Phase 4: postposition swap (skip prepositions already placed by phase 3)
+  swapNounPhraseAndPostposition(units);
+
+  // Phase 5: verb-final — move the main verb to the end
+  let verbIdx = -1;
+  for (let i = 0; i < units.length - 1; i++) {
+    if (units[i].verb && !units[i].prep && units[i].eng !== 'to') {
+      if (units.slice(i + 1).some(u => u.urdu)) {
+        verbIdx = i;
+        break;
+      }
+    }
+  }
+  if (verbIdx !== -1) {
+    const verb = units.splice(verbIdx, 1)[0];
+    // Insert genitive connector between object noun and action verb
+    // For action verbs like "visit", insert genitive connector after the object
+    if (verb.eng === 'visit' || verb.eng === 'visits' || verb.eng === 'visited') {
+      if (verbIdx < units.length) {
+        units.splice(verbIdx + 1, 0, {
+          eng: '', urdu: 'کا', prep: false, verb: false, fixed: true,
+        });
+      }
+    }
+    units.push(verb);
+  }
+
+  let parts = units.map(u => u.urdu).filter(Boolean);
+  // Remove consecutive duplicate words (e.g., "اضافہ اضافہ")
+  parts = parts.filter((w, i) => i === 0 || w !== parts[i - 1]);
+  return parts.join(' ');
 }
 
 const TWO_LETTER_KEEP = new Set(['ai', 'us', 'uk', 'eu', 'tv', 'pc', 'ceo', 'cfo', 'cto', '5g', '4g', 'psl', 'imf', 'cpec', 'odi', 't20']);
