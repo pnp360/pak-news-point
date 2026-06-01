@@ -2561,41 +2561,21 @@ export function translateToUrdu(englishText: string): string {
   return parts.join(' ');
 }
 
-let dailyCharsUsed = 0;
-const DAILY_LIMIT = 45000;
-let dailyReset = Date.now();
-
-function getDailyChars(): number {
-  const now = Date.now();
-  if (now - dailyReset > 86400000) {
-    dailyCharsUsed = 0;
-    dailyReset = now;
-  }
-  return dailyCharsUsed;
-}
-
 export async function translateToUrduAsync(englishText: string): Promise<string> {
   const sent = englishText.slice(0, 500);
-  if (getDailyChars() + sent.length > DAILY_LIMIT) {
-    console.warn(`Daily API limit reached (${dailyCharsUsed}/${DAILY_LIMIT}), falling back to local`);
-    return translateToUrdu(englishText);
-  }
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 8000);
   try {
-    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(sent)}&langpair=en|ur&de=admin@azadkhabar.com`;
+    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ur&dt=t&q=${encodeURIComponent(sent)}`;
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 8000);
     const res = await fetch(url, { signal: controller.signal });
     clearTimeout(timer);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = (await res.json()) as { responseData?: { translatedText?: string } };
-    if (data.responseData?.translatedText) {
-      dailyCharsUsed = Math.min(dailyCharsUsed + sent.length, DAILY_LIMIT);
-      return data.responseData.translatedText;
-    }
+    const data = (await res.json()) as [[[string, string]]];
+    const translated = data?.[0]?.[0]?.[0];
+    if (translated) return translated;
     throw new Error('No translation');
   } catch (e) {
-    clearTimeout(timer);
-    console.warn('Translation API failed, falling back to local:', (e as Error)?.message || e);
+    console.warn('Google Translate failed, using local:', (e as Error)?.message || e);
     return translateToUrdu(englishText);
   }
 }
