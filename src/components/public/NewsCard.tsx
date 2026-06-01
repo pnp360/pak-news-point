@@ -15,34 +15,20 @@ interface NewsCardProps {
   variant?: 'default' | 'featured' | 'compact';
 }
 
-function NewsImage({
-  src,
-  alt,
-  className,
-  fill,
-}: {
-  src: string;
-  alt: string;
-  className?: string;
-  fill?: boolean;
-}) {
+function NewsImage({ src, alt, className, fill }: { src: string; alt: string; className?: string; fill?: boolean }) {
   if (!src || src === '/images/placeholder.svg') {
     return (
       <div
-        className={`bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center ${className || ''}`}
+        className={`bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center ${className || ''}`}
         style={fill ? { position: 'absolute', inset: 0 } : undefined}
       >
-        <svg className="w-12 h-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg className="w-10 h-10 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
         </svg>
       </div>
     );
   }
-
-  if (fill) {
-    return <Image src={src} alt={alt} fill className={className} unoptimized />;
-  }
-
+  if (fill) return <Image src={src} alt={alt} fill className={className} unoptimized />;
   return <Image src={src} alt={alt} width={400} height={250} className={className} unoptimized />;
 }
 
@@ -50,23 +36,24 @@ export default function NewsCard({
   title, slug, excerpt, featuredImage, category, publishedAt, views, variant = 'default',
 }: NewsCardProps) {
   const imgSrc = getWatermarkedUrl(featuredImage || '');
+
   if (variant === 'featured') {
     return (
-      <Link href={`/news/${slug}`} className="group relative block overflow-hidden rounded-xl">
-        <div className="relative h-[400px] md:h-[500px]">
+      <Link href={`/news/${slug}`} className="group relative block overflow-hidden rounded-2xl shadow-sm">
+        <div className="relative h-[420px] md:h-[520px]">
           <NewsImage
             src={imgSrc}
             alt={title}
             fill
-            className="object-cover group-hover:scale-105 transition-transform duration-500"
+            className="object-cover group-hover:scale-105 transition-transform duration-700"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
         </div>
-        <div className="absolute bottom-0 right-0 left-0 p-6 text-white">
-          <span className="bg-primary-600 text-white px-3 py-1 rounded text-sm inline-block mb-3">
+        <div className="absolute bottom-0 right-0 left-0 p-7 text-white">
+          <span className="bg-primary-600 text-white px-3 py-1 rounded text-sm inline-block mb-3 font-medium">
             {category.nameUrdu}
           </span>
-          <h2 className="text-2xl md:text-3xl font-bold mb-2 line-clamp-3 group-hover:underline">
+          <h2 className="text-2xl md:text-3xl font-bold mb-2 line-clamp-3 group-hover:underline decoration-2 underline-offset-4">
             {title}
           </h2>
           <div className="flex items-center gap-4 text-sm text-gray-300">
@@ -80,8 +67,8 @@ export default function NewsCard({
 
   if (variant === 'compact') {
     return (
-      <Link href={`/news/${slug}`} className="flex gap-3 group">
-        <div className="relative w-24 h-20 shrink-0 rounded-lg overflow-hidden">
+      <Link href={`/news/${slug}`} className="flex gap-3 group items-start">
+        <div className="relative w-28 h-20 shrink-0 rounded-lg overflow-hidden bg-gray-100">
           <NewsImage
             src={imgSrc}
             alt={title}
@@ -90,10 +77,11 @@ export default function NewsCard({
           />
         </div>
         <div className="flex-1 min-w-0">
-          <h3 className="font-medium text-sm line-clamp-2 group-hover:text-primary-600">
+          <span className="text-primary-600 text-xs font-medium">{category.nameUrdu}</span>
+          <h3 className="font-semibold text-sm leading-snug line-clamp-2 mt-0.5 group-hover:text-primary-600 transition-colors">
             {title}
           </h3>
-          <div className="flex items-center gap-2 mt-1 text-xs text-gray-500">
+          <div className="flex items-center gap-2 mt-1.5 text-xs text-gray-400">
             {publishedAt && <span>{timeAgo(publishedAt)}</span>}
           </div>
         </div>
@@ -102,25 +90,27 @@ export default function NewsCard({
   }
 
   return (
-    <Link href={`/news/${slug}`} className="group block">
-      <div className="relative h-48 rounded-xl overflow-hidden mb-3">
-          <NewsImage
-            src={imgSrc}
-            alt={title}
-            fill
-            className="object-cover group-hover:scale-105 transition-transform duration-300"
-          />
+    <Link href={`/news/${slug}`} className="group block rounded-2xl overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow duration-300">
+      <div className="relative aspect-[16/9] overflow-hidden bg-gray-100">
+        <NewsImage
+          src={imgSrc}
+          alt={title}
+          fill
+          className="object-cover group-hover:scale-105 transition-transform duration-500"
+        />
       </div>
-      <span className="text-primary-600 text-sm font-medium">{category.nameUrdu}</span>
-      <h3 className="font-bold text-lg mt-1 mb-2 line-clamp-2 group-hover:text-primary-600">
-        {title}
-      </h3>
-      {excerpt && (
-        <p className="text-gray-600 text-sm line-clamp-2 mb-2">{excerpt}</p>
-      )}
-      <div className="flex items-center gap-3 text-sm text-gray-500">
-        {publishedAt && <span>{timeAgo(publishedAt)}</span>}
-        <span>{formatViews(views)} ملاحظات</span>
+      <div className="p-4">
+        <span className="text-primary-600 text-xs font-semibold uppercase tracking-wide">{category.nameUrdu}</span>
+        <h3 className="font-bold text-base mt-1.5 mb-2 line-clamp-2 leading-snug group-hover:text-primary-600 transition-colors">
+          {title}
+        </h3>
+        {excerpt && (
+          <p className="text-gray-500 text-sm line-clamp-2 mb-3 leading-relaxed">{excerpt}</p>
+        )}
+        <div className="flex items-center gap-3 text-xs text-gray-400">
+          {publishedAt && <span>{timeAgo(publishedAt)}</span>}
+          <span>{formatViews(views)} ملاحظات</span>
+        </div>
       </div>
     </Link>
   );
