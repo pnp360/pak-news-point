@@ -87,8 +87,7 @@ export default async function HomePage() {
     : data.latestArticles.slice(1, 5);
 
   return (
-    <div className="container mx-auto px-4 py-4 max-w-7xl">
-
+    <div className="mx-auto px-4 py-4" style={{ maxWidth: '1440px' }}>
       {/* Breaking News Tickers */}
       <BreakingNews articles={data.breakingArticles} />
       <EnglishBreaking articles={data.englishArticles} />
@@ -122,7 +121,6 @@ export default async function HomePage() {
               </Link>
             </div>
           )}
-
           {/* Side Stories — 1/4 width */}
           <div className="flex flex-col gap-3">
             {heroSideStories.map((story) => (
@@ -176,7 +174,7 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* ════════ MAIN CONTENT + SIDEBAR (with flanking skyscraper ads on desktop) ════════ */}
+      {/* ════════ MAIN CONTENT + SIDEBAR (3-column grid with flanking ads) ════════ */}
       <div className="grid grid-cols-1 xl:grid-cols-[160px_1fr_160px] gap-4 items-start">
 
         {/* Left Skyscraper Ad */}
@@ -185,7 +183,7 @@ export default async function HomePage() {
         </div>
 
         {/* Center: Content + Sidebar */}
-        <div className="flex flex-col lg:flex-row gap-10 min-w-0">
+        <div className="flex flex-col lg:flex-row gap-10 min-w-0" style={{ height: 'auto' }}>
 
           {/* Main Column */}
           <div className="flex-1 min-w-0">
@@ -195,18 +193,14 @@ export default async function HomePage() {
               <SectionHeader title="تازہ ترین خبریں" />
               {data.latestArticles.length > 0 && (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                  {/* First story — spans 2 cols, horizontal layout */}
                   <div className="md:col-span-2">
                     <NewsCard {...(data.latestArticles[0] as any)} variant="featured" />
                   </div>
-                  {/* Second story — takes 1 col */}
                   <div>
                     <NewsCard {...(data.latestArticles[1] as any)} />
                   </div>
-                  {/* Third + Fourth — 2-col grid */}
                   <NewsCard {...(data.latestArticles[2] as any)} />
                   <NewsCard {...(data.latestArticles[3] as any)} />
-                  {/* Row 2: remaining 8 stories in 4-col grid */}
                   {data.latestArticles.slice(4).map((article) => (
                     <NewsCard key={article.id} {...article} />
                   ))}
@@ -222,7 +216,6 @@ export default async function HomePage() {
                 <section key={slug} className="mb-10">
                   <SectionHeader title={category.nameUrdu} href={`/category/${slug}`} />
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
-                    {/* First article — vertically tall, spans 2 cols */}
                     <div className="md:col-span-2 md:row-span-2">
                       <Link href={`/news/${articles[0].slug}`} className="group relative block overflow-hidden rounded-2xl shadow-sm h-full min-h-[300px]">
                         <Image
@@ -239,7 +232,6 @@ export default async function HomePage() {
                         </div>
                       </Link>
                     </div>
-                    {/* Remaining articles */}
                     {articles.slice(1, 5).map((article: any) => (
                       <NewsCard key={article.id} {...article} />
                     ))}
