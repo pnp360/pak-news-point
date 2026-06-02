@@ -12,8 +12,11 @@ export default function EnglishBreaking({ articles }: EnglishBreakingProps) {
           <span className="bg-red-600 text-white px-3 py-0.5 rounded font-bold text-xs shrink-0 uppercase tracking-wider ml-6">
             Breaking
           </span>
-        <div className="overflow-hidden flex-grow px-4">
-          <div className="animate-scroll-left whitespace-nowrap inline-block" style={{ animationDuration: '40s' }}>
+        <div className="overflow-hidden flex-grow">
+          <div
+            className="animate-scroll-left whitespace-nowrap inline-block ml-6"
+            style={{ willChange: 'transform' }}
+          >
             {[...englishOnly, ...englishOnly].map((article, i) => (
               <a
                 key={`en-${article.id}-${i}`}

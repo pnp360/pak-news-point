@@ -33,7 +33,7 @@ const config: Config = {
         },
       },
       animation: {
-        'scroll-left': 'scroll-left 40s linear infinite',
+        'scroll-left': 'scroll-left 60s linear infinite',
       },
     },
   },

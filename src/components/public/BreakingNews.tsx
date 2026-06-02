@@ -11,8 +11,11 @@ export default function BreakingNews({ articles }: BreakingNewsProps) {
           <span className="bg-white text-red-600 px-3 py-1 rounded font-bold text-sm shrink-0 ml-6">
             اہم خبر
           </span>
-        <div className="overflow-hidden flex-grow px-4">
-          <div className="animate-scroll-left whitespace-nowrap inline-block" style={{ animationDuration: '40s' }}>
+        <div className="overflow-hidden flex-grow">
+          <div
+            className="animate-scroll-left whitespace-nowrap inline-block mr-6"
+            style={{ willChange: 'transform' }}
+          >
             {[...articles, ...articles].map((article, i) => (
               <a
                 key={`ur-${article.id}-${i}`}
