@@ -20,14 +20,14 @@ interface Couplet {
 }
 
 const poets: Poet[] = [
-  { name: 'مرزا غالب', era: '1797–1869', description: 'غزل کے بادشاہ، فارسی و اردو کے عظیم شاعر', category: 'کلاسیکی غزل', image: '/images/poets/ghalib.jpg' },
-  { name: 'میر تقی میر', era: '1723–1810', description: 'غزل کی تلخیوں کے ترجمان، میرے الفاظوں کے شاعر', category: 'کلاسیکی غزل', image: '/images/poets/mir.jpg' },
-  { name: 'مرزا انیس', era: '1803–1874', description: 'مرثیہ نگاری کے امام، کربلا کے شاعر', category: 'مرثیہ و نوحہ', image: '/images/poets/anees.jpg' },
-  { name: 'مرزا دبیر', era: '1803–1875', description: 'مرثیہ گو شاعر، انیس کے ہم عصر', category: 'مرثیہ و نوحہ', image: '/images/poets/dabeer.jpg' },
-  { name: 'علامہ اقبال', era: '1877–1938', description: 'شاعر مشرق، فلسفی، نظریہ پاکستان کے خالق', category: 'فلسفیانہ و قومی', image: '/images/poets/iqbal.jpg' },
-  { name: 'فیض احمد فیض', era: '1911–1984', description: 'انقلابی شاعر، محبت اور انصاف کے ترجمان', category: 'فلسفیانہ و قومی', image: '/images/poets/faiz.jpg' },
-  { name: 'احمد فراز', era: '1934–2008', description: 'جدید غزل کے بے تاج بادشاہ', category: 'فلسفیانہ و قومی', image: '/images/poets/faraz.jpg' },
-  { name: 'جان ایلیا', era: '1931–2002', description: 'جدید شاعری کے منفرد لہجے، باغی اور فلسفیانہ شاعر', category: 'فلسفیانہ و قومی', image: '/images/poets/jaun.jpg' },
+  { name: 'مرزا غالب', era: '1797–1869', description: 'غزل کے بادشاہ، فارسی و اردو کے عظیم شاعر', category: 'کلاسیکی غزل', image: 'https://upload.wikimedia.org/wikipedia/commons/d/de/Mirza_Ghalib_portrait.jpg' },
+  { name: 'میر تقی میر', era: '1723–1810', description: 'غزل کی تلخیوں کے ترجمان، میرے الفاظوں کے شاعر', category: 'کلاسیکی غزل', image: 'https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png' },
+  { name: 'مرزا انیس', era: '1803–1874', description: 'مرثیہ نگاری کے امام، کربلا کے شاعر', category: 'مرثیہ و نوحہ', image: 'https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png' },
+  { name: 'مرزا دبیر', era: '1803–1875', description: 'مرثیہ گو شاعر، انیس کے ہم عصر', category: 'مرثیہ و نوحہ', image: 'https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png' },
+  { name: 'علامہ اقبال', era: '1877–1938', description: 'شاعر مشرق، فلسفی، نظریہ پاکستان کے خالق', category: 'فلسفیانہ و قومی', image: 'https://upload.wikimedia.org/wikipedia/commons/e/ef/Allama_Iqbal_1934.jpg' },
+  { name: 'فیض احمد فیض', era: '1911–1984', description: 'انقلابی شاعر، محبت اور انصاف کے ترجمان', category: 'فلسفیانہ و قومی', image: 'https://upload.wikimedia.org/wikipedia/commons/4/4b/Faiz_Ahmed_Faiz_1969.jpg' },
+  { name: 'احمد فراز', era: '1934–2008', description: 'جدید غزل کے بے تاج بادشاہ', category: 'فلسفیانہ و قومی', image: 'https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png' },
+  { name: 'جان ایلیا', era: '1931–2002', description: 'جدید شاعری کے منفرد لہجے، باغی اور فلسفیانہ شاعر', category: 'فلسفیانہ و قومی', image: 'https://upload.wikimedia.org/wikipedia/commons/b/ba/Jaun_Elia.jpg' },
 ];
 
 const coupletOfTheDay: Couplet = {
