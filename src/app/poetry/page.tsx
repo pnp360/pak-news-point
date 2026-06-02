@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 
 /* ──────────────────────── Data ──────────────────────── */
 
@@ -9,6 +10,8 @@ interface Poet {
   era: string;
   description: string;
   category: string;
+  image: string;
+  imageDomain: string;
 }
 
 interface Couplet {
@@ -19,13 +22,14 @@ interface Couplet {
 }
 
 const poets: Poet[] = [
-  { name: 'مرزا غالب', era: '1797–1869', description: 'غزل کے بادشاہ، فارسی و اردو کے عظیم شاعر', category: 'کلاسیکی غزل' },
-  { name: 'میر تقی میر', era: '1723–1810', description: 'غزل کی تلخیوں کے ترجمان، میرے الفاظوں کے شاعر', category: 'کلاسیکی غزل' },
-  { name: 'مرزا انیس', era: '1803–1874', description: 'مرثیہ نگاری کے امام، کربلا کے شاعر', category: 'مرثیہ و نوحہ' },
-  { name: 'مرزا دبیر', era: '1803–1875', description: 'مرثیہ گو شاعر، انیس کے ہم عصر', category: 'مرثیہ و نوحہ' },
-  { name: 'علامہ اقبال', era: '1877–1938', description: 'شاعر مشرق، فلسفی، نظریہ پاکستان کے خالق', category: 'فلسفیانہ و قومی' },
-  { name: 'فیض احمد فیض', era: '1911–1984', description: 'انقلابی شاعر، محبت اور انصاف کے ترجمان', category: 'فلسفیانہ و قومی' },
-  { name: 'احمد فراز', era: '1934–2008', description: 'جدید غزل کے بے تاج بادشاہ', category: 'فلسفیانہ و قومی' },
+  { name: 'مرزا غالب', era: '1797–1869', description: 'غزل کے بادشاہ، فارسی و اردو کے عظیم شاعر', category: 'کلاسیکی غزل', image: '4/4c/Mirza_Ghalib_photograph.jpg', imageDomain: 'upload.wikimedia.org' },
+  { name: 'میر تقی میر', era: '1723–1810', description: 'غزل کی تلخیوں کے ترجمان، میرے الفاظوں کے شاعر', category: 'کلاسیکی غزل', image: '3/3c/Mir_Taqi_Mir_2.jpg', imageDomain: 'upload.wikimedia.org' },
+  { name: 'مرزا انیس', era: '1803–1874', description: 'مرثیہ نگاری کے امام، کربلا کے شاعر', category: 'مرثیہ و نوحہ', image: '4/4f/Mirza_Anees.jpg', imageDomain: 'upload.wikimedia.org' },
+  { name: 'مرزا دبیر', era: '1803–1875', description: 'مرثیہ گو شاعر، انیس کے ہم عصر', category: 'مرثیہ و نوحہ', image: '6/63/Mirza_Salamat_Ali_Dabir.jpg', imageDomain: 'upload.wikimedia.org' },
+  { name: 'علامہ اقبال', era: '1877–1938', description: 'شاعر مشرق، فلسفی، نظریہ پاکستان کے خالق', category: 'فلسفیانہ و قومی', image: '0/0d/Allama_Iqbal.jpg', imageDomain: 'upload.wikimedia.org' },
+  { name: 'فیض احمد فیض', era: '1911–1984', description: 'انقلابی شاعر، محبت اور انصاف کے ترجمان', category: 'فلسفیانہ و قومی', image: '4/45/Faiz_Ahmed_Faiz_in_Peshawar_(cropped).jpg', imageDomain: 'upload.wikimedia.org' },
+  { name: 'احمد فراز', era: '1934–2008', description: 'جدید غزل کے بے تاج بادشاہ', category: 'فلسفیانہ و قومی', image: '67/67e/Ahmed_Faraz.jpg', imageDomain: 'upload.wikimedia.org' },
+  { name: 'جان ایلیا', era: '1931–2002', description: 'جدید شاعری کے منفرد لہجے، باغی اور فلسفیانہ شاعر', category: 'فلسفیانہ و قومی', image: '9/97/Jaun_Elia.jpg', imageDomain: 'upload.wikimedia.org' },
 ];
 
 const coupletOfTheDay: Couplet = {
@@ -46,7 +50,42 @@ const couplets: Couplet[] = [
   { first: 'مؤذن نے کہا اللہ اکبر میں نے سوچا', second: 'بہت خوب مگر کس کی حکومت جا رہی ہے آج', poet: 'فیض احمد فیض', genre: 'نظم' },
   { first: 'اب کے ہم بچھڑے تو شاید کبھی خوابوں میں ملیں', second: 'جس طرح سوکھے ہوئے پھول کتابوں میں ملیں', poet: 'احمد فراز', genre: 'غزل' },
   { first: 'دنیا نے تیری یاد سے بیگانہ کر دیا', second: 'اتنا تو بتا دے تو کسے مانا کر دیا', poet: 'میر تقی میر', genre: 'غزل' },
+  { first: 'غم سے زیادہ اس غم کے احساس نے مارا', second: 'یوں تو ہر موڑ پہ تنہائی تھی لیکن کچھ اور بھی تھا', poet: 'جان ایلیا', genre: 'غزل' },
+  { first: 'ہم کہاں کے سچے تھے کبھی تم نے دیکھا ہی نہیں', second: 'ہم نے خود کو بھی جھٹلایا تو تم نے مانا نہیں', poet: 'جان ایلیا', genre: 'غزل' },
 ];
+
+/* ──────────────────────── PoetCard ──────────────────────── */
+
+function PoetCard({ poet, gradient }: { poet: Poet; gradient: string }) {
+  const [imgError, setImgError] = useState(false);
+  const src = `https://${poet.imageDomain}/${poet.image}`;
+
+  return (
+    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 flex items-center gap-4 hover:shadow-md transition-shadow">
+      <div className="w-14 h-14 rounded-full overflow-hidden shrink-0 bg-gray-100 dark:bg-gray-700 relative">
+        {!imgError ? (
+          <Image
+            src={src}
+            alt={poet.name}
+            fill
+            sizes="56px"
+            className="object-cover"
+            onError={() => setImgError(true)}
+          />
+        ) : (
+          <div className={`w-full h-full flex items-center justify-center text-white text-lg font-bold ${gradient}`}>
+            {poet.name.charAt(0)}
+          </div>
+        )}
+      </div>
+      <div className="font-nastaliq">
+        <h4 className="font-bold text-gray-900 dark:text-gray-100 text-base leading-[2]">{poet.name}</h4>
+        <p className="text-xs text-gray-400 dark:text-gray-500">{poet.era}</p>
+        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-[1.8]">{poet.description}</p>
+      </div>
+    </div>
+  );
+}
 
 /* ──────────────────────── Helpers ──────────────────────── */
 
@@ -56,7 +95,7 @@ function formatCoupletForShare(c: Couplet): string {
 
 /* ──────────────────────── CoupletCard ──────────────────────── */
 
-function CoupletCard({ couplet, index }: { couplet: Couplet; index: number }) {
+function CoupletCard({ couplet }: { couplet: Couplet }) {
   const [toast, setToast] = useState(false);
 
   const handleCopy = async () => {
@@ -217,16 +256,7 @@ export default function PoetryPage() {
             <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-3 tracking-wide">کلاسیکی غزل</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {poets.filter(p => p.category === 'کلاسیکی غزل').map(poet => (
-                <div key={poet.name} className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 flex items-center gap-4 hover:shadow-md transition-shadow">
-                  <div className="w-14 h-14 rounded-full bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center text-white text-lg font-bold shrink-0">
-                    {poet.name.charAt(0)}
-                  </div>
-                  <div className="font-nastaliq">
-                    <h4 className="font-bold text-gray-900 dark:text-gray-100 text-base leading-[2]">{poet.name}</h4>
-                    <p className="text-xs text-gray-400 dark:text-gray-500">{poet.era}</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-[1.8]">{poet.description}</p>
-                  </div>
-                </div>
+                <PoetCard key={poet.name} poet={poet} gradient="bg-gradient-to-br from-primary-500 to-primary-700" />
               ))}
             </div>
           </div>
@@ -236,16 +266,7 @@ export default function PoetryPage() {
             <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-3 tracking-wide">مرثیہ و نوحہ</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {poets.filter(p => p.category === 'مرثیہ و نوحہ').map(poet => (
-                <div key={poet.name} className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 flex items-center gap-4 hover:shadow-md transition-shadow">
-                  <div className="w-14 h-14 rounded-full bg-gradient-to-br from-gray-700 to-gray-900 flex items-center justify-center text-white text-lg font-bold shrink-0">
-                    {poet.name.charAt(0)}
-                  </div>
-                  <div className="font-nastaliq">
-                    <h4 className="font-bold text-gray-900 dark:text-gray-100 text-base leading-[2]">{poet.name}</h4>
-                    <p className="text-xs text-gray-400 dark:text-gray-500">{poet.era}</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-[1.8]">{poet.description}</p>
-                  </div>
-                </div>
+                <PoetCard key={poet.name} poet={poet} gradient="bg-gradient-to-br from-gray-700 to-gray-900" />
               ))}
             </div>
           </div>
@@ -255,16 +276,7 @@ export default function PoetryPage() {
             <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-3 tracking-wide">فلسفیانہ و قومی</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
               {poets.filter(p => p.category === 'فلسفیانہ و قومی').map(poet => (
-                <div key={poet.name} className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 flex items-center gap-4 hover:shadow-md transition-shadow">
-                  <div className="w-14 h-14 rounded-full bg-gradient-to-br from-amber-600 to-amber-800 flex items-center justify-center text-white text-lg font-bold shrink-0">
-                    {poet.name.charAt(0)}
-                  </div>
-                  <div className="font-nastaliq">
-                    <h4 className="font-bold text-gray-900 dark:text-gray-100 text-base leading-[2]">{poet.name}</h4>
-                    <p className="text-xs text-gray-400 dark:text-gray-500">{poet.era}</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-[1.8]">{poet.description}</p>
-                  </div>
-                </div>
+                <PoetCard key={poet.name} poet={poet} gradient="bg-gradient-to-br from-amber-600 to-amber-800" />
               ))}
             </div>
           </div>
@@ -279,7 +291,7 @@ export default function PoetryPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {couplets.map((c, i) => (
-              <CoupletCard key={i} couplet={c} index={i} />
+              <CoupletCard key={i} couplet={c} />
             ))}
           </div>
         </section>
