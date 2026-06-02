@@ -175,15 +175,15 @@ export default async function HomePage() {
       )}
 
       {/* ════════ MAIN CONTENT + SIDEBAR (3-column grid with flanking ads) ════════ */}
-      <div className="grid grid-cols-1 lg:grid-cols-[160px_1fr_160px] gap-5 items-start">
+      <div className="main-news-grid">
 
         {/* Left Skyscraper Ad */}
-        <div className="hidden lg:block sticky top-24">
+        <div className="side-ad-column sticky top-24">
           <AdBanner format="skyscraper" />
         </div>
 
         {/* Center: Content + Sidebar */}
-        <div className="flex flex-col lg:flex-row gap-10 min-w-0 w-full" style={{ height: 'auto' }}>
+        <div className="center-news-feed">
 
           {/* Main Column */}
           <div className="flex-1 min-w-0">
@@ -259,7 +259,7 @@ export default async function HomePage() {
         </div>
 
         {/* Right Skyscraper Ad */}
-        <div className="hidden lg:block sticky top-24">
+        <div className="side-ad-column sticky top-24">
           <AdBanner format="skyscraper" />
         </div>
       </div>
