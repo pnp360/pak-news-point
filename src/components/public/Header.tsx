@@ -23,6 +23,7 @@ const categories = [
   { name: 'سائنس و ٹیکنالوجی', slug: 'technology' },
   { name: 'صحت', slug: 'health' },
   { name: 'تعلیم', slug: 'education' },
+  { name: 'شاعری', slug: 'poetry' },
 ];
 
 export default function Header({ breakingNews = [] }: HeaderProps) {
