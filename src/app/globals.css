@@ -278,3 +278,9 @@ h1, h2, h3 {
     display: none;
   }
 }
+
+.news-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}

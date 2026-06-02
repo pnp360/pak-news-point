@@ -124,24 +124,26 @@ export default async function HomePage() {
           {/* Side Stories — 1/4 width */}
           <div className="flex flex-col gap-3">
             {heroSideStories.map((story) => (
-              <Link key={story.id} href={`/news/${story.slug}`} className="group flex flex-row-reverse gap-3 items-center bg-white rounded-xl p-3 shadow-sm hover:shadow-md transition-shadow border border-gray-100">
-                <div className="relative w-20 h-20 shrink-0 rounded-md overflow-hidden bg-gray-100">
-                  <Image
-                    src={getWatermarkedUrl(story.featuredImage || '')}
-                    alt={story.title}
-                    fill
-                    sizes="80px"
-                    className="object-cover"
-                  />
-                </div>
-                <div className="flex-1 min-w-0 w-full">
-                  <span className="text-xs text-primary-600 font-medium">{story.category?.nameUrdu}</span>
-                  <h3 className="text-sm font-semibold leading-[1.6] mt-0.5 group-hover:text-primary-600 transition-colors">
-                    {story.title}
-                  </h3>
-                  <span className="text-xs text-gray-400 mt-1 block">{story.publishedAt && timeAgo(story.publishedAt)}</span>
-                </div>
-              </Link>
+              <article key={story.id} className="news-card">
+                <Link href={`/news/${story.slug}`} className="group flex flex-row-reverse gap-3 items-center bg-white rounded-xl p-3 shadow-sm hover:shadow-md transition-shadow border border-gray-100">
+                  <div className="relative w-20 h-20 shrink-0 rounded-md overflow-hidden bg-gray-100">
+                    <Image
+                      src={getWatermarkedUrl(story.featuredImage || '')}
+                      alt={story.title}
+                      fill
+                      sizes="80px"
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="flex-1 min-w-0 w-full">
+                    <span className="text-xs text-primary-600 font-medium">{story.category?.nameUrdu}</span>
+                    <h3 className="text-sm font-semibold leading-[1.6] mt-0.5 group-hover:text-primary-600 transition-colors">
+                      {story.title}
+                    </h3>
+                    <span className="text-xs text-gray-400 mt-1 block">{story.publishedAt && timeAgo(story.publishedAt)}</span>
+                  </div>
+                </Link>
+              </article>
             ))}
           </div>
         </div>
@@ -217,20 +219,22 @@ export default async function HomePage() {
                   <SectionHeader title={category.nameUrdu} href={`/category/${slug}`} />
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
                     <div className="md:col-span-2 md:row-span-2">
-                      <Link href={`/news/${articles[0].slug}`} className="group relative block overflow-hidden rounded-2xl shadow-sm h-full min-h-[300px]">
-                        <Image
-                          src={getWatermarkedUrl(articles[0].featuredImage || '')}
-                          alt={articles[0].title}
-                          fill
-                          sizes="(max-width: 768px) 100vw, 50vw"
-                          className="object-cover group-hover:scale-105 transition-transform duration-500"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                        <div className="absolute bottom-0 right-0 left-0 p-5 text-white flex flex-col">
-                          <h3 className="text-lg font-bold leading-[2] group-hover:underline">{articles[0].title}</h3>
-                          <span className="text-xs text-gray-300 mt-1 block">{articles[0].publishedAt && timeAgo(articles[0].publishedAt)}</span>
-                        </div>
-                      </Link>
+                      <article className="news-card h-full">
+                        <Link href={`/news/${articles[0].slug}`} className="group relative block overflow-hidden rounded-2xl shadow-sm h-full min-h-[300px]">
+                          <Image
+                            src={getWatermarkedUrl(articles[0].featuredImage || '')}
+                            alt={articles[0].title}
+                            fill
+                            sizes="(max-width: 768px) 100vw, 50vw"
+                            className="object-cover group-hover:scale-105 transition-transform duration-500"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                          <div className="absolute bottom-0 right-0 left-0 p-5 text-white flex flex-col">
+                            <h3 className="text-lg font-bold leading-[2] group-hover:underline">{articles[0].title}</h3>
+                            <span className="text-xs text-gray-300 mt-1 block">{articles[0].publishedAt && timeAgo(articles[0].publishedAt)}</span>
+                          </div>
+                        </Link>
+                      </article>
                     </div>
                     {articles.slice(1, 5).map((article: any) => (
                       <NewsCard key={article.id} {...article} />
