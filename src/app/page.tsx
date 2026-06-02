@@ -100,7 +100,7 @@ export default async function HomePage() {
             <div className="lg:col-span-3">
               <Link href={`/news/${mainFeatured.slug}`} className="group relative block overflow-hidden rounded-2xl shadow-sm h-full min-h-[450px] md:min-h-[550px]">
                 <Image
-                  src={getWatermarkedUrl(mainFeatured.featuredImage || '')}
+                  src={getWatermarkedUrl(mainFeatured.featuredImage || 'https://images.unsplash.com/photo-1555333145-deb2e18f22b0?w=1200&q=80')}
                   alt={mainFeatured.title}
                   fill
                   sizes="(max-width: 1024px) 100vw, 75vw"
@@ -124,8 +124,8 @@ export default async function HomePage() {
           {/* Side Stories — 1/4 width */}
           <div className="flex flex-col gap-3">
             {heroSideStories.map((story) => (
-              <Link key={story.id} href={`/news/${story.slug}`} className="group flex gap-3 items-start bg-white rounded-xl p-3 shadow-sm hover:shadow-md transition-shadow border border-gray-100">
-                <div className="relative w-20 h-16 shrink-0 rounded-lg overflow-hidden bg-gray-100">
+              <Link key={story.id} href={`/news/${story.slug}`} className="group flex flex-row-reverse gap-3 items-center bg-white rounded-xl p-3 shadow-sm hover:shadow-md transition-shadow border border-gray-100">
+                <div className="relative w-20 h-20 shrink-0 rounded-md overflow-hidden bg-gray-100">
                   <Image
                     src={getWatermarkedUrl(story.featuredImage || '')}
                     alt={story.title}
@@ -136,7 +136,7 @@ export default async function HomePage() {
                 </div>
                 <div className="flex-1 min-w-0 w-full">
                   <span className="text-xs text-primary-600 font-medium">{story.category?.nameUrdu}</span>
-                  <h3 className="text-sm font-semibold leading-[1.5] mt-0.5 group-hover:text-primary-600 transition-colors">
+                  <h3 className="text-sm font-semibold leading-[1.6] mt-0.5 group-hover:text-primary-600 transition-colors">
                     {story.title}
                   </h3>
                   <span className="text-xs text-gray-400 mt-1 block">{story.publishedAt && timeAgo(story.publishedAt)}</span>
