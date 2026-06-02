@@ -2,6 +2,7 @@ export const dynamic = 'force-dynamic';
 
 import { prisma } from '@/lib/prisma';
 import NewsCard from '@/components/public/NewsCard';
+import AdBanner from '@/components/public/AdBanner';
 import Pagination from '@/components/public/Pagination';
 
 interface Props {
@@ -65,18 +66,26 @@ export default async function SearchPage({ searchParams }: Props) {
           <p className="mt-2">براہ کرم دوسرے کلیدی الفاظ سے تلاش کریں</p>
         </div>
       ) : (
-        <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {articles.map((article) => (
-              <NewsCard key={article.id} {...article} />
-            ))}
+        <div className="grid grid-cols-1 xl:grid-cols-[160px_1fr_160px] gap-4 items-start">
+          <div className="hidden xl:block sticky top-24">
+            <AdBanner format="skyscraper" />
           </div>
-          <Pagination
-            currentPage={page}
-            totalPages={totalPages}
-            basePath="/search"
-          />
-        </>
+          <div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {articles.map((article) => (
+                <NewsCard key={article.id} {...article} />
+              ))}
+            </div>
+            <Pagination
+              currentPage={page}
+              totalPages={totalPages}
+              basePath="/search"
+            />
+          </div>
+          <div className="hidden xl:block sticky top-24">
+            <AdBanner format="skyscraper" />
+          </div>
+        </div>
       )}
     </div>
   );

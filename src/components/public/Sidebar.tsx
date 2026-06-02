@@ -2,6 +2,7 @@ import Link from 'next/link';
 import WeatherWidget from './WeatherWidget';
 import PrayerTimesWidget from './PrayerTimesWidget';
 import RatesWidget from './RatesWidget';
+import AdBanner from './AdBanner';
 
 interface SidebarArticle {
   id: string;
@@ -36,7 +37,7 @@ export default function Sidebar({ trending, latest }: SidebarProps) {
                 {String(i + 1).padStart(2, '0')}
               </span>
               <div className="flex-1 min-w-0">
-                <h4 className="text-sm font-medium line-clamp-2 group-hover:text-primary-600">
+                <h4 className="text-sm font-medium leading-[1.5] group-hover:text-primary-600">
                   {article.title}
                 </h4>
               </div>
@@ -72,13 +73,8 @@ export default function Sidebar({ trending, latest }: SidebarProps) {
         <PrayerTimesWidget />
       </div>
 
-      {/* Ad Placeholder */}
-      <div className="bg-gray-100 rounded-xl p-5 text-center">
-        <p className="text-gray-400 text-sm">اشتہار کی جگہ</p>
-        <div className="h-24 flex items-center justify-center border-2 border-dashed border-gray-300 rounded-lg mt-2">
-          <span className="text-gray-400">AdSense Ad</span>
-        </div>
-      </div>
+      {/* Ad Banner */}
+      <AdBanner format="sidebar" />
     </aside>
   );
 }

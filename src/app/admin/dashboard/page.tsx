@@ -4,13 +4,14 @@ import { prisma } from '@/lib/prisma';
 import { getTodayPublishedCount, getDailyLimit } from '@/lib/daily-limit';
 import { toUrduNumber } from '@/lib/urdu';
 import Link from 'next/link';
-import { HiDocumentText, HiEye, HiCollection, HiTag, HiUserGroup, HiExclamation } from 'react-icons/hi';
+import { HiDocumentText, HiEye, HiCollection, HiTag, HiUserGroup, HiExclamation, HiChat, HiPencilAlt, HiVideoCamera } from 'react-icons/hi';
 import FetchNewsButton from '@/components/admin/FetchNewsButton';
 
 async function getDashboardStats() {
   const [
     totalArticles, publishedToday, dailyLimit, totalViews, totalCategories,
-    totalTags, totalUsers, draftCount, scheduledCount, publishedCount, breakingCount,
+    totalTags, totalUsers, draftCount, scheduledCount, publishedCount, breakingCount, pendingComments,
+    totalColumns, totalVideos,
   ] = await Promise.all([
     prisma.article.count(),
     getTodayPublishedCount(),
@@ -23,11 +24,15 @@ async function getDashboardStats() {
     prisma.article.count({ where: { status: 'SCHEDULED' } }),
     prisma.article.count({ where: { status: 'PUBLISHED' } }),
     prisma.article.count({ where: { isBreaking: true, status: 'PUBLISHED' } }),
+    prisma.comment.count({ where: { isApproved: false } }),
+    prisma.columnArticle.count(),
+    prisma.video.count(),
   ]);
 
   return {
     totalArticles, publishedToday, dailyLimit, totalViews: totalViews._sum.views || 0,
-    totalCategories, totalTags, totalUsers, draftCount, scheduledCount, publishedCount, breakingCount,
+    totalCategories, totalTags, totalUsers, draftCount, scheduledCount, publishedCount, breakingCount, pendingComments,
+    totalColumns, totalVideos,
   };
 }
 
@@ -40,9 +45,12 @@ export default async function AdminDashboard() {
     { label: 'ڈرافٹ', value: stats.draftCount, icon: HiExclamation, color: 'bg-yellow-500' },
     { label: 'بریکنگ', value: stats.breakingCount, icon: HiExclamation, color: 'bg-red-500' },
     { label: 'کل ملاحظات', value: stats.totalViews, icon: HiEye, color: 'bg-purple-500' },
+    { label: 'کالمز', value: stats.totalColumns, icon: HiPencilAlt, color: 'bg-indigo-500', link: '/admin/columns' },
+    { label: 'ویڈیوز', value: stats.totalVideos, icon: HiVideoCamera, color: 'bg-pink-500', link: '/admin/videos' },
     { label: 'زمرہ جات', value: stats.totalCategories, icon: HiCollection, color: 'bg-indigo-500' },
     { label: 'ٹیگز', value: stats.totalTags, icon: HiTag, color: 'bg-pink-500' },
     { label: 'صارفین', value: stats.totalUsers, icon: HiUserGroup, color: 'bg-teal-500' },
+    { label: 'زیر التواء تبصرے', value: stats.pendingComments, icon: HiChat, color: 'bg-orange-500', link: '/admin/comments' },
   ];
 
   return (
@@ -81,8 +89,8 @@ export default async function AdminDashboard() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {cards.map((card) => {
           const Icon = card.icon;
-          return (
-            <div key={card.label} className="bg-white rounded-xl shadow-sm p-5">
+          const content = (
+            <div className="bg-white rounded-xl shadow-sm p-5">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-gray-500 text-sm">{card.label}</p>
@@ -94,6 +102,10 @@ export default async function AdminDashboard() {
               </div>
             </div>
           );
+          if (card.link) {
+            return <Link key={card.label} href={card.link}>{content}</Link>;
+          }
+          return <div key={card.label}>{content}</div>;
         })}
       </div>
 
@@ -113,6 +125,24 @@ export default async function AdminDashboard() {
             className="bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700"
           >
             زمرہ جات کا نظم کریں
+          </Link>
+          <Link
+            href="/admin/columns/new"
+            className="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700"
+          >
+            نیا کالم تحریر کریں
+          </Link>
+          <Link
+            href="/admin/videos/new"
+            className="bg-pink-600 text-white px-6 py-3 rounded-lg hover:bg-pink-700"
+          >
+            نئی ویڈیو شامل کریں
+          </Link>
+          <Link
+            href="/admin/comments"
+            className="bg-orange-600 text-white px-6 py-3 rounded-lg hover:bg-orange-700"
+          >
+            تبصروں کا نظم کریں
           </Link>
           <Link
             href="/admin/settings"

@@ -32,7 +32,7 @@ export default function Footer() {
               <li><Link href="/about" className="hover:text-white transition-colors">ہمارے بارے میں</Link></li>
               <li><Link href="/contact" className="hover:text-white transition-colors">رابطہ</Link></li>
               <li><Link href="/search" className="hover:text-white transition-colors">خبریں تلاش کریں</Link></li>
-              <li><Link href="/privacy-policy" className="hover:text-white transition-colors">پرائیویسی پالیسی</Link></li>
+              <li><Link href="/privacy-policy" className="hover:text-white transition-colors">رازداری کی پالیسی</Link></li>
               <li><Link href="/terms" className="hover:text-white transition-colors">شرائط و ضوابط</Link></li>
             </ul>
           </div>
@@ -45,11 +45,11 @@ export default function Footer() {
                 </a>
               ))}
             </div>
-            <h4 className="text-white font-bold mb-3">نیوز لیٹر</h4>
+            <h4 className="text-white font-bold mb-3">خبرنامہ</h4>
             <p className="text-sm mb-3">تازہ ترین خبریں اپنی ای میل پر حاصل کریں</p>
             <form className="flex gap-2">
               <input type="email" placeholder="آپ کا ای میل" className="flex-1 px-3 py-2 rounded bg-gray-800 border border-gray-700 text-sm focus:outline-none focus:border-primary-500" />
-              <button type="button" className="bg-primary-600 text-white px-4 py-2 rounded text-sm hover:bg-primary-700 transition-colors">سبسکرائب</button>
+              <button type="button" className="bg-primary-600 text-white px-4 py-2 rounded text-sm hover:bg-primary-700 transition-colors">سبسکرائب کریں</button>
             </form>
           </div>
         </div>

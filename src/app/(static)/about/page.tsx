@@ -1,6 +1,6 @@
 export const metadata = {
   title: 'ہمارے بارے میں',
-  description: 'Azad Khabar کے بارے میں معلومات',
+  description: 'آزاد خبر کے بارے میں معلومات',
 };
 
 export default function AboutPage() {
@@ -10,7 +10,7 @@ export default function AboutPage() {
         <h1 className="text-3xl font-bold mb-6">ہمارے بارے میں</h1>
         <div className="prose prose-lg leading-loose space-y-4">
           <p>
-            Azad Khabar ایک معروف اردو خبروں کی ویب سائٹ ہے جو پاکستان
+            آزاد خبر ایک معروف اردو خبروں کی ویب سائٹ ہے جو پاکستان
             بھر سے تازہ ترین خبریں فراہم کرتی ہے۔
           </p>
           <p>
@@ -21,7 +21,7 @@ export default function AboutPage() {
           <h2 className="text-2xl font-bold mt-8 mb-4">ہمارا وژن</h2>
           <p>
             پاکستان کی سب سے بھروسہ مند اردو نیوز ویب سائٹ بننا اور عوام کو
-            معیاری صحافت فراہم کرنا۔
+            اعلیٰ معیار کی صحافت فراہم کرنا۔
           </p>
           <h2 className="text-2xl font-bold mt-8 mb-4">ہماری ٹیم</h2>
           <p>

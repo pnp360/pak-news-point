@@ -5,13 +5,17 @@ import { usePathname } from 'next/navigation';
 import { signOut } from 'next-auth/react';
 import {
   HiHome, HiDocumentText, HiCollection, HiTag, HiUsers,
-  HiPhotograph, HiCog, HiLogout, HiMenu, HiX, HiSparkles,
+  HiPhotograph, HiCog, HiLogout, HiMenu, HiX, HiSparkles, HiChat,
+  HiPencilAlt, HiVideoCamera,
 } from 'react-icons/hi';
 import { useState } from 'react';
 
 const menuItems = [
   { href: '/admin/dashboard', label: 'ڈیش بورڈ', icon: HiHome },
   { href: '/admin/news', label: 'خبریں', icon: HiDocumentText },
+  { href: '/admin/columns', label: 'کالمز', icon: HiPencilAlt },
+  { href: '/admin/videos', label: 'ویڈیوز', icon: HiVideoCamera },
+  { href: '/admin/comments', label: 'تبصرے', icon: HiChat },
   { href: '/admin/categories', label: 'زمرہ جات', icon: HiCollection },
   { href: '/admin/tags', label: 'ٹیگز', icon: HiTag },
   { href: '/admin/users', label: 'صارفین', icon: HiUsers },

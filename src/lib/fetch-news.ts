@@ -2,6 +2,7 @@ import { prisma } from '@/lib/prisma';
 import { FEED_CONFIG, parser } from '@/lib/rss-fetcher';
 import { translateToUrduAsync, translateToUrdu } from '@/lib/translate';
 import { autoFetchImageForArticle, resetUsedUrls } from '@/lib/image-fetcher';
+import { applyUrduJournalism } from '@/lib/urdu-journalism';
 import { incrementPublishedCount } from '@/lib/daily-limit';
 
 const CATEGORY_SLUG_MAP: Record<string, string> = {
@@ -102,7 +103,7 @@ export async function fetchAllFeeds(): Promise<{
             }
             if (isDuplicate) continue;
 
-            const urduTitle = await translateToUrduAsync(englishTitle);
+            const urduTitle = applyUrduJournalism(await translateToUrduAsync(englishTitle), true);
 
             const existingUrdu = await prisma.article.findFirst({
               where: { title: { contains: urduTitle.slice(0, 40) } },
@@ -110,13 +111,13 @@ export async function fetchAllFeeds(): Promise<{
             });
             if (existingUrdu) continue;
 
-            const description = item.contentSnippet || item.content || item.summary || '';
-            const urduDescription = description ? await translateToUrduAsync(description.slice(0, 300)) : '';
+            const description = item.contentSnippet || item.content || item.summary || (item as any).description || '';
+            const urduDescription = description ? applyUrduJournalism(await translateToUrduAsync(description.slice(0, 300))) : '';
             const excerpt = urduDescription.slice(0, 200) || urduTitle;
 
             const content = item['content:encoded'] || item.content || description || englishTitle;
             const rawContent = content.replace(/<[^>]*>/g, '').slice(0, 1500);
-            const translatedContent = rawContent.trim() ? await translateToUrduAsync(rawContent) : urduTitle;
+            const translatedContent = rawContent.trim() ? applyUrduJournalism(await translateToUrduAsync(rawContent)) : urduTitle;
             const formattedParagraphs = translatedContent
               .split(/[۔\.\?\!]\s*/)
               .filter(Boolean)

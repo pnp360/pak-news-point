@@ -13,15 +13,12 @@ export default function EnglishBreaking({ articles }: EnglishBreakingProps) {
           Breaking
         </span>
         <div className="overflow-hidden flex-1">
-          <div
-            className="news-ticker whitespace-nowrap flex gap-12"
-            style={{ animationDuration: '40s' }}
-          >
+          <div className="animate-scroll-left whitespace-nowrap inline-block" style={{ animationDuration: '40s' }}>
             {[...englishOnly, ...englishOnly].map((article, i) => (
               <a
                 key={`en-${article.id}-${i}`}
                 href={`/news/${article.slug}`}
-                className="hover:underline inline-block text-xs md:text-sm shrink-0"
+                className="hover:underline inline-block text-xs md:text-sm mx-4"
               >
                 {article.originalTitle}
               </a>

@@ -37,19 +37,26 @@ function generateWatermarkSvg(width: number): Buffer {
 
 export async function processImage(imageBuffer: Buffer): Promise<Buffer> {
   const metadata = await sharp(imageBuffer).metadata();
-  const w = metadata.width!;
+  let w = metadata.width!;
   const h = metadata.height!;
+
+  const MIN_W = 1200;
+  let pipeline = sharp(imageBuffer);
+  if (w < MIN_W) {
+    pipeline = sharp(imageBuffer).resize(MIN_W, undefined, { kernel: 'lanczos3', fit: 'outside' });
+    w = MIN_W;
+  }
 
   const watermarkSvg = generateWatermarkSvg(w);
 
-  return sharp(imageBuffer)
+  return pipeline
     .composite([
       {
         input: watermarkSvg,
         gravity: 'southeast',
       },
     ])
-    .jpeg({ quality: 95 })
+    .jpeg({ quality: 100 })
     .toBuffer();
 }
 
@@ -63,8 +70,7 @@ export function isValidImageUrl(url: string): boolean {
 }
 
 function getCacheBuster(): number {
-  const now = Date.now();
-  return Math.floor(now / 3600000);
+  return 2;
 }
 
 export function getWatermarkedUrl(url: string): string {

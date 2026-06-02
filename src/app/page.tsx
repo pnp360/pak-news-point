@@ -9,6 +9,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { getWatermarkedUrl } from '@/lib/watermark';
 import { timeAgo } from '@/lib/urdu';
+import AdBanner from '@/components/public/AdBanner';
 
 async function getHomepageData() {
   const [breakingArticles, englishArticles, featuredArticles, latestArticles, trendingArticles] = await Promise.all([
@@ -98,19 +99,20 @@ export default async function HomePage() {
           {/* Main Hero — 3/4 width */}
           {mainFeatured && (
             <div className="lg:col-span-3">
-              <Link href={`/news/${mainFeatured.slug}`} className="group relative block overflow-hidden rounded-2xl shadow-sm h-full min-h-[400px] md:min-h-[500px]">
+              <Link href={`/news/${mainFeatured.slug}`} className="group relative block overflow-hidden rounded-2xl shadow-sm h-full min-h-[450px] md:min-h-[550px]">
                 <Image
                   src={getWatermarkedUrl(mainFeatured.featuredImage || '')}
                   alt={mainFeatured.title}
                   fill
+                  sizes="(max-width: 1024px) 100vw, 75vw"
                   className="object-cover group-hover:scale-105 transition-transform duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
-                <div className="absolute bottom-0 right-0 left-0 p-6 md:p-8 text-white">
-                  <span className="bg-primary-600 text-white px-3 py-1 rounded text-xs font-semibold inline-block mb-3 uppercase tracking-wider">
+                <div className="absolute bottom-0 right-0 left-0 p-6 md:p-8 text-white flex flex-col">
+                  <span className="bg-primary-600 text-white px-3 py-1 rounded text-xs font-semibold inline-block mb-3 uppercase tracking-wider self-start">
                     {mainFeatured.category?.nameUrdu}
                   </span>
-                  <h1 className="text-2xl md:text-4xl font-bold mb-2 line-clamp-3 group-hover:underline decoration-2 underline-offset-4">
+                  <h1 className="text-2xl md:text-3xl font-bold leading-[2] mb-3 group-hover:underline decoration-2 underline-offset-4">
                     {mainFeatured.title}
                   </h1>
                   <div className="flex items-center gap-3 text-sm text-gray-300">
@@ -130,12 +132,13 @@ export default async function HomePage() {
                     src={getWatermarkedUrl(story.featuredImage || '')}
                     alt={story.title}
                     fill
+                    sizes="80px"
                     className="object-cover"
                   />
                 </div>
                 <div className="flex-1 min-w-0">
                   <span className="text-xs text-primary-600 font-medium">{story.category?.nameUrdu}</span>
-                  <h3 className="text-sm font-semibold leading-snug line-clamp-2 mt-0.5 group-hover:text-primary-600 transition-colors">
+                  <h3 className="text-sm font-semibold leading-[1.6] mt-0.5 group-hover:text-primary-600 transition-colors">
                     {story.title}
                   </h3>
                   <span className="text-xs text-gray-400 mt-1 block">{story.publishedAt && timeAgo(story.publishedAt)}</span>
@@ -145,6 +148,11 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Leaderboard Ad */}
+      <div className="mb-8">
+        <AdBanner format="leaderboard" />
+      </div>
 
       {/* ════════ TRENDING STRIP ════════ */}
       {data.trendingArticles.length > 0 && (
@@ -161,91 +169,106 @@ export default async function HomePage() {
                 className="flex items-center gap-2 whitespace-nowrap hover:bg-white/10 px-3 py-2 rounded-lg transition-colors shrink-0"
               >
                 <span className="text-lg font-bold text-white/50 tabular-nums">{String(i + 1).padStart(2, '0')}</span>
-                <span className="text-sm font-medium line-clamp-1">{article.title}</span>
+                <span className="text-sm font-medium">{article.title}</span>
               </Link>
             ))}
           </div>
         </section>
       )}
 
-      {/* ════════ MAIN CONTENT + SIDEBAR ════════ */}
-      <div className="flex flex-col lg:flex-row gap-10">
+      {/* ════════ MAIN CONTENT + SIDEBAR (with flanking skyscraper ads on desktop) ════════ */}
+      <div className="grid grid-cols-1 xl:grid-cols-[160px_1fr_160px] gap-4 items-start">
 
-        {/* Main Column */}
-        <div className="flex-1 min-w-0">
+        {/* Left Skyscraper Ad */}
+        <div className="hidden xl:block sticky top-24">
+          <AdBanner format="skyscraper" />
+        </div>
 
-          {/* LATEST NEWS — Magazine Grid */}
-          <section className="mb-10">
-            <SectionHeader title="تازہ ترین خبریں" />
-            {data.latestArticles.length > 0 && (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                {/* First story — spans 2 cols, horizontal layout */}
-                <div className="md:col-span-2">
-                  <NewsCard {...(data.latestArticles[0] as any)} variant="featured" />
-                </div>
-                {/* Second story — takes 1 col */}
-                <div>
-                  <NewsCard {...(data.latestArticles[1] as any)} />
-                </div>
-                {/* Third + Fourth — 2-col grid */}
-                <NewsCard {...(data.latestArticles[2] as any)} />
-                <NewsCard {...(data.latestArticles[3] as any)} />
-                {/* Row 2: remaining 8 stories in 4-col grid */}
-                {data.latestArticles.slice(4).map((article) => (
-                  <NewsCard key={article.id} {...article} />
-                ))}
-              </div>
-            )}
-          </section>
+        {/* Center: Content + Sidebar */}
+        <div className="flex flex-col lg:flex-row gap-10 min-w-0">
 
-          {/* CATEGORY ZONES */}
-          {Object.entries(data.categoryArticles).slice(0, 6).map(([slug, articles]) => {
-            const category = data.categories.find((c) => c.slug === slug);
-            if (!category || articles.length === 0) return null;
-            return (
-              <section key={slug} className="mb-10">
-                <SectionHeader title={category.nameUrdu} href={`/category/${slug}`} />
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
-                  {/* First article — vertically tall, spans 2 cols */}
-                  <div className="md:col-span-2 md:row-span-2">
-                    <Link href={`/news/${articles[0].slug}`} className="group relative block overflow-hidden rounded-2xl shadow-sm h-full min-h-[300px]">
-                      <Image
-                        src={getWatermarkedUrl(articles[0].featuredImage || '')}
-                        alt={articles[0].title}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                      <div className="absolute bottom-0 right-0 left-0 p-5 text-white">
-                        <h3 className="text-lg font-bold line-clamp-3 group-hover:underline">{articles[0].title}</h3>
-                        <span className="text-xs text-gray-300 mt-1 block">{articles[0].publishedAt && timeAgo(articles[0].publishedAt)}</span>
-                      </div>
-                    </Link>
+          {/* Main Column */}
+          <div className="flex-1 min-w-0">
+
+            {/* LATEST NEWS — Magazine Grid */}
+            <section className="mb-10">
+              <SectionHeader title="تازہ ترین خبریں" />
+              {data.latestArticles.length > 0 && (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                  {/* First story — spans 2 cols, horizontal layout */}
+                  <div className="md:col-span-2">
+                    <NewsCard {...(data.latestArticles[0] as any)} variant="featured" />
                   </div>
-                  {/* Remaining articles */}
-                  {articles.slice(1, 5).map((article: any) => (
+                  {/* Second story — takes 1 col */}
+                  <div>
+                    <NewsCard {...(data.latestArticles[1] as any)} />
+                  </div>
+                  {/* Third + Fourth — 2-col grid */}
+                  <NewsCard {...(data.latestArticles[2] as any)} />
+                  <NewsCard {...(data.latestArticles[3] as any)} />
+                  {/* Row 2: remaining 8 stories in 4-col grid */}
+                  {data.latestArticles.slice(4).map((article) => (
                     <NewsCard key={article.id} {...article} />
                   ))}
                 </div>
-              </section>
-            );
-          })}
+              )}
+            </section>
 
-          {/* NEWSLETTER CTA */}
-          <section className="mb-10 bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-8 text-white text-center">
-            <h2 className="text-2xl font-bold mb-2">تازہ ترین خبریں اپنے ان باکس میں حاصل کریں</h2>
-            <p className="text-gray-400 mb-5">روزانہ کی اہم خبریں اور اپ ڈیٹس براہ راست اپنی ای میل پر</p>
-            <form className="flex gap-3 max-w-md mx-auto" action="#">
-              <input type="email" placeholder="ای میل ایڈریس درج کریں" className="flex-1 px-4 py-3 rounded-xl text-gray-900 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500" />
-              <button type="button" className="bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-xl text-sm font-semibold transition-colors">سبسکرائب</button>
-            </form>
-          </section>
+            {/* CATEGORY ZONES */}
+            {Object.entries(data.categoryArticles).slice(0, 6).map(([slug, articles]) => {
+              const category = data.categories.find((c) => c.slug === slug);
+              if (!category || articles.length === 0) return null;
+              return (
+                <section key={slug} className="mb-10">
+                  <SectionHeader title={category.nameUrdu} href={`/category/${slug}`} />
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
+                    {/* First article — vertically tall, spans 2 cols */}
+                    <div className="md:col-span-2 md:row-span-2">
+                      <Link href={`/news/${articles[0].slug}`} className="group relative block overflow-hidden rounded-2xl shadow-sm h-full min-h-[300px]">
+                        <Image
+                          src={getWatermarkedUrl(articles[0].featuredImage || '')}
+                          alt={articles[0].title}
+                          fill
+                          sizes="(max-width: 768px) 100vw, 50vw"
+                          className="object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                        <div className="absolute bottom-0 right-0 left-0 p-5 text-white flex flex-col">
+                          <h3 className="text-lg font-bold leading-[2] group-hover:underline">{articles[0].title}</h3>
+                          <span className="text-xs text-gray-300 mt-1 block">{articles[0].publishedAt && timeAgo(articles[0].publishedAt)}</span>
+                        </div>
+                      </Link>
+                    </div>
+                    {/* Remaining articles */}
+                    {articles.slice(1, 5).map((article: any) => (
+                      <NewsCard key={article.id} {...article} />
+                    ))}
+                  </div>
+                </section>
+              );
+            })}
 
+            {/* NEWSLETTER CTA */}
+            <section className="mb-10 bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-8 text-white text-center">
+              <h2 className="text-2xl font-bold mb-2">تازہ ترین خبریں اپنی ای میل پر حاصل کریں</h2>
+              <p className="text-gray-400 mb-5">روزانہ کی اہم خبریں اور خصوصی اپ ڈیٹس براہ راست اپنی ان باکس میں</p>
+              <form className="flex gap-3 max-w-md mx-auto" action="#">
+                <input type="email" placeholder="ای میل ایڈریس درج کریں" className="flex-1 px-4 py-3 rounded-xl text-gray-900 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500" />
+                <button type="button" className="bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-xl text-sm font-semibold transition-colors">سبسکرائب کریں</button>
+              </form>
+            </section>
+
+          </div>
+
+          {/* Sidebar */}
+          <div className="w-full lg:w-80 shrink-0">
+            <Sidebar trending={data.trendingArticles} latest={data.latestArticles} />
+          </div>
         </div>
 
-        {/* Sidebar */}
-        <div className="w-full lg:w-80 shrink-0">
-          <Sidebar trending={data.trendingArticles} latest={data.latestArticles} />
+        {/* Right Skyscraper Ad */}
+        <div className="hidden xl:block sticky top-24">
+          <AdBanner format="skyscraper" />
         </div>
       </div>
     </div>

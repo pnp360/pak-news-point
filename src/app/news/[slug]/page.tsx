@@ -10,6 +10,8 @@ import { formatViews, getReadingTime } from '@/lib/utils';
 import { getWatermarkedUrl } from '@/lib/watermark';
 import NewsCard from '@/components/public/NewsCard';
 import ShareButtons from '@/components/public/ShareButtons';
+import CommentSection from '@/components/public/CommentSection';
+import AdBanner from '@/components/public/AdBanner';
 
 interface Props {
   params: { slug: string };
@@ -125,7 +127,7 @@ export default async function ArticlePage({ params }: Props) {
           </span>
 
           {/* Title */}
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-4 text-gray-900">
+          <h1 className="text-2xl md:text-3xl lg:text-4xl font-semibold leading-[1.6] mb-4 text-gray-900">
             {article.title}
           </h1>
 
@@ -173,6 +175,7 @@ export default async function ArticlePage({ params }: Props) {
                   src={getWatermarkedUrl(article.featuredImage)}
                   alt={article.title}
                   fill
+                  sizes="(max-width: 768px) 100vw, 800px"
                   className="object-cover"
                   priority
                 />
@@ -188,6 +191,9 @@ export default async function ArticlePage({ params }: Props) {
             className="article-content text-lg leading-loose text-gray-800"
             dangerouslySetInnerHTML={{ __html: article.content }}
           />
+
+          {/* In-content Ad */}
+          <AdBanner format="in-content" />
 
           {/* Tags */}
           {article.tags.length > 0 && (
@@ -212,6 +218,9 @@ export default async function ArticlePage({ params }: Props) {
               <ShareButtons url={articleUrl} title={article.title} />
             </div>
           </div>
+
+          {/* Comments */}
+          <CommentSection articleId={article.id} />
 
         </article>
 

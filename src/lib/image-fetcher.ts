@@ -120,21 +120,6 @@ export async function fetchRelevantImage(
     }
   }
 
-  try {
-    const rssImg = await findRssImage(title, categoryName, skipUrls, englishTitle);
-    if (rssImg?.url) {
-      skipUrls?.add(rssImg.url);
-      return {
-        url: rssImg.url,
-        alt: title,
-        photographer: rssImg.source,
-        source: 'rss',
-      };
-    }
-  } catch {
-    // RSS unavailable - fall through
-  }
-
   const queries = buildSearchQueries(title, categoryName, englishTitle);
   const pexelsKey = process.env.PEXELS_API_KEY;
   const unsplashKey = process.env.UNSPLASH_ACCESS_KEY;
@@ -149,6 +134,21 @@ export async function fetchRelevantImage(
       const img = await fetchFromUnsplash(query, unsplashKey);
       if (img) return img;
     }
+  }
+
+  try {
+    const rssImg = await findRssImage(title, categoryName, skipUrls, englishTitle);
+    if (rssImg?.url) {
+      skipUrls?.add(rssImg.url);
+      return {
+        url: rssImg.url,
+        alt: title,
+        photographer: rssImg.source,
+        source: 'rss',
+      };
+    }
+  } catch {
+    // RSS unavailable - fall through
   }
 
   return null;

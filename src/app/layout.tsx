@@ -4,6 +4,7 @@ import Header from '@/components/public/Header';
 import Footer from '@/components/public/Footer';
 import AutoFetchTrigger from '@/components/public/AutoFetchTrigger';
 import { Providers } from './providers';
+import { prisma } from '@/lib/prisma';
 
 export const metadata: Metadata = {
   title: {
@@ -40,8 +41,15 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://azadkhabar.vercel.app';
+
+  const breakingNews = await prisma.article.findMany({
+    where: { status: 'PUBLISHED' },
+    orderBy: { publishedAt: 'desc' },
+    take: 10,
+    select: { slug: true, title: true },
+  });
 
   const websiteJsonLd = {
     '@context': 'https://schema.org',
@@ -59,14 +67,30 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   };
 
   return (
-    <html dir="rtl" lang="ur">
-      <body className="min-h-screen bg-gray-50 text-gray-900">
+    <html dir="rtl" lang="ur" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var theme = localStorage.getItem('theme');
+                  if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                    document.documentElement.classList.add('dark');
+                  }
+                } catch(e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
+      <body className="min-h-screen bg-gray-50 text-gray-900 dark:bg-slate-900 dark:text-slate-100 transition-colors duration-300">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
         />
         <Providers>
-          <Header />
+          <Header breakingNews={breakingNews} />
           <main>{children}</main>
           <Footer />
           <AutoFetchTrigger />

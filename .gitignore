@@ -11,3 +11,4 @@ public/uploads/
 prisma/prisma/
 
 .vercel
+.env*
