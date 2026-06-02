@@ -81,7 +81,7 @@ export default function NewsCard({
         </div>
         <div className="flex-1 min-w-0">
           <span className="text-primary-600 text-xs font-medium">{category.nameUrdu}</span>
-          <h3 className="font-semibold text-sm leading-[1.5] mt-0.5 group-hover:text-primary-600 transition-colors">
+          <h3 className="font-semibold text-sm leading-[1.6] mt-0.5 group-hover:text-primary-600 transition-colors">
             {title}
           </h3>
           <div className="flex items-center gap-2 mt-1.5 text-xs text-gray-400">

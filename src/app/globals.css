@@ -99,14 +99,14 @@ html {
 }
 
 body {
-  font-family: var(--font-nastaliq);
+  font-family: 'Noto Nastaliq Urdu', serif;
   direction: rtl;
   text-align: right;
   line-height: 2.25;
 }
 
-h1, h2, h3, h4 {
-  line-height: 1.6;
+h1, h2, h3 {
+  line-height: 1.7;
 }
 
 .ProseMirror {

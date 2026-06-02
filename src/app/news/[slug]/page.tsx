@@ -225,10 +225,10 @@ export default async function ArticlePage({ params }: Props) {
         </article>
 
         {/* Sidebar */}
-        <aside className="w-full lg:w-80 shrink-0">
+        <aside className="w-full lg:w-96 shrink-0">
           {relatedArticles.length > 0 && (
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 sticky top-24">
-              <h3 className="text-base font-bold pb-3 mb-4 border-b border-gray-100 flex items-center gap-2">
+              <h3 className="text-base font-bold pb-3 mb-4 border-b border-gray-100 flex items-center gap-2 leading-[1.6]">
                 <span className="w-1 h-5 bg-primary-600 rounded inline-block" />
                 متعلقہ خبریں
               </h3>

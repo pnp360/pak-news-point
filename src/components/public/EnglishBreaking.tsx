@@ -7,12 +7,12 @@ export default function EnglishBreaking({ articles }: EnglishBreakingProps) {
   if (!englishOnly.length) return null;
 
   return (
-    <div className="bg-gray-900 text-gray-200 py-1.5 overflow-hidden border-t border-red-800">
-      <div className="container mx-auto px-4 flex items-center" dir="ltr">
-        <span className="bg-red-600 text-white px-3 py-0.5 rounded font-bold text-xs shrink-0 uppercase tracking-wider ml-4">
-          Breaking
-        </span>
-        <div className="overflow-hidden flex-1">
+      <div className="bg-gray-900 text-gray-200 py-1.5 overflow-hidden border-t border-red-800">
+        <div className="container mx-auto px-4 flex items-center justify-between" dir="ltr">
+          <span className="bg-red-600 text-white px-3 py-0.5 rounded font-bold text-xs shrink-0 uppercase tracking-wider ml-6">
+            Breaking
+          </span>
+          <div className="overflow-hidden flex-grow">
           <div className="animate-scroll-left whitespace-nowrap inline-block" style={{ animationDuration: '40s' }}>
             {[...englishOnly, ...englishOnly].map((article, i) => (
               <a
