@@ -89,6 +89,37 @@ function PoetCard({ poet, gradient }: { poet: Poet; gradient: string }) {
 
 /* ──────────────────────── Helpers ──────────────────────── */
 
+const poetImageMap = new Map<string, string>(
+  poets.map(p => [p.name, `https://${p.imageDomain}/${p.image}`])
+);
+
+function getPoetImage(name: string): string | undefined {
+  return poetImageMap.get(name);
+}
+
+function PoetAvatar({ name, size = 9 }: { name: string; size?: number }) {
+  const [error, setError] = useState(false);
+  const src = getPoetImage(name);
+
+  if (!src || error) return null;
+
+  return (
+    <div
+      className="relative rounded-full overflow-hidden shrink-0 ring-2 ring-white dark:ring-gray-700"
+      style={{ width: `${size * 4}px`, height: `${size * 4}px` }}
+    >
+      <Image
+        src={src}
+        alt={name}
+        fill
+        sizes={`${size * 4}px`}
+        className="object-cover"
+        onError={() => setError(true)}
+      />
+    </div>
+  );
+}
+
 function formatCoupletForShare(c: Couplet): string {
   return `"${c.first}\n${c.second}"\n\n— ${c.poet}\n— Shared via Azad Khabar`;
 }
@@ -131,8 +162,11 @@ function CoupletCard({ couplet }: { couplet: Couplet }) {
         <p className="text-base md:text-lg text-gray-900 dark:text-gray-100">{couplet.second}</p>
       </div>
 
-      {/* Poet name */}
-      <p className="text-xs text-gray-500 dark:text-gray-400 mb-4">— {couplet.poet}</p>
+      {/* Poet name + avatar */}
+      <div className="flex items-center justify-center gap-2 mb-4">
+        <PoetAvatar name={couplet.poet} size={8} />
+        <p className="text-xs text-gray-500 dark:text-gray-400">{couplet.poet}</p>
+      </div>
 
       {/* Actions */}
       <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
@@ -218,7 +252,10 @@ export default function PoetryPage() {
 
               {/* Poet + genre */}
               <div className="flex items-center justify-center gap-2 text-sm text-gray-400 mb-6">
-                <span>{coupletOfTheDay.poet}</span>
+                <div className="flex items-center gap-2">
+                  <PoetAvatar name={coupletOfTheDay.poet} size={8} />
+                  <span>{coupletOfTheDay.poet}</span>
+                </div>
                 <span className="w-px h-3 bg-gray-600" />
                 <span className="text-primary-400">{coupletOfTheDay.genre}</span>
               </div>
