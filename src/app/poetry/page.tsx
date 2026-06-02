@@ -21,13 +21,13 @@ interface Couplet {
 
 const poets: Poet[] = [
   { name: 'مرزا غالب', era: '1797–1869', description: 'غزل کے بادشاہ، فارسی و اردو کے عظیم شاعر', category: 'کلاسیکی غزل', image: '/images/poets/ghalib.jpg' },
-  { name: 'میر تقی میر', era: '1723–1810', description: 'غزل کی تلخیوں کے ترجمان، میرے الفاظوں کے شاعر', category: 'کلاسیکی غزل', image: '/images/poets/mir-taqi-mir.jpg' },
-  { name: 'مرزا انیس', era: '1803–1874', description: 'مرثیہ نگاری کے امام، کربلا کے شاعر', category: 'مرثیہ و نوحہ', image: '/images/poets/mirza-anees.jpg' },
-  { name: 'مرزا دبیر', era: '1803–1875', description: 'مرثیہ گو شاعر، انیس کے ہم عصر', category: 'مرثیہ و نوحہ', image: '/images/poets/mirza-dabeer.jpg' },
-  { name: 'علامہ اقبال', era: '1877–1938', description: 'شاعر مشرق، فلسفی، نظریہ پاکستان کے خالق', category: 'فلسفیانہ و قومی', image: '/images/poets/allama-iqbal.jpg' },
+  { name: 'میر تقی میر', era: '1723–1810', description: 'غزل کی تلخیوں کے ترجمان، میرے الفاظوں کے شاعر', category: 'کلاسیکی غزل', image: '/images/poets/mir.jpg' },
+  { name: 'مرزا انیس', era: '1803–1874', description: 'مرثیہ نگاری کے امام، کربلا کے شاعر', category: 'مرثیہ و نوحہ', image: '/images/poets/anees.jpg' },
+  { name: 'مرزا دبیر', era: '1803–1875', description: 'مرثیہ گو شاعر، انیس کے ہم عصر', category: 'مرثیہ و نوحہ', image: '/images/poets/dabeer.jpg' },
+  { name: 'علامہ اقبال', era: '1877–1938', description: 'شاعر مشرق، فلسفی، نظریہ پاکستان کے خالق', category: 'فلسفیانہ و قومی', image: '/images/poets/iqbal.jpg' },
   { name: 'فیض احمد فیض', era: '1911–1984', description: 'انقلابی شاعر، محبت اور انصاف کے ترجمان', category: 'فلسفیانہ و قومی', image: '/images/poets/faiz.jpg' },
-  { name: 'احمد فراز', era: '1934–2008', description: 'جدید غزل کے بے تاج بادشاہ', category: 'فلسفیانہ و قومی', image: '/images/poets/ahmed-faraz.jpg' },
-  { name: 'جان ایلیا', era: '1931–2002', description: 'جدید شاعری کے منفرد لہجے، باغی اور فلسفیانہ شاعر', category: 'فلسفیانہ و قومی', image: '/images/poets/jaun-elia.jpg' },
+  { name: 'احمد فراز', era: '1934–2008', description: 'جدید غزل کے بے تاج بادشاہ', category: 'فلسفیانہ و قومی', image: '/images/poets/faraz.jpg' },
+  { name: 'جان ایلیا', era: '1931–2002', description: 'جدید شاعری کے منفرد لہجے، باغی اور فلسفیانہ شاعر', category: 'فلسفیانہ و قومی', image: '/images/poets/jaun.jpg' },
 ];
 
 const coupletOfTheDay: Couplet = {
@@ -58,19 +58,17 @@ function PoetCard({ poet, gradient }: { poet: Poet; gradient: string }) {
   const [imgError, setImgError] = useState(false);
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 flex items-center gap-4 hover:shadow-md transition-shadow">
-      <div className="shrink-0">
+    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 flex items-center hover:shadow-md transition-shadow">
+      <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-gray-200 dark:border-gray-600 shadow-sm ml-4 flex-shrink-0">
         {!imgError ? (
           <img
             src={poet.image}
             alt={poet.name}
-            width={48}
-            height={48}
-            className="w-12 h-12 rounded-full object-cover border-2 border-gray-200 dark:border-gray-600 shadow-sm"
+            className="w-full h-full object-cover"
             onError={() => setImgError(true)}
           />
         ) : (
-          <div className={`w-12 h-12 rounded-full flex items-center justify-center text-white text-sm font-bold ${gradient}`}>
+          <div className={`w-full h-full flex items-center justify-center text-white text-sm font-bold ${gradient}`}>
             {poet.name.charAt(0)}
           </div>
         )}
