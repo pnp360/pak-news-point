@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
 
 /* ──────────────────────── Data ──────────────────────── */
 
@@ -11,7 +10,6 @@ interface Poet {
   description: string;
   category: string;
   image: string;
-  imageDomain: string;
 }
 
 interface Couplet {
@@ -22,14 +20,14 @@ interface Couplet {
 }
 
 const poets: Poet[] = [
-  { name: 'مرزا غالب', era: '1797–1869', description: 'غزل کے بادشاہ، فارسی و اردو کے عظیم شاعر', category: 'کلاسیکی غزل', image: '4/4c/Mirza_Ghalib_photograph.jpg', imageDomain: 'upload.wikimedia.org' },
-  { name: 'میر تقی میر', era: '1723–1810', description: 'غزل کی تلخیوں کے ترجمان، میرے الفاظوں کے شاعر', category: 'کلاسیکی غزل', image: '3/3c/Mir_Taqi_Mir_2.jpg', imageDomain: 'upload.wikimedia.org' },
-  { name: 'مرزا انیس', era: '1803–1874', description: 'مرثیہ نگاری کے امام، کربلا کے شاعر', category: 'مرثیہ و نوحہ', image: '4/4f/Mirza_Anees.jpg', imageDomain: 'upload.wikimedia.org' },
-  { name: 'مرزا دبیر', era: '1803–1875', description: 'مرثیہ گو شاعر، انیس کے ہم عصر', category: 'مرثیہ و نوحہ', image: '6/63/Mirza_Salamat_Ali_Dabir.jpg', imageDomain: 'upload.wikimedia.org' },
-  { name: 'علامہ اقبال', era: '1877–1938', description: 'شاعر مشرق، فلسفی، نظریہ پاکستان کے خالق', category: 'فلسفیانہ و قومی', image: '0/0d/Allama_Iqbal.jpg', imageDomain: 'upload.wikimedia.org' },
-  { name: 'فیض احمد فیض', era: '1911–1984', description: 'انقلابی شاعر، محبت اور انصاف کے ترجمان', category: 'فلسفیانہ و قومی', image: '4/45/Faiz_Ahmed_Faiz_in_Peshawar_(cropped).jpg', imageDomain: 'upload.wikimedia.org' },
-  { name: 'احمد فراز', era: '1934–2008', description: 'جدید غزل کے بے تاج بادشاہ', category: 'فلسفیانہ و قومی', image: '67/67e/Ahmed_Faraz.jpg', imageDomain: 'upload.wikimedia.org' },
-  { name: 'جان ایلیا', era: '1931–2002', description: 'جدید شاعری کے منفرد لہجے، باغی اور فلسفیانہ شاعر', category: 'فلسفیانہ و قومی', image: '9/97/Jaun_Elia.jpg', imageDomain: 'upload.wikimedia.org' },
+  { name: 'مرزا غالب', era: '1797–1869', description: 'غزل کے بادشاہ، فارسی و اردو کے عظیم شاعر', category: 'کلاسیکی غزل', image: '/assets/images/poets/ghalib.jpg' },
+  { name: 'میر تقی میر', era: '1723–1810', description: 'غزل کی تلخیوں کے ترجمان، میرے الفاظوں کے شاعر', category: 'کلاسیکی غزل', image: '/assets/images/poets/mir-taqi-mir.jpg' },
+  { name: 'مرزا انیس', era: '1803–1874', description: 'مرثیہ نگاری کے امام، کربلا کے شاعر', category: 'مرثیہ و نوحہ', image: '/assets/images/poets/mirza-anees.jpg' },
+  { name: 'مرزا دبیر', era: '1803–1875', description: 'مرثیہ گو شاعر، انیس کے ہم عصر', category: 'مرثیہ و نوحہ', image: '/assets/images/poets/mirza-dabeer.jpg' },
+  { name: 'علامہ اقبال', era: '1877–1938', description: 'شاعر مشرق، فلسفی، نظریہ پاکستان کے خالق', category: 'فلسفیانہ و قومی', image: '/assets/images/poets/allama-iqbal.jpg' },
+  { name: 'فیض احمد فیض', era: '1911–1984', description: 'انقلابی شاعر، محبت اور انصاف کے ترجمان', category: 'فلسفیانہ و قومی', image: '/assets/images/poets/faiz.jpg' },
+  { name: 'احمد فراز', era: '1934–2008', description: 'جدید غزل کے بے تاج بادشاہ', category: 'فلسفیانہ و قومی', image: '/assets/images/poets/ahmed-faraz.jpg' },
+  { name: 'جان ایلیا', era: '1931–2002', description: 'جدید شاعری کے منفرد لہجے، باغی اور فلسفیانہ شاعر', category: 'فلسفیانہ و قومی', image: '/assets/images/poets/jaun-elia.jpg' },
 ];
 
 const coupletOfTheDay: Couplet = {
@@ -58,22 +56,19 @@ const couplets: Couplet[] = [
 
 function PoetCard({ poet, gradient }: { poet: Poet; gradient: string }) {
   const [imgError, setImgError] = useState(false);
-  const src = `https://${poet.imageDomain}/${poet.image}`;
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 flex items-center gap-4 hover:shadow-md transition-shadow">
-      <div className="w-14 h-14 rounded-full overflow-hidden shrink-0 bg-gray-100 dark:bg-gray-700 relative">
+      <div className="w-12 h-12 rounded-full overflow-hidden shrink-0 bg-gray-100 dark:bg-gray-700 ring-2 ring-gray-200 dark:ring-gray-600 shadow-sm">
         {!imgError ? (
-          <Image
-            src={src}
+          <img
+            src={poet.image}
             alt={poet.name}
-            fill
-            sizes="56px"
-            className="object-cover"
+            className="w-full h-full object-cover"
             onError={() => setImgError(true)}
           />
         ) : (
-          <div className={`w-full h-full flex items-center justify-center text-white text-lg font-bold ${gradient}`}>
+          <div className={`w-full h-full flex items-center justify-center text-white text-sm font-bold ${gradient}`}>
             {poet.name.charAt(0)}
           </div>
         )}
@@ -90,7 +85,7 @@ function PoetCard({ poet, gradient }: { poet: Poet; gradient: string }) {
 /* ──────────────────────── Helpers ──────────────────────── */
 
 const poetImageMap = new Map<string, string>(
-  poets.map(p => [p.name, `https://${p.imageDomain}/${p.image}`])
+  poets.map(p => [p.name, p.image])
 );
 
 function getPoetImage(name: string): string | undefined {
@@ -100,20 +95,21 @@ function getPoetImage(name: string): string | undefined {
 function PoetAvatar({ name, size = 9 }: { name: string; size?: number }) {
   const [error, setError] = useState(false);
   const src = getPoetImage(name);
+  const px = size * 4;
 
   if (!src || error) return null;
 
   return (
     <div
-      className="relative rounded-full overflow-hidden shrink-0 ring-2 ring-white dark:ring-gray-700"
-      style={{ width: `${size * 4}px`, height: `${size * 4}px` }}
+      className="rounded-full overflow-hidden shrink-0 ring-2 ring-white dark:ring-gray-700 shadow-sm"
+      style={{ width: px, height: px }}
     >
-      <Image
+      <img
         src={src}
         alt={name}
-        fill
-        sizes={`${size * 4}px`}
-        className="object-cover"
+        width={px}
+        height={px}
+        className="w-full h-full object-cover"
         onError={() => setError(true)}
       />
     </div>
