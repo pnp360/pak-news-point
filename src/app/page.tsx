@@ -87,7 +87,7 @@ export default async function HomePage() {
     : data.latestArticles.slice(1, 5);
 
   return (
-    <div className="mx-auto px-4 py-4" style={{ maxWidth: '1440px' }}>
+    <div className="mx-auto px-4 py-4" style={{ maxWidth: '1400px' }}>
       {/* Breaking News Tickers */}
       <BreakingNews articles={data.breakingArticles} />
       <EnglishBreaking articles={data.englishArticles} />
@@ -175,15 +175,15 @@ export default async function HomePage() {
       )}
 
       {/* ════════ MAIN CONTENT + SIDEBAR (3-column grid with flanking ads) ════════ */}
-      <div className="grid grid-cols-1 xl:grid-cols-[160px_1fr_160px] gap-4 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-[160px_1fr_160px] gap-5 items-start">
 
         {/* Left Skyscraper Ad */}
-        <div className="hidden xl:block sticky top-24">
+        <div className="hidden lg:block sticky top-24">
           <AdBanner format="skyscraper" />
         </div>
 
         {/* Center: Content + Sidebar */}
-        <div className="flex flex-col lg:flex-row gap-10 min-w-0" style={{ height: 'auto' }}>
+        <div className="flex flex-col lg:flex-row gap-10 min-w-0 w-full" style={{ height: 'auto' }}>
 
           {/* Main Column */}
           <div className="flex-1 min-w-0">
@@ -259,7 +259,7 @@ export default async function HomePage() {
         </div>
 
         {/* Right Skyscraper Ad */}
-        <div className="hidden xl:block sticky top-24">
+        <div className="hidden lg:block sticky top-24">
           <AdBanner format="skyscraper" />
         </div>
       </div>
