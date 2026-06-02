@@ -34,7 +34,7 @@ async function getHomepageData() {
     prisma.article.findMany({
       where: { status: 'PUBLISHED' },
       orderBy: { publishedAt: 'desc' },
-      take: 13,
+      take: 20,
       include: { category: { select: { nameUrdu: true, slug: true } } },
     }),
     prisma.article.findMany({
@@ -47,18 +47,53 @@ async function getHomepageData() {
 
   const categories = await prisma.category.findMany({ orderBy: { order: 'asc' } });
 
+  const pakistanSlug = categories.find((c) => c.slug === 'pakistan')?.slug;
+  const worldSlug = categories.find((c) => c.slug === 'world')?.slug;
+
+  const pakistanArticles = pakistanSlug
+    ? latestArticles.filter((a) => (a as any).category?.slug === pakistanSlug)
+    : [];
+  const worldArticles = worldSlug
+    ? latestArticles.filter((a) => (a as any).category?.slug === worldSlug)
+    : [];
+
+  const latestFeed: typeof latestArticles = [];
+  let pi = 0, wi = 0;
+  while (pi < pakistanArticles.length || wi < worldArticles.length) {
+    for (let i = 0; i < 3 && pi < pakistanArticles.length; i++) {
+      latestFeed.push(pakistanArticles[pi++]);
+    }
+    if (wi < worldArticles.length) {
+      latestFeed.push(worldArticles[wi++]);
+    } else if (pi < pakistanArticles.length) {
+      latestFeed.push(pakistanArticles[pi++]);
+    } else {
+      break;
+    }
+  }
+
+  const remainingLatest = latestArticles.filter((a) => {
+    if (!pakistanSlug || !worldSlug) return false;
+    const s = (a as any).category?.slug;
+    return s !== pakistanSlug && s !== worldSlug;
+  });
+  latestFeed.push(...remainingLatest);
+
   const categoryArticles: Record<string, any[]> = {};
   for (const cat of categories) {
+    let take = 5;
+    if (cat.slug === 'pakistan') take = 8;
+    else if (cat.slug === 'world') take = 4;
     const articles = await prisma.article.findMany({
       where: { status: 'PUBLISHED', categoryId: cat.id },
       orderBy: { publishedAt: 'desc' },
-      take: 5,
+      take,
       include: { category: { select: { nameUrdu: true, slug: true } } },
     });
     if (articles.length > 0) categoryArticles[cat.slug] = articles;
   }
 
-  return { breakingArticles, englishArticles, featuredArticles, latestArticles, trendingArticles, categories, categoryArticles };
+  return { breakingArticles, englishArticles, featuredArticles, latestArticles, latestFeed, trendingArticles, categories, categoryArticles };
 }
 
 function SectionHeader({ title, href }: { title: string; href?: string }) {
@@ -193,17 +228,17 @@ export default async function HomePage() {
             {/* LATEST NEWS — Magazine Grid */}
             <section className="mb-10">
               <SectionHeader title="تازہ ترین خبریں" />
-              {data.latestArticles.length > 0 && (
+              {data.latestFeed.length > 0 && (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                   <div className="md:col-span-2">
-                    <NewsCard {...(data.latestArticles[0] as any)} variant="featured" />
+                    <NewsCard {...(data.latestFeed[0] as any)} variant="featured" />
                   </div>
                   <div>
-                    <NewsCard {...(data.latestArticles[1] as any)} />
+                    <NewsCard {...(data.latestFeed[1] as any)} />
                   </div>
-                  <NewsCard {...(data.latestArticles[2] as any)} />
-                  <NewsCard {...(data.latestArticles[3] as any)} />
-                  {data.latestArticles.slice(4).map((article) => (
+                  <NewsCard {...(data.latestFeed[2] as any)} />
+                  <NewsCard {...(data.latestFeed[3] as any)} />
+                  {data.latestFeed.slice(4).map((article) => (
                     <NewsCard key={article.id} {...article} />
                   ))}
                 </div>
@@ -214,6 +249,7 @@ export default async function HomePage() {
             {Object.entries(data.categoryArticles).slice(0, 6).map(([slug, articles]) => {
               const category = data.categories.find((c) => c.slug === slug);
               if (!category || articles.length === 0) return null;
+              const sliceEnd = slug === 'pakistan' ? 7 : slug === 'world' ? 3 : 5;
               return (
                 <section key={slug} className="mb-10">
                   <SectionHeader title={category.nameUrdu} href={`/category/${slug}`} />
@@ -236,7 +272,7 @@ export default async function HomePage() {
                         </Link>
                       </article>
                     </div>
-                    {articles.slice(1, 5).map((article: any) => (
+                    {articles.slice(1, sliceEnd).map((article: any) => (
                       <NewsCard key={article.id} {...article} />
                     ))}
                   </div>
