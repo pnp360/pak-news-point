@@ -111,7 +111,7 @@ export default async function HomePage() {
                   <span className="bg-primary-600 text-white px-3 py-1 rounded text-xs font-semibold inline-block mb-3 uppercase tracking-wider self-start">
                     {mainFeatured.category?.nameUrdu}
                   </span>
-                  <h1 className="text-2xl md:text-3xl font-bold leading-[2] mb-3 group-hover:underline decoration-2 underline-offset-4">
+                  <h1 className="text-2xl md:text-3xl font-bold leading-[2.2] mb-3 group-hover:underline decoration-2 underline-offset-4">
                     {mainFeatured.title}
                   </h1>
                   <div className="flex items-center gap-3 text-sm text-gray-300">
@@ -134,9 +134,9 @@ export default async function HomePage() {
                     className="object-cover"
                   />
                 </div>
-                <div className="flex-1 min-w-0">
+                <div className="flex-1 min-w-0 w-full">
                   <span className="text-xs text-primary-600 font-medium">{story.category?.nameUrdu}</span>
-                  <h3 className="text-sm font-semibold leading-[1.6] mt-0.5 group-hover:text-primary-600 transition-colors">
+                  <h3 className="text-sm font-semibold leading-[1.5] mt-0.5 group-hover:text-primary-600 transition-colors">
                     {story.title}
                   </h3>
                   <span className="text-xs text-gray-400 mt-1 block">{story.publishedAt && timeAgo(story.publishedAt)}</span>
