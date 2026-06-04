@@ -3,7 +3,9 @@ export const dynamic = 'force-dynamic';
 import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
 import { toUrduNumber } from '@/lib/urdu';
-import { HiPlus, HiPencil, HiTrash, HiRefresh } from 'react-icons/hi';
+import { HiPlus, HiPencil } from 'react-icons/hi';
+import DeleteNewsButton from '@/components/admin/DeleteNewsButton';
+import RefreshImagesButton from '@/components/admin/RefreshImagesButton';
 
 interface Props {
   searchParams: { page?: string; status?: string };
@@ -129,7 +131,7 @@ export default async function AdminNewsPage({ searchParams }: Props) {
                         >
                           <HiPencil className="w-4 h-4" />
                         </Link>
-                        <DeleteButton id={article.id} />
+                        <DeleteNewsButton id={article.id} />
                       </div>
                     </td>
                   </tr>
@@ -160,47 +162,4 @@ export default async function AdminNewsPage({ searchParams }: Props) {
   );
 }
 
-function RefreshImagesButton() {
-  return (
-    <form
-      onSubmit={async (e) => {
-        e.preventDefault();
-        if (!confirm('کیا تمام پرانی تصاویر کو اپ ڈیٹ کرنا چاہتے ہیں؟')) return;
-        const btn = e.currentTarget.querySelector('button') as HTMLButtonElement;
-        btn.disabled = true;
-        btn.innerHTML = 'اپ ڈیٹ ہو رہا ہے...';
-        const res = await fetch('/api/news/refresh-images', { method: 'POST' });
-        const data = await res.json();
-        alert(`${data.updated} / ${data.total} تصاویر اپ ڈیٹ ہو گئیں`);
-        window.location.reload();
-      }}
-    >
-      <button type="submit" className="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 flex items-center gap-2">
-        <HiRefresh className="w-5 h-5" />
-        تصاویر تازہ کریں
-      </button>
-    </form>
-  );
-}
 
-function DeleteButton({ id }: { id: string }) {
-  return (
-    <form
-      action={async () => {
-        'use server';
-        const { prisma } = await import('@/lib/prisma');
-        await prisma.article.delete({ where: { id } });
-      }}
-      onSubmit={async (e) => {
-        e.preventDefault();
-        if (confirm('کیا آپ واقعی یہ خبر حذف کرنا چاہتے ہیں؟')) {
-          (e.target as HTMLFormElement).requestSubmit();
-        }
-      }}
-    >
-      <button type="submit" className="p-2 hover:bg-red-50 rounded text-red-600">
-        <HiTrash className="w-4 h-4" />
-      </button>
-    </form>
-  );
-}

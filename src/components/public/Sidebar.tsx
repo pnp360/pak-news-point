@@ -2,7 +2,7 @@ import Link from 'next/link';
 import WeatherWidget from './WeatherWidget';
 import PrayerTimesWidget from './PrayerTimesWidget';
 import RatesWidget from './RatesWidget';
-import AdBanner from './AdBanner';
+import PoetryWidget from './PoetryWidget';
 
 interface SidebarArticle {
   id: string;
@@ -27,7 +27,7 @@ export default function Sidebar({ trending, latest }: SidebarProps) {
           تازہ ترین
         </h3>
         <div className="space-y-4">
-          {latest.slice(0, 5).map((article, i) => (
+          {latest.filter((a) => /[\u0600-\u06FF]/.test(a.title)).slice(0, 5).map((article, i) => (
             <Link
               key={article.id}
               href={`/news/${article.slug}`}
@@ -73,8 +73,37 @@ export default function Sidebar({ trending, latest }: SidebarProps) {
         <PrayerTimesWidget />
       </div>
 
-      {/* Ad Banner */}
-      <AdBanner format="sidebar" />
+      {/* Verse of the Day */}
+      <PoetryWidget />
+
+      {/* Categories */}
+      <div className="bg-white rounded-xl shadow-sm p-5">
+        <h3 className="text-lg font-bold border-b pb-3 mb-4 flex items-center gap-2">
+          <span className="w-1 h-6 bg-primary-600 rounded inline-block" />
+          اقسام
+        </h3>
+        <div className="grid grid-cols-2 gap-2">
+          {[
+            { name: 'پاکستان', slug: 'pakistan' },
+            { name: 'دنیا', slug: 'world' },
+            { name: 'کھیل', slug: 'sports' },
+            { name: 'کاروبار', slug: 'business' },
+            { name: 'شوبز', slug: 'entertainment' },
+            { name: 'سائنس و ٹیکنالوجی', slug: 'technology' },
+            { name: 'صحت', slug: 'health' },
+            { name: 'تعلیم', slug: 'education' },
+            { name: 'شاعری', slug: 'poetry' },
+          ].map((cat) => (
+            <Link
+              key={cat.slug}
+              href={`/${cat.slug}`}
+              className="block bg-gray-50 hover:bg-primary-50 hover:text-primary-700 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 text-sm font-medium px-3 py-2 rounded-lg transition-colors text-center"
+            >
+              {cat.name}
+            </Link>
+          ))}
+        </div>
+      </div>
     </aside>
   );
 }

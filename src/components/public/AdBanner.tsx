@@ -27,7 +27,7 @@ export default function AdBanner({ format = 'sidebar' }: AdBannerProps) {
   if (format === 'leaderboard') {
     return (
       <div className="w-full bg-gradient-to-r from-primary-600 to-primary-800 rounded-xl overflow-hidden">
-        <div className="flex flex-col items-center justify-center px-4 py-4 md:py-5 min-h-[80px]" style={{ height: 'auto' }}>
+        <div className="flex items-center justify-center px-4 py-3 max-h-[120px]">
           <AdContent />
         </div>
         <p className="text-[10px] text-white/40 text-center pb-1">اشتہار</p>

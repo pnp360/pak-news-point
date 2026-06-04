@@ -1,0 +1,102 @@
+'use client';
+
+import { useState, useCallback, useEffect, useRef } from 'react';
+
+interface SafeImageProps {
+  src: string;
+  alt: string;
+  className?: string;
+  fill?: boolean;
+  sizes?: string;
+  width?: number;
+  height?: number;
+}
+
+function BrandedFallback({ className, fill }: { className?: string; fill?: boolean }) {
+  return (
+    <div
+      data-fallback="azad-khabar"
+      className={`bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800 flex items-center justify-center overflow-hidden select-none ${className || ''}`}
+      style={fill ? { position: 'absolute', inset: 0 } : { width: '100%', height: '100%', minHeight: 120 }}
+    >
+      <div className="flex flex-col items-center gap-1.5 p-3">
+        <svg className="w-7 h-7 text-gray-400 dark:text-gray-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+        <span className="text-[10px] font-bold text-gray-400 dark:text-gray-500 font-nastaliq leading-tight">آزاد خبر</span>
+      </div>
+    </div>
+  );
+}
+
+function SkeletonLoader() {
+  return (
+    <div
+      className="absolute inset-0 bg-[length:200%_100%] bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 animate-skeleton"
+    />
+  );
+}
+
+export default function SafeImage({ src, alt, className, fill, width, height }: SafeImageProps) {
+  const [error, setError] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+  const mountedRef = useRef(true);
+
+  useEffect(() => {
+    return () => { mountedRef.current = false; };
+  }, []);
+
+  useEffect(() => {
+    setError(false);
+    setLoaded(false);
+  }, [src]);
+
+  const onError = useCallback(() => {
+    if (mountedRef.current) {
+      setError(true);
+      setLoaded(true);
+    }
+  }, []);
+
+  const onLoad = useCallback(() => {
+    if (mountedRef.current) {
+      setLoaded(true);
+    }
+  }, []);
+
+  if (!src || error) {
+    return <BrandedFallback className={className} fill={fill} />;
+  }
+
+  if (fill) {
+    return (
+      <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
+        {!loaded && <SkeletonLoader />}
+        <img
+          src={src}
+          alt={alt}
+          className={className}
+          style={{ width: '100%', height: '100%' }}
+          onError={onError}
+          onLoad={onLoad}
+          loading="lazy"
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ position: 'relative', width: width || 400, height: height || 250, overflow: 'hidden' }}>
+      {!loaded && <SkeletonLoader />}
+      <img
+        src={src}
+        alt={alt}
+        className={className}
+        style={{ width: '100%', height: '100%' }}
+        onError={onError}
+        onLoad={onLoad}
+        loading="lazy"
+      />
+    </div>
+  );
+}

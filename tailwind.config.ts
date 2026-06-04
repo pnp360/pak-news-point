@@ -31,9 +31,19 @@ const config: Config = {
           '0%': { transform: 'translateX(0)' },
           '100%': { transform: 'translateX(-50%)' },
         },
+        'fade-in': {
+          '0%': { opacity: '0', transform: 'translateY(8px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        'skeleton': {
+          '0%': { backgroundPosition: '200% 0' },
+          '100%': { backgroundPosition: '-200% 0' },
+        },
       },
       animation: {
         'scroll-left': 'scroll-left 60s linear infinite',
+        'fade-in': 'fade-in 0.4s ease-out',
+        'skeleton': 'skeleton 1.5s ease-in-out infinite',
       },
     },
   },

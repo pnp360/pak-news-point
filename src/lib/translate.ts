@@ -2558,7 +2558,42 @@ export function translateToUrdu(englishText: string): string {
   let parts = units.map(u => u.urdu).filter(Boolean);
   // Remove consecutive duplicate words (e.g., "اضافہ اضافہ")
   parts = parts.filter((w, i) => i === 0 || w !== parts[i - 1]);
-  return parts.join(' ');
+  return fixTranslations(parts.join(' '));
+}
+
+// ── Post-translation fixes for known Google Translate errors ──
+const TRANSLATION_FIXES: [RegExp, string][] = [
+  [/\bAI\b/g, 'مصنوعی ذہانت (AI)'],
+  [/\bUK\b/g, 'برطانیہ'],
+];
+
+// Strip common raw English suffixes/phrases left untranslated in headlines
+const RAW_ENGLISH_PATTERNS: RegExp[] = [
+  /[-–—]\s*(business\s+live|live|business|latest|update|breaking)\s*$/gi,
+  /[-–—]\s*[a-zA-Z\s]{2,40}$/g,
+  /\b(live|breaking|update)\s*[-–—]\s*/gi,
+];
+
+function fixTranslations(text: string): string {
+  let result = text;
+  for (const [pattern, replacement] of TRANSLATION_FIXES) {
+    result = result.replace(pattern, replacement);
+  }
+  for (const pattern of RAW_ENGLISH_PATTERNS) {
+    result = result.replace(pattern, '').trim();
+  }
+  return result;
+}
+
+export function cleanArticleTitle(title: string): string {
+  if (!title) return title;
+  let result = title;
+  for (const pattern of RAW_ENGLISH_PATTERNS) {
+    result = result.replace(pattern, '').trim();
+  }
+  result = result.replace(/\bAI\b/g, 'مصنوعی ذہانت (AI)');
+  result = result.replace(/\bUK\b/g, 'برطانیہ');
+  return result.trim();
 }
 
 export async function translateToUrduAsync(englishText: string): Promise<string> {
@@ -2576,7 +2611,7 @@ export async function translateToUrduAsync(englishText: string): Promise<string>
       const translated = data?.[0]?.[0]?.[0];
       if (translated) {
         const cleaned = await transliterateRemainingEnglish(translated);
-        return cleaned;
+        return fixTranslations(cleaned);
       }
       throw new Error('No translation');
     } catch (e) {

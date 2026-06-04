@@ -2,13 +2,13 @@ export const dynamic = 'force-dynamic';
 
 import { prisma } from '@/lib/prisma';
 import BreakingNews from '@/components/public/BreakingNews';
-import EnglishBreaking from '@/components/public/EnglishBreaking';
 import NewsCard from '@/components/public/NewsCard';
 import Sidebar from '@/components/public/Sidebar';
 import Link from 'next/link';
-import Image from 'next/image';
 import { getWatermarkedUrl } from '@/lib/watermark';
+import SafeImage from '@/components/public/SafeImage';
 import { timeAgo } from '@/lib/urdu';
+import { cleanArticleTitle } from '@/lib/translate';
 import AdBanner from '@/components/public/AdBanner';
 
 async function getHomepageData() {
@@ -125,7 +125,7 @@ export default async function HomePage() {
     <div className="mx-auto px-4 py-4" style={{ maxWidth: '1400px' }}>
       {/* Breaking News Tickers */}
       <BreakingNews articles={data.breakingArticles} />
-      <EnglishBreaking articles={data.englishArticles} />
+      {/* English ticker removed — Urdu-only site */}
 
       {/* ════════ HERO ZONE — Magazine Style ════════ */}
       <section className="mt-5 mb-10">
@@ -134,22 +134,22 @@ export default async function HomePage() {
           {mainFeatured && (
             <div className="lg:col-span-3">
               <Link href={`/news/${mainFeatured.slug}`} className="group relative block overflow-hidden rounded-2xl shadow-sm h-full min-h-[450px] md:min-h-[550px]">
-                <Image
+                <SafeImage
                   src={getWatermarkedUrl(mainFeatured.featuredImage || 'https://images.unsplash.com/photo-1555333145-deb2e18f22b0?w=1200&q=80')}
                   alt={mainFeatured.title}
                   fill
                   sizes="(max-width: 1024px) 100vw, 75vw"
                   className="object-cover group-hover:scale-105 transition-transform duration-700"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
-                <div className="absolute bottom-0 right-0 left-0 p-6 md:p-8 text-white flex flex-col">
-                  <span className="bg-primary-600 text-white px-3 py-1 rounded text-xs font-semibold inline-block mb-3 uppercase tracking-wider self-start">
+                <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 70%, transparent 100%)' }} />
+                <div className="absolute bottom-0 inset-x-0 p-6 md:p-8">
+                  <span className="bg-primary-600 text-white px-4 py-1.5 rounded text-xs font-extrabold inline-block mb-4 uppercase tracking-wider shadow-lg">
                     {mainFeatured.category?.nameUrdu}
                   </span>
-                  <h1 className="text-2xl md:text-3xl font-bold leading-[2.2] mb-3 group-hover:underline decoration-2 underline-offset-4">
-                    {mainFeatured.title}
+                  <h1 className="text-white text-2xl md:text-3xl font-extrabold leading-[2.2] mb-4 group-hover:underline decoration-2 underline-offset-4 drop-shadow-lg">
+                    {cleanArticleTitle(mainFeatured.title)}
                   </h1>
-                  <div className="flex items-center gap-3 text-sm text-gray-300">
+                  <div className="flex items-center gap-3 text-sm text-white/80 font-medium">
                     {mainFeatured.publishedAt && <span>{timeAgo(mainFeatured.publishedAt)}</span>}
                   </div>
                 </div>
@@ -160,20 +160,20 @@ export default async function HomePage() {
           <div className="flex flex-col gap-3">
             {heroSideStories.map((story) => (
               <article key={story.id} className="news-card">
-                <Link href={`/news/${story.slug}`} className="group flex flex-row-reverse gap-3 items-center bg-white rounded-xl p-3 shadow-sm hover:shadow-md transition-shadow border border-gray-100">
-                  <div className="relative w-20 h-20 shrink-0 rounded-md overflow-hidden bg-gray-100">
-                    <Image
+                <Link href={`/news/${story.slug}`} className="group flex flex-row-reverse items-center gap-4 bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow border border-gray-100">
+                  <div className="relative w-28 aspect-video shrink-0 rounded-md overflow-hidden">
+                    <SafeImage
                       src={getWatermarkedUrl(story.featuredImage || '')}
                       alt={story.title}
                       fill
-                      sizes="80px"
+                      sizes="112px"
                       className="object-cover"
                     />
                   </div>
-                  <div className="flex-1 min-w-0 w-full">
+                  <div className="flex-1 min-w-0 overflow-hidden">
                     <span className="text-xs text-primary-600 font-medium">{story.category?.nameUrdu}</span>
-                    <h3 className="text-sm font-semibold leading-[1.6] mt-0.5 group-hover:text-primary-600 transition-colors">
-                      {story.title}
+                    <h3 className="text-sm font-semibold leading-[1.6] mt-0.5 group-hover:text-primary-600 transition-colors line-clamp-2">
+                      {cleanArticleTitle(story.title)}
                     </h3>
                     <span className="text-xs text-gray-400 mt-1 block">{story.publishedAt && timeAgo(story.publishedAt)}</span>
                   </div>
@@ -190,21 +190,21 @@ export default async function HomePage() {
       </div>
 
       {/* ════════ TRENDING STRIP ════════ */}
-      {data.trendingArticles.length > 0 && (
+      {data.trendingArticles.filter((a) => /[\u0600-\u06FF]/.test(a.title)).length > 0 && (
         <section className="mb-10 bg-gradient-to-l from-primary-600 to-primary-700 rounded-2xl p-4 text-white">
           <div className="flex items-center gap-4 overflow-x-auto scrollbar-hide">
             <span className="text-sm font-bold whitespace-nowrap flex items-center gap-1.5 bg-white/20 px-3 py-1.5 rounded-full">
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.66 11.2C17.43 10.9 17.15 10.64 16.89 10.38C16.22 9.78 15.46 9.35 14.82 8.72C13.33 7.26 13 4.85 13.95 3C13 3.23 12.17 3.75 11.46 4.32C8.87 6.4 7.85 10.07 9.07 13.22C9.11 13.32 9.15 13.42 9.15 13.55C9.15 13.77 9 13.97 8.8 14.05C8.57 14.15 8.33 14.09 8.14 13.93C8.08 13.88 8.04 13.83 8 13.76C6.87 12.33 6.69 10.28 7.45 8.64C5.78 10 4.87 12.3 5 14.47C5.06 14.97 5.12 15.47 5.29 15.97C5.43 16.57 5.7 17.17 6 17.7C7.08 19.43 8.95 20.67 10.96 20.92C13.1 21.19 15.39 20.8 16.89 19.32C18.55 17.68 19.15 15.15 18.23 13C17.96 12.38 17.6 11.79 17.21 11.24L17.66 11.2Z" /></svg>
               ٹرینڈنگ
             </span>
-            {data.trendingArticles.map((article, i) => (
+            {data.trendingArticles.filter((a) => /[\u0600-\u06FF]/.test(a.title)).map((article, i) => (
               <Link
                 key={article.id}
                 href={`/news/${article.slug}`}
                 className="flex items-center gap-2 whitespace-nowrap hover:bg-white/10 px-3 py-2 rounded-lg transition-colors shrink-0"
               >
                 <span className="text-lg font-bold text-white/50 tabular-nums">{String(i + 1).padStart(2, '0')}</span>
-                <span className="text-sm font-medium">{article.title}</span>
+                <span className="text-sm font-medium">{cleanArticleTitle(article.title)}</span>
               </Link>
             ))}
           </div>
@@ -257,17 +257,17 @@ export default async function HomePage() {
                     <div className="md:col-span-2 md:row-span-2">
                       <article className="news-card h-full">
                         <Link href={`/news/${articles[0].slug}`} className="group relative block overflow-hidden rounded-2xl shadow-sm h-full min-h-[300px]">
-                          <Image
+                          <SafeImage
                             src={getWatermarkedUrl(articles[0].featuredImage || '')}
                             alt={articles[0].title}
                             fill
                             sizes="(max-width: 768px) 100vw, 50vw"
                             className="object-cover group-hover:scale-105 transition-transform duration-500"
                           />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                          <div className="absolute bottom-0 right-0 left-0 p-5 text-white flex flex-col">
-                            <h3 className="text-lg font-bold leading-[2] group-hover:underline">{articles[0].title}</h3>
-                            <span className="text-xs text-gray-300 mt-1 block">{articles[0].publishedAt && timeAgo(articles[0].publishedAt)}</span>
+                          <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 70%, transparent 100%)' }} />
+                          <div className="absolute bottom-0 inset-x-0 p-4">
+                            <h3 className="text-white font-extrabold text-lg leading-[2] group-hover:underline drop-shadow-lg">{cleanArticleTitle(articles[0].title)}</h3>
+                            <span className="text-white/80 text-xs mt-1 block font-medium">{articles[0].publishedAt && timeAgo(articles[0].publishedAt)}</span>
                           </div>
                         </Link>
                       </article>
@@ -298,9 +298,30 @@ export default async function HomePage() {
           </div>
         </div>
 
-        {/* Right Skyscraper Ad */}
+        {/* Right Sidebar — Trending News (replaces skyscraper ad) */}
         <div className="side-ad-column sticky top-24">
-          <AdBanner format="skyscraper" />
+          <div className="bg-white rounded-xl shadow-sm p-4">
+            <h3 className="text-sm font-bold border-b pb-2 mb-3 flex items-center gap-2">
+              <span className="w-1 h-5 bg-primary-600 rounded inline-block" />
+              ٹرینڈنگ
+            </h3>
+            <div className="space-y-3">
+              {data.trendingArticles.filter((a) => /[\u0600-\u06FF]/.test(a.title)).slice(0, 5).map((article, i) => (
+                <Link
+                  key={article.id}
+                  href={`/news/${article.slug}`}
+                  className="flex gap-2 group"
+                >
+                  <span className="text-primary-600 font-bold text-sm w-5 shrink-0 tabular-nums">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <p className="text-xs font-medium leading-[1.6] group-hover:text-primary-600 transition-colors line-clamp-2">
+                    {cleanArticleTitle(article.title)}
+                  </p>
+                </Link>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </div>
