@@ -4,7 +4,7 @@ export const dynamic = 'force-dynamic';
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { fetchAllFeeds } from '@/lib/fetch-news';
+import { runPipeline, shouldRunPipeline } from '@/lib/news-pipeline';
 
 export async function GET(request: Request) {
   const authHeader = request.headers.get('authorization');
@@ -22,6 +22,12 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const result = await fetchAllFeeds();
+  // Respect 30-min minimum interval
+  const canRun = await shouldRunPipeline();
+  if (!canRun) {
+    return NextResponse.json({ skipped: true, message: 'Pipeline already ran recently.' });
+  }
+
+  const result = await runPipeline();
   return NextResponse.json(result);
 }
