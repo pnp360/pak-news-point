@@ -2,14 +2,14 @@
 
 import { useEffect } from 'react';
 
-const FOUR_MINUTES = 4 * 60 * 1000;
+const THIRTY_MINUTES = 30 * 60 * 1000;
 
 export default function AutoFetchTrigger() {
   useEffect(() => {
     fetch('/api/trigger-fetch').catch(() => {});
-    const ping = () => fetch('/api/keep-alive').catch(() => {});
-    ping();
-    const id = setInterval(ping, FOUR_MINUTES);
+    const id = setInterval(() => {
+      fetch('/api/trigger-fetch').catch(() => {});
+    }, THIRTY_MINUTES);
     return () => clearInterval(id);
   }, []);
 
