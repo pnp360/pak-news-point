@@ -1,5 +1,18 @@
 export type Language = 'ur' | 'en';
 
+/** Maps category slugs to English display names */
+export const CATEGORY_ENGLISH_NAMES: Record<string, string> = {
+  pakistan: 'Pakistan',
+  world: 'World',
+  sports: 'Sports',
+  business: 'Business',
+  entertainment: 'Entertainment',
+  technology: 'Technology',
+  health: 'Health',
+  education: 'Education',
+  poetry: 'Poetry',
+};
+
 export const translations: Record<string, { ur: string; en: string }> = {
   'site.name': { ur: 'آزاد خبر', en: 'Azad Khabar' },
   'site.description': { ur: 'پاکستان کی تازہ ترین خبریں', en: 'Latest news from Pakistan' },
