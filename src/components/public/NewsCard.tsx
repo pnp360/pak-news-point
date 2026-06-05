@@ -48,7 +48,7 @@ export default function NewsCard({
             <span className="bg-primary-600 text-white px-3 py-1 rounded text-sm inline-block mb-3 font-extrabold self-start">
               {categoryName}
             </span>
-            <h2 className="text-2xl md:text-3xl font-extrabold mb-2 leading-[2] group-hover:underline decoration-2 underline-offset-4 drop-shadow-lg">
+            <h2 className="text-2xl md:text-3xl font-extrabold mb-2 leading-[2] group-hover:underline decoration-2 underline-offset-4 drop-shadow-lg break-words line-clamp-3">
               {displayTitle}
             </h2>
             <div className="flex items-center gap-4 text-sm text-white/80 font-medium">
@@ -76,7 +76,7 @@ export default function NewsCard({
           </div>
           <div className="flex-1 min-w-0">
             <span className="text-primary-600 text-xs font-medium">{categoryName}</span>
-            <h3 className="font-semibold text-sm leading-[1.6] mt-0.5 group-hover:text-primary-600 transition-colors">
+            <h3 className="font-semibold text-sm leading-[1.6] mt-0.5 group-hover:text-primary-600 transition-colors break-words line-clamp-2">
               {displayTitle}
             </h3>
             <div className="flex items-center gap-2 mt-1.5 text-xs text-gray-400">
@@ -102,7 +102,7 @@ export default function NewsCard({
         </div>
         <div className="p-4">
           <span className="text-primary-600 text-xs font-semibold uppercase tracking-wide">{categoryName}</span>
-          <h3 className="font-bold text-base mt-1.5 mb-2 leading-[1.6] group-hover:text-primary-600 transition-colors">
+          <h3 className="font-bold text-base mt-1.5 mb-2 leading-[1.6] group-hover:text-primary-600 transition-colors break-words line-clamp-2">
             {displayTitle}
           </h3>
           {excerpt && (

@@ -102,6 +102,19 @@ async function isDuplicate(title: string): Promise<boolean> {
   return !!existing;
 }
 
+/** Strip markdown, category prefixes, and non-text cruft from titles */
+function cleanTitle(raw: string): string {
+  return raw
+    .replace(/\[!\[.*?\]\(.*?\)\]/g, '')
+    .replace(/!\[.*?\]\(.*?\)/g, '')
+    .replace(/\[.*?\]\(.*?\)/g, '')
+    .replace(/^(PAKISTAN|WORLD|SPORTS|BUSINESS|TECHNOLOGY|ENTERTAINMENT|HEALTH|EDUCATION)\s*[-–—|]\s*/gi, '')
+    .replace(/[-–—]\s*(business\s+live|live|business|latest|update|breaking)\s*$/gi, '')
+    .replace(/\b(live|breaking|update)\s*[-–—]\s*/gi, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 /**
  * Main pipeline orchestrator.
  * 1. Scrape all Urdu RSS sources
@@ -144,8 +157,12 @@ export async function runPipeline(): Promise<PipelineResult> {
     let errors = 0;
     let rewritten = 0;
 
+    // Filter to articles from last 48 hours only (ignore stale/archived RSS items)
+    const fortyEightHoursAgo = new Date(Date.now() - 48 * 60 * 60 * 1000);
+    const fresh = scraped.filter((a) => a.publishedAt >= fortyEightHoursAgo);
+
     // Take top 15 most recent to stay within rate limits
-    const batch = scraped.sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime()).slice(0, 15);
+    const batch = fresh.sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime()).slice(0, 15);
 
     for (const article of batch) {
       try {
@@ -167,7 +184,7 @@ export async function runPipeline(): Promise<PipelineResult> {
           rewritten++;
         }
 
-        // 4) Resolve category
+        // 4) Resolve category (prefer per-item category from RSS, fall back to source-level)
         const categoryId = await resolveCategory(article.category);
         if (!categoryId) {
           result.skipped++;
@@ -186,14 +203,17 @@ export async function runPipeline(): Promise<PipelineResult> {
           .map((s) => `<p>${s.trim()}۔</p>`)
           .join('\n');
 
+        const cleanedTitle = cleanTitle(title);
+        const cleanedOriginalTitle = cleanTitle(article.originalTitle);
+
         // 5) Store
         await prisma.article.create({
           data: {
-            title,
-            originalTitle: article.originalTitle,
-            slug: generateSlug(title),
-            excerpt: body.slice(0, 200),
-            content: paragraphs || `<p>${title}</p>`,
+            title: cleanedTitle,
+            originalTitle: cleanedOriginalTitle,
+            slug: generateSlug(cleanedTitle),
+            excerpt: cleanBody.slice(0, 200),
+            content: paragraphs || `<p>${cleanedTitle}</p>`,
             featuredImage: article.imageUrl || FALLBACK_IMAGE,
             categoryId,
             authorId: admin.id,

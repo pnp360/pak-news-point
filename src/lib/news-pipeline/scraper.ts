@@ -102,6 +102,27 @@ function extractBody(item: any): string {
   return item.title || '';
 }
 
+/** Map a per-item RSS category string to our known slugs */
+const ITEM_CATEGORY_MAP: Record<string, string> = {
+  pakistan: 'Pakistan',
+  'پاکستان': 'Pakistan',
+  world: 'World',
+  'دنیا': 'World',
+  sports: 'Sports',
+  'کھیل': 'Sports',
+  business: 'Business',
+  'کاروبار': 'Business',
+  entertainment: 'Entertainment',
+  'شوبز': 'Entertainment',
+  technology: 'Technology',
+  'ٹیکنالوجی': 'Technology',
+  'سائنس و ٹیکنالوجی': 'Technology',
+  health: 'Health',
+  'صحت': 'Health',
+  education: 'Education',
+  'تعلیم': 'Education',
+};
+
 export async function scrapeSource(source: UrduFeedSource): Promise<ScrapedArticle[]> {
   try {
     const feed = await parser.parseURL(source.url);
@@ -113,9 +134,35 @@ export async function scrapeSource(source: UrduFeedSource): Promise<ScrapedArtic
       const title = (item.title || '').trim();
       if (!title) continue;
 
+      // Prefer per-item RSS <category> tags over source-level category
+      let category = source.category;
+      if (item.categories && item.categories.length > 0) {
+        for (const cat of item.categories) {
+          const mapped = ITEM_CATEGORY_MAP[cat.toLowerCase()];
+          if (mapped) {
+            category = mapped;
+            break;
+          }
+        }
+      }
+
       const imageUrl = extractImage(item);
       const body = extractBody(item);
       const link = item.link || item.guid || '';
+
+      // Validate date: reject dates in the future or older than 7 days
+      let publishedAt: Date;
+      if (item.pubDate) {
+        const parsed = new Date(item.pubDate);
+        const now = Date.now();
+        if (!isNaN(parsed.getTime()) && parsed.getTime() <= now && parsed.getTime() > now - 7 * 24 * 60 * 60 * 1000) {
+          publishedAt = parsed;
+        } else {
+          publishedAt = new Date();
+        }
+      } else {
+        publishedAt = new Date();
+      }
 
       articles.push({
         sourceName: source.name,
@@ -124,8 +171,8 @@ export async function scrapeSource(source: UrduFeedSource): Promise<ScrapedArtic
         originalBody: body,
         excerpt: body.slice(0, 200),
         imageUrl,
-        category: source.category,
-        publishedAt: item.pubDate ? new Date(item.pubDate) : new Date(),
+        category,
+        publishedAt,
       });
     }
 

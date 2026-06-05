@@ -37,10 +37,13 @@ const sidebarCategories = [
 export default function Sidebar({ trending, latest }: SidebarProps) {
   const { lang } = useLanguage();
 
-  const latestDisplay = latest.map((a) => ({
-    ...a,
-    displayTitle: lang === 'en' && a.originalTitle ? a.originalTitle : a.title,
-  }));
+  const stripMarkdown = (s: string) =>
+    s.replace(/\[!\[.*?\]\(.*?\)\]|!\[.*?\]\(.*?\)|\[.*?\]\(.*?\)/g, '').trim();
+
+  const latestDisplay = latest.map((a) => {
+    const raw = lang === 'en' && a.originalTitle ? a.originalTitle : a.title;
+    return { ...a, displayTitle: stripMarkdown(raw) };
+  });
 
   return (
     <aside className="space-y-8">

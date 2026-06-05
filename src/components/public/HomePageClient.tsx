@@ -56,7 +56,7 @@ export default function HomePageClient({ data }: { data: any }) {
                   <span className="bg-primary-600 text-white px-4 py-1.5 rounded text-xs font-extrabold inline-block mb-4 uppercase tracking-wider shadow-lg">
                     {mainFeaturedCategory}
                   </span>
-                  <h1 className="text-white text-2xl md:text-3xl font-extrabold leading-[2.2] mb-4 group-hover:underline decoration-2 underline-offset-4 drop-shadow-lg">
+                  <h1 className="text-white text-2xl md:text-3xl font-extrabold leading-[2.2] mb-4 group-hover:underline decoration-2 underline-offset-4 drop-shadow-lg break-words line-clamp-3">
                     {cleanArticleTitle(mainFeaturedTitle)}
                   </h1>
                   <div className="flex items-center gap-3 text-sm text-white/80 font-medium">
@@ -177,7 +177,7 @@ export default function HomePageClient({ data }: { data: any }) {
                           />
                           <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 70%, transparent 100%)' }} />
                           <div className="absolute bottom-0 inset-x-0 p-4">
-                            <h3 className="text-white font-extrabold text-lg leading-[2] group-hover:underline drop-shadow-lg">{cleanArticleTitle(articles[0].title)}</h3>
+                            <h3 className="text-white font-extrabold text-lg leading-[2] group-hover:underline drop-shadow-lg break-words line-clamp-3">{cleanArticleTitle(articles[0].title)}</h3>
                             <span className="text-white/80 text-xs mt-1 block font-medium">{articles[0].publishedAt && timeAgo(articles[0].publishedAt, lang)}</span>
                           </div>
                         </Link>

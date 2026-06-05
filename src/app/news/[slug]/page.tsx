@@ -8,7 +8,7 @@ import { Metadata } from 'next';
 import { getUrduDate, getHijriDate, timeAgo } from '@/lib/urdu';
 import type { Language } from '@/lib/i18n';
 import { CATEGORY_ENGLISH_NAMES } from '@/lib/i18n';
-import { formatViews, getReadingTime } from '@/lib/utils';
+import { formatViews, getReadingTime, stripMarkdown } from '@/lib/utils';
 import { getWatermarkedUrl } from '@/lib/watermark';
 import NewsCard from '@/components/public/NewsCard';
 import ShareButtons from '@/components/public/ShareButtons';
@@ -121,7 +121,7 @@ export default async function ArticlePage({ params }: Props) {
               <LangText ur={article.category.nameUrdu} en={CATEGORY_ENGLISH_NAMES[article.category.slug] || article.category.name} />
             </Link>
             <span>/</span>
-            <span className="text-gray-600 dark:text-gray-400 truncate max-w-[200px]">{article.title}</span>
+            <span className="text-gray-600 dark:text-gray-400 truncate max-w-[200px]">{stripMarkdown(article.title)}</span>
           </nav>
 
           {/* Category Badge */}
@@ -130,8 +130,8 @@ export default async function ArticlePage({ params }: Props) {
           </span>
 
           {/* Title */}
-          <h1 className="text-2xl md:text-3xl lg:text-4xl font-semibold leading-[1.6] mb-4 text-gray-900 dark:text-white">
-            {article.title}
+          <h1 className="text-2xl md:text-3xl lg:text-4xl font-semibold leading-[1.6] mb-4 text-gray-900 dark:text-white break-words">
+            {stripMarkdown(article.title)}
           </h1>
 
           {/* Meta Bar */}

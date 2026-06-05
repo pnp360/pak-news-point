@@ -18,6 +18,15 @@ export function truncateText(text: string, maxLength: number): string {
   return text.substring(0, maxLength).replace(/\s+\S*$/, '') + '...';
 }
 
+export function stripMarkdown(text: string): string {
+  return text
+    .replace(/\[!\[.*?\]\(.*?\)\]/g, '')
+    .replace(/!\[.*?\]\(.*?\)/g, '')
+    .replace(/\[.*?\]\(.*?\)/g, '')
+    .replace(/^(PAKISTAN|WORLD|SPORTS|BUSINESS|TECHNOLOGY|ENTERTAINMENT|HEALTH|EDUCATION)\s*[-–—|]\s*/gi, '')
+    .trim();
+}
+
 export function sanitizeHtml(dirty: string): string {
   return dirty
     .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')

@@ -269,7 +269,14 @@ h1, h2, h3 {
   gap: 20px;
   max-width: 1400px;
   margin: 0 auto;
+}
+
+html[dir="rtl"] .main-news-grid {
   direction: rtl;
+}
+
+html[dir="ltr"] .main-news-grid {
+  direction: ltr;
 }
 
 .center-news-feed {
@@ -306,4 +313,14 @@ h1, h2, h3 {
   display: flex;
   flex-direction: column;
   gap: 12px;
+}
+
+/* Prevent mid-word truncation in card headlines */
+.news-card h2,
+.news-card h3 {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  -ms-word-break: break-word;
+  word-break: break-word;
+  hyphens: auto;
 }

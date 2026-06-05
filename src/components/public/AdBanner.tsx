@@ -11,13 +11,13 @@ function AdContent() {
         آپ کا اشتہار یہاں ہو سکتا ہے
       </p>
       <p className="text-xs md:text-sm text-white/80 text-center">
-        For your ads email us at:
-      </p>
-      <p
-        className="text-xs md:text-sm text-white mt-1 text-center"
-        style={{ fontFamily: 'Arial, Helvetica, sans-serif', letterSpacing: '0.3px' }}
-      >
-        pnewspoint@gmail.com
+        For your ads email us at:&nbsp;
+        <span
+          className="block mt-0.5 text-white"
+          style={{ fontFamily: 'Arial, Helvetica, sans-serif', letterSpacing: '0.3px' }}
+        >
+          pnewspoint@gmail.com
+        </span>
       </p>
     </>
   );
