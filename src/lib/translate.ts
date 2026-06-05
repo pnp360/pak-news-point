@@ -2569,6 +2569,9 @@ const TRANSLATION_FIXES: [RegExp, string][] = [
 
 // Strip common raw English suffixes/phrases left untranslated in headlines
 const RAW_ENGLISH_PATTERNS: RegExp[] = [
+  /\[!\[.*?\]\(.*?\)\]/,                          // markdown image: [![alt](url)]
+  /!\[.*?\]\(.*?\)/g,                              // raw markdown image: ![alt](url)
+  /\[.*?\]\(.*?\)/g,                               // generic markdown link: [text](url)
   /[-–—]\s*(business\s+live|live|business|latest|update|breaking)\s*$/gi,
   /[-–—]\s*[a-zA-Z\s]{2,40}$/g,
   /\b(live|breaking|update)\s*[-–—]\s*/gi,

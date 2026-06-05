@@ -6,7 +6,7 @@ import { formatViews } from '@/lib/utils';
 import { getWatermarkedUrl } from '@/lib/watermark-client';
 import SafeImage from './SafeImage';
 import { useLanguage } from '@/components/LanguageProvider';
-import { CATEGORY_ENGLISH_NAMES, t } from '@/lib/i18n';
+import { CATEGORY_ENGLISH_NAMES } from '@/lib/i18n';
 
 interface NewsCardProps {
   title: string;
@@ -24,7 +24,8 @@ export default function NewsCard({
   title, originalTitle, slug, excerpt, featuredImage, category, publishedAt, views, variant = 'default',
 }: NewsCardProps) {
   const { lang } = useLanguage();
-  const displayTitle = lang === 'en' && originalTitle ? originalTitle : title;
+  const rawTitle = lang === 'en' && originalTitle ? originalTitle : title;
+  const displayTitle = rawTitle.replace(/\[!\[.*?\]\(.*?\)\]|!\[.*?\]\(.*?\)|\[.*?\]\(.*?\)/g, '').trim();
   const categoryName = lang === 'en' ? (CATEGORY_ENGLISH_NAMES[category.slug] || category.nameUrdu) : category.nameUrdu;
   const imgSrc = getWatermarkedUrl(featuredImage || '');
   const viewsLabel = lang === 'en' ? 'views' : 'ملاحظات';
@@ -79,7 +80,7 @@ export default function NewsCard({
               {displayTitle}
             </h3>
             <div className="flex items-center gap-2 mt-1.5 text-xs text-gray-400">
-              {publishedAt && <span>{timeAgo(publishedAt)}</span>}
+              {publishedAt && <span>{timeAgo(publishedAt, lang)}</span>}
             </div>
           </div>
         </Link>

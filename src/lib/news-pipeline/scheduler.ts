@@ -175,7 +175,12 @@ export async function runPipeline(): Promise<PipelineResult> {
         }
 
         // Build final content as HTML paragraphs
-        const paragraphs = body
+        const cleanBody = body
+          .replace(/\[!\[.*?\]\(.*?\)\]/g, '')
+          .replace(/!\[.*?\]\(.*?\)/g, '')
+          .replace(/\[.*?\]\(.*?\)/g, '')
+          .replace(/<[^>]+>/g, '');
+        const paragraphs = cleanBody
           .split(/[.!?]\s*/)
           .filter(Boolean)
           .map((s) => `<p>${s.trim()}۔</p>`)
