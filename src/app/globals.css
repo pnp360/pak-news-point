@@ -100,9 +100,17 @@ html {
 
 body {
   font-family: 'Noto Nastaliq Urdu', serif;
+  line-height: 2.25;
+}
+
+html[dir="rtl"] body {
   direction: rtl;
   text-align: right;
-  line-height: 2.25;
+}
+
+html[dir="ltr"] body {
+  direction: ltr;
+  text-align: left;
 }
 
 h1, h2, h3 {

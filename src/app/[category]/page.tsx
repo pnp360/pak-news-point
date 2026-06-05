@@ -6,6 +6,7 @@ import NewsCard from '@/components/public/NewsCard';
 import AdBanner from '@/components/public/AdBanner';
 import Pagination from '@/components/public/Pagination';
 import LangText from '@/components/LangText';
+import { CATEGORY_ENGLISH_NAMES } from '@/lib/i18n';
 
 interface Props {
   params: { category: string };
@@ -53,7 +54,9 @@ export default async function CategoryPage({ params, searchParams }: Props) {
   return (
     <div className="container mx-auto px-4 py-6">
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 mb-6">
-        <h1 className="text-3xl font-bold">{category.nameUrdu}</h1>
+        <h1 className="text-3xl font-bold">
+          <LangText ur={category.nameUrdu} en={CATEGORY_ENGLISH_NAMES[category.slug] || category.name} />
+        </h1>
         {category.description && (
           <p className="text-gray-600 dark:text-gray-400 mt-2">{category.description}</p>
         )}

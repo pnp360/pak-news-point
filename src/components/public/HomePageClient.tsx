@@ -60,7 +60,7 @@ export default function HomePageClient({ data }: { data: any }) {
                     {cleanArticleTitle(mainFeaturedTitle)}
                   </h1>
                   <div className="flex items-center gap-3 text-sm text-white/80 font-medium">
-                    {mainFeatured.publishedAt && <span>{timeAgo(mainFeatured.publishedAt)}</span>}
+                    {mainFeatured.publishedAt && <span>{timeAgo(mainFeatured.publishedAt, lang)}</span>}
                   </div>
                 </div>
               </Link>
@@ -89,7 +89,7 @@ export default function HomePageClient({ data }: { data: any }) {
                       <h3 className="text-sm font-semibold leading-[1.6] mt-0.5 group-hover:text-primary-600 transition-colors line-clamp-2">
                         {cleanArticleTitle(sideTitle)}
                       </h3>
-                      <span className="text-xs text-gray-400 mt-1 block">{story.publishedAt && timeAgo(story.publishedAt)}</span>
+                      <span className="text-xs text-gray-400 mt-1 block">{story.publishedAt && timeAgo(story.publishedAt, lang)}</span>
                     </div>
                   </Link>
                 </article>
@@ -178,7 +178,7 @@ export default function HomePageClient({ data }: { data: any }) {
                           <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 70%, transparent 100%)' }} />
                           <div className="absolute bottom-0 inset-x-0 p-4">
                             <h3 className="text-white font-extrabold text-lg leading-[2] group-hover:underline drop-shadow-lg">{cleanArticleTitle(articles[0].title)}</h3>
-                            <span className="text-white/80 text-xs mt-1 block font-medium">{articles[0].publishedAt && timeAgo(articles[0].publishedAt)}</span>
+                            <span className="text-white/80 text-xs mt-1 block font-medium">{articles[0].publishedAt && timeAgo(articles[0].publishedAt, lang)}</span>
                           </div>
                         </Link>
                       </article>

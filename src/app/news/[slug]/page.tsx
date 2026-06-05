@@ -6,6 +6,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Metadata } from 'next';
 import { getUrduDate, getHijriDate, timeAgo } from '@/lib/urdu';
+import type { Language } from '@/lib/i18n';
+import { CATEGORY_ENGLISH_NAMES } from '@/lib/i18n';
 import { formatViews, getReadingTime } from '@/lib/utils';
 import { getWatermarkedUrl } from '@/lib/watermark';
 import NewsCard from '@/components/public/NewsCard';
@@ -116,7 +118,7 @@ export default async function ArticlePage({ params }: Props) {
             <Link href="/" className="hover:text-primary-600 transition-colors"><LangText ur="صفحہ اول" en="Home" /></Link>
             <span>/</span>
             <Link href={`/category/${article.category.slug}`} className="hover:text-primary-600 transition-colors">
-              {article.category.nameUrdu}
+              <LangText ur={article.category.nameUrdu} en={CATEGORY_ENGLISH_NAMES[article.category.slug] || article.category.name} />
             </Link>
             <span>/</span>
             <span className="text-gray-600 dark:text-gray-400 truncate max-w-[200px]">{article.title}</span>
@@ -124,7 +126,7 @@ export default async function ArticlePage({ params }: Props) {
 
           {/* Category Badge */}
           <span className="inline-block bg-primary-600 text-white text-xs font-semibold px-3 py-1.5 rounded-full mb-4 uppercase tracking-wider">
-            {article.category.nameUrdu}
+            <LangText ur={article.category.nameUrdu} en={CATEGORY_ENGLISH_NAMES[article.category.slug] || article.category.name} />
           </span>
 
           {/* Title */}
@@ -182,7 +184,7 @@ export default async function ArticlePage({ params }: Props) {
                 />
               </div>
               <figcaption className="text-sm text-gray-400 mt-2 text-center">
-                {article.category.nameUrdu} — {article.title}
+                <LangText ur={article.category.nameUrdu} en={CATEGORY_ENGLISH_NAMES[article.category.slug] || article.category.name} /> — {article.title}
               </figcaption>
             </figure>
           )}

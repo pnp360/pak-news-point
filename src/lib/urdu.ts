@@ -36,12 +36,22 @@ export function getHijriDate(): string {
   return `${toUrduNumber(hijriDay || 1)} ${urduMonths[hijriMonth - 1] || 'محرم'} ${toUrduNumber(hijriYear)}`;
 }
 
-export function timeAgo(date: Date): string {
+import type { Language } from './i18n';
+
+export function timeAgo(date: Date, lang: Language = 'ur'): string {
   const now = new Date();
   const diffMs = now.getTime() - date.getTime();
   const diffMins = Math.floor(diffMs / 60000);
   const diffHours = Math.floor(diffMins / 60);
   const diffDays = Math.floor(diffHours / 24);
+
+  if (lang === 'en') {
+    if (diffMins < 1) return 'Just now';
+    if (diffMins < 60) return `${diffMins} min ago`;
+    if (diffHours < 24) return `${diffHours} hr ago`;
+    if (diffDays < 7) return `${diffDays}d ago`;
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
 
   if (diffMins < 1) return 'ابھی';
   if (diffMins < 60) return `${toUrduNumber(diffMins)} منٹ پہلے`;
