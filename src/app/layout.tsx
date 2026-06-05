@@ -67,13 +67,21 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   };
 
   return (
-    <html dir="rtl" lang="ur" suppressHydrationWarning>
+    <html suppressHydrationWarning>
       <head>
         <script
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
                 try {
+                  var lang = localStorage.getItem('lang');
+                  if (lang === 'en') {
+                    document.documentElement.lang = 'en';
+                    document.documentElement.dir = 'ltr';
+                  } else {
+                    document.documentElement.lang = 'ur';
+                    document.documentElement.dir = 'rtl';
+                  }
                   var theme = localStorage.getItem('theme');
                   if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                     document.documentElement.classList.add('dark');

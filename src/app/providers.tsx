@@ -2,11 +2,14 @@
 
 import { SessionProvider } from 'next-auth/react';
 import { Toaster } from 'react-hot-toast';
+import LanguageProvider from '@/components/LanguageProvider';
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <SessionProvider>
-      {children}
+      <LanguageProvider>
+        {children}
+      </LanguageProvider>
       <Toaster
         position="top-center"
         toastOptions={{

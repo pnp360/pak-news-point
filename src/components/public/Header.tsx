@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { HiMenu, HiX, HiSearch, HiSun, HiMoon } from 'react-icons/hi';
 import Logo from './Logo';
+import { useLanguage } from '@/components/LanguageProvider';
+import { t } from '@/lib/i18n';
 
 interface BreakingItem {
   slug: string;
@@ -27,10 +29,11 @@ const categories = [
 ];
 
 export default function Header({ breakingNews = [] }: HeaderProps) {
+  const { lang, toggleLang } = useLanguage();
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [todayDateUrdu, setTodayDateUrdu] = useState('');
+  const [todayDate, setTodayDate] = useState('');
   const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
@@ -45,8 +48,8 @@ export default function Header({ breakingNews = [] }: HeaderProps) {
   };
 
   useEffect(() => {
-    setTodayDateUrdu(
-      new Date().toLocaleDateString('ur-PK', {
+    setTodayDate(
+      new Date().toLocaleDateString(lang === 'ur' ? 'ur-PK' : 'en-PK', {
         weekday: 'long',
         day: 'numeric',
         month: 'long',
@@ -54,7 +57,7 @@ export default function Header({ breakingNews = [] }: HeaderProps) {
         timeZone: 'Asia/Karachi',
       })
     );
-  }, []);
+  }, [lang]);
 
   const [scrolled, setScrolled] = useState(false);
 
@@ -79,7 +82,7 @@ export default function Header({ breakingNews = [] }: HeaderProps) {
           {breakingNews.length > 0 && (
             <div className="flex items-center gap-2 flex-1 min-w-0">
               <span className="bg-yellow-300 text-red-800 font-bold text-xs px-2 py-0.5 rounded shrink-0">
-                بریکنگ
+                {t('breaking', lang)}
               </span>
               <div className="overflow-hidden flex-1 min-w-0">
                 <div className="whitespace-nowrap animate-scroll-left inline-block">
@@ -97,7 +100,7 @@ export default function Header({ breakingNews = [] }: HeaderProps) {
               </div>
             </div>
           )}
-          <span className="text-xs whitespace-nowrap shrink-0 bg-white/10 px-3 py-1.5 rounded dir=ltr text-left" style={{ unicodeBidi: 'plaintext' }}>{todayDateUrdu}</span>
+          <span className="text-xs whitespace-nowrap shrink-0 bg-white/10 px-3 py-1.5 rounded" style={{ unicodeBidi: 'plaintext' }}>{todayDate}</span>
         </div>
       </div>
 
@@ -128,14 +131,21 @@ export default function Header({ breakingNews = [] }: HeaderProps) {
             <button
               onClick={toggleDark}
               className="p-2 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-full"
-              aria-label="ڈارک موڈ"
+              aria-label={t('theme.dark', lang)}
             >
               {darkMode ? <HiSun className="w-5 h-5" /> : <HiMoon className="w-5 h-5" />}
             </button>
             <button
+              onClick={toggleLang}
+              className="px-2 py-1 text-xs font-bold border border-gray-300 dark:border-slate-500 rounded hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
+              aria-label={t('language.toggle', lang)}
+            >
+              {t('language.toggle', lang)}
+            </button>
+            <button
               onClick={() => setSearchOpen(!searchOpen)}
               className="p-2 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-full"
-              aria-label="تلاش"
+              aria-label={t('search.button', lang)}
             >
               <HiSearch className="w-5 h-5" />
             </button>
@@ -174,14 +184,14 @@ export default function Header({ breakingNews = [] }: HeaderProps) {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="خبریں تلاش کریں..."
+              placeholder={t('search.placeholder', lang)}
               className="flex-1 px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-slate-800 dark:text-white"
             />
             <button
               type="submit"
               className="bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700"
             >
-              تلاش
+              {t('search.button', lang)}
             </button>
           </form>
         </div>
