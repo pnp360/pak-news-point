@@ -1,7 +1,4 @@
-import sharp from 'sharp';
-
 const ALLOWED_HOSTS = ['images.pexels.com', 'images.unsplash.com', 'plus.unsplash.com', 'source.unsplash.com'];
-
 const WATERMARK_TEXT = 'Azad Khabar';
 
 function generateWatermarkSvg(width: number): Buffer {
@@ -36,6 +33,7 @@ function generateWatermarkSvg(width: number): Buffer {
 }
 
 export async function processImage(imageBuffer: Buffer): Promise<Buffer> {
+  const sharp = (await import('sharp')).default;
   const metadata = await sharp(imageBuffer).metadata();
   let w = metadata.width!;
   const h = metadata.height!;
