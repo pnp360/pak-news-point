@@ -4,12 +4,11 @@ import { prisma } from '@/lib/prisma';
 import NewsCard from '@/components/public/NewsCard';
 import AdBanner from '@/components/public/AdBanner';
 import Pagination from '@/components/public/Pagination';
+import LangText from '@/components/LangText';
 
 interface Props {
   searchParams: { q?: string; page?: string };
 }
-
-export const metadata = { title: 'تلاش - Azad Khabar' };
 
 export default async function SearchPage({ searchParams }: Props) {
   const query = searchParams.q || '';
@@ -32,7 +31,7 @@ export default async function SearchPage({ searchParams }: Props) {
       skip: (page - 1) * pageSize,
       take: pageSize,
       include: {
-        category: { select: { nameUrdu: true, slug: true } },
+        category: { select: { name: true, nameUrdu: true, slug: true } },
       },
     }),
     prisma.article.count({
@@ -54,16 +53,20 @@ export default async function SearchPage({ searchParams }: Props) {
   return (
     <div className="container mx-auto px-4 py-6">
       <h1 className="text-3xl font-bold mb-6">
-        {query ? `تلاش: ${query}` : 'تمام خبریں'}
+        {query ? (
+          <><LangText ur="تلاش:" en="Search:" /> {query}</>
+        ) : (
+          <LangText ur="تمام خبریں" en="All News" />
+        )}
       </h1>
       <p className="text-gray-500 mb-6">
-        {total} {query ? 'میں' : ''} نتائج ملے
+        {total} <LangText ur="نتائج ملے" en="results found" />
       </p>
 
       {articles.length === 0 ? (
         <div className="text-center py-20 text-gray-500">
-          <p className="text-xl">کوئی خبر نہیں ملی</p>
-          <p className="mt-2">براہ کرم دوسرے کلیدی الفاظ سے تلاش کریں</p>
+          <p className="text-xl"><LangText ur="کوئی خبر نہیں ملی" en="No articles found" /></p>
+          <p className="mt-2"><LangText ur="براہ کرم دوسرے کلیدی الفاظ سے تلاش کریں" en="Please try different keywords" /></p>
         </div>
       ) : (
         <div className="grid grid-cols-1 xl:grid-cols-[160px_1fr_160px] gap-4 items-start">

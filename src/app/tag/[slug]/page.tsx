@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 import NewsCard from '@/components/public/NewsCard';
 import AdBanner from '@/components/public/AdBanner';
 import Pagination from '@/components/public/Pagination';
+import LangText from '@/components/LangText';
 
 interface Props {
   params: { slug: string };
@@ -13,8 +14,8 @@ interface Props {
 
 export async function generateMetadata({ params }: Props) {
   const tag = await prisma.tag.findUnique({ where: { slug: params.slug } });
-  if (!tag) return { title: 'ٹیگ نہیں ملا' };
-  return { title: `${tag.name} - خبریں`, description: `${tag.name} سے متعلق خبریں` };
+  if (!tag) return { title: 'Tag not found' };
+  return { title: `${tag.name} - Azad Khabar`, description: `${tag.name} related news` };
 }
 
 export default async function TagPage({ params, searchParams }: Props) {
@@ -34,7 +35,7 @@ export default async function TagPage({ params, searchParams }: Props) {
       skip: (page - 1) * pageSize,
       take: pageSize,
       include: {
-        category: { select: { nameUrdu: true, slug: true } },
+        category: { select: { name: true, nameUrdu: true, slug: true } },
       },
     }),
     prisma.article.count({
@@ -49,12 +50,14 @@ export default async function TagPage({ params, searchParams }: Props) {
 
   return (
     <div className="container mx-auto px-4 py-6">
-      <h1 className="text-3xl font-bold mb-2">ٹیگ: {tag.name}</h1>
-      <p className="text-gray-500 mb-6">{total} خبریں</p>
+      <h1 className="text-3xl font-bold mb-2">
+        <LangText ur="ٹیگ:" en="Tag:" /> {tag.name}
+      </h1>
+      <p className="text-gray-500 mb-6">{total} <LangText ur="خبریں" en="articles" /></p>
 
       {articles.length === 0 ? (
         <div className="text-center py-20 text-gray-500">
-          <p className="text-xl">اس ٹیگ میں کوئی خبر نہیں ہے</p>
+          <p className="text-xl"><LangText ur="اس ٹیگ میں کوئی خبر نہیں ہے" en="No articles in this tag" /></p>
         </div>
       ) : (
         <div className="grid grid-cols-1 xl:grid-cols-[160px_1fr_160px] gap-4 items-start">

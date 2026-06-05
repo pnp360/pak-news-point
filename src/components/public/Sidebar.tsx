@@ -1,12 +1,17 @@
+'use client';
+
 import Link from 'next/link';
 import WeatherWidget from './WeatherWidget';
 import PrayerTimesWidget from './PrayerTimesWidget';
 import RatesWidget from './RatesWidget';
 import PoetryWidget from './PoetryWidget';
+import { useLanguage } from '@/components/LanguageProvider';
+import { t, CATEGORY_ENGLISH_NAMES } from '@/lib/i18n';
 
 interface SidebarArticle {
   id: string;
   title: string;
+  originalTitle?: string | null;
   slug: string;
   views: number;
   publishedAt: Date | null;
@@ -17,17 +22,36 @@ interface SidebarProps {
   latest: SidebarArticle[];
 }
 
+const sidebarCategories = [
+  { slug: 'pakistan' },
+  { slug: 'world' },
+  { slug: 'sports' },
+  { slug: 'business' },
+  { slug: 'entertainment' },
+  { slug: 'technology' },
+  { slug: 'health' },
+  { slug: 'education' },
+  { slug: 'poetry' },
+];
+
 export default function Sidebar({ trending, latest }: SidebarProps) {
+  const { lang } = useLanguage();
+
+  const latestDisplay = latest.map((a) => ({
+    ...a,
+    displayTitle: lang === 'en' && a.originalTitle ? a.originalTitle : a.title,
+  }));
+
   return (
     <aside className="space-y-8">
-      {/* Trending */}
-      <div className="bg-white rounded-xl shadow-sm p-5">
-        <h3 className="text-lg font-bold border-b pb-3 mb-4 flex items-center gap-2">
+      {/* Latest */}
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-5">
+        <h3 className="text-lg font-bold border-b dark:border-gray-700 pb-3 mb-4 flex items-center gap-2">
           <span className="w-1 h-6 bg-primary-600 rounded inline-block" />
-          تازہ ترین
+          {t('sidebar.latest', lang)}
         </h3>
         <div className="space-y-4">
-          {latest.filter((a) => /[\u0600-\u06FF]/.test(a.title)).slice(0, 5).map((article, i) => (
+          {latestDisplay.slice(0, 5).map((article, i) => (
             <Link
               key={article.id}
               href={`/news/${article.slug}`}
@@ -38,7 +62,7 @@ export default function Sidebar({ trending, latest }: SidebarProps) {
               </span>
               <div className="flex-1 min-w-0">
                 <h4 className="text-sm font-medium leading-[1.5] group-hover:text-primary-600">
-                  {article.title}
+                  {article.displayTitle}
                 </h4>
               </div>
             </Link>
@@ -47,28 +71,28 @@ export default function Sidebar({ trending, latest }: SidebarProps) {
       </div>
 
       {/* Weather Widget */}
-      <div className="bg-white rounded-xl shadow-sm p-5">
-        <h3 className="text-lg font-bold border-b pb-3 mb-4 flex items-center gap-2">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-5">
+        <h3 className="text-lg font-bold border-b dark:border-gray-700 pb-3 mb-4 flex items-center gap-2">
           <span className="w-1 h-6 bg-primary-600 rounded inline-block" />
-          موسم
+          {t('sidebar.weather', lang)}
         </h3>
         <WeatherWidget />
       </div>
 
       {/* Currency & Gold Rates */}
-      <div className="bg-white rounded-xl shadow-sm p-5">
-        <h3 className="text-lg font-bold border-b pb-3 mb-4 flex items-center gap-2">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-5">
+        <h3 className="text-lg font-bold border-b dark:border-gray-700 pb-3 mb-4 flex items-center gap-2">
           <span className="w-1 h-6 bg-primary-600 rounded inline-block" />
-          زر مبادلہ کی شرح
+          {t('sidebar.rates', lang)}
         </h3>
         <RatesWidget />
       </div>
 
       {/* Prayer Times */}
-      <div className="bg-white rounded-xl shadow-sm p-5">
-        <h3 className="text-lg font-bold border-b pb-3 mb-4 flex items-center gap-2">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-5">
+        <h3 className="text-lg font-bold border-b dark:border-gray-700 pb-3 mb-4 flex items-center gap-2">
           <span className="w-1 h-6 bg-primary-600 rounded inline-block" />
-          اوقات نماز
+          {t('sidebar.prayer', lang)}
         </h3>
         <PrayerTimesWidget />
       </div>
@@ -77,31 +101,26 @@ export default function Sidebar({ trending, latest }: SidebarProps) {
       <PoetryWidget />
 
       {/* Categories */}
-      <div className="bg-white rounded-xl shadow-sm p-5">
-        <h3 className="text-lg font-bold border-b pb-3 mb-4 flex items-center gap-2">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-5">
+        <h3 className="text-lg font-bold border-b dark:border-gray-700 pb-3 mb-4 flex items-center gap-2">
           <span className="w-1 h-6 bg-primary-600 rounded inline-block" />
-          اقسام
+          {t('sidebar.categories', lang)}
         </h3>
         <div className="grid grid-cols-2 gap-2">
-          {[
-            { name: 'پاکستان', slug: 'pakistan' },
-            { name: 'دنیا', slug: 'world' },
-            { name: 'کھیل', slug: 'sports' },
-            { name: 'کاروبار', slug: 'business' },
-            { name: 'شوبز', slug: 'entertainment' },
-            { name: 'سائنس و ٹیکنالوجی', slug: 'technology' },
-            { name: 'صحت', slug: 'health' },
-            { name: 'تعلیم', slug: 'education' },
-            { name: 'شاعری', slug: 'poetry' },
-          ].map((cat) => (
-            <Link
-              key={cat.slug}
-              href={`/${cat.slug}`}
-              className="block bg-gray-50 hover:bg-primary-50 hover:text-primary-700 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 text-sm font-medium px-3 py-2 rounded-lg transition-colors text-center"
-            >
-              {cat.name}
-            </Link>
-          ))}
+          {sidebarCategories.map((cat) => {
+            const catName = lang === 'en'
+              ? (CATEGORY_ENGLISH_NAMES[cat.slug] || cat.slug)
+              : t(`categories.${cat.slug}` as any, 'ur');
+            return (
+              <Link
+                key={cat.slug}
+                href={`/${cat.slug}`}
+                className="block bg-gray-50 hover:bg-primary-50 hover:text-primary-700 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 text-sm font-medium px-3 py-2 rounded-lg transition-colors text-center"
+              >
+                {catName}
+              </Link>
+            );
+          })}
         </div>
       </div>
     </aside>

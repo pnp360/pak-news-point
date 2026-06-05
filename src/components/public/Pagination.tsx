@@ -1,6 +1,8 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useLanguage } from '@/components/LanguageProvider';
+import { t } from '@/lib/i18n';
 
 interface PaginationProps {
   currentPage: number;
@@ -9,6 +11,7 @@ interface PaginationProps {
 }
 
 export default function Pagination({ currentPage, totalPages, basePath }: PaginationProps) {
+  const { lang } = useLanguage();
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -34,9 +37,9 @@ export default function Pagination({ currentPage, totalPages, basePath }: Pagina
       <button
         onClick={() => goToPage(currentPage - 1)}
         disabled={currentPage <= 1}
-        className="px-4 py-2 rounded-lg border hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="px-4 py-2 rounded-lg border hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        پچھلا
+        {t('pagination.previous', lang)}
       </button>
       {pages.map((page, i) =>
         typeof page === 'string' ? (
@@ -48,7 +51,7 @@ export default function Pagination({ currentPage, totalPages, basePath }: Pagina
             className={`w-10 h-10 rounded-lg font-medium ${
               page === currentPage
                 ? 'bg-primary-600 text-white'
-                : 'border hover:bg-gray-50'
+                : 'border dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
             }`}
           >
             {page}
@@ -58,9 +61,9 @@ export default function Pagination({ currentPage, totalPages, basePath }: Pagina
       <button
         onClick={() => goToPage(currentPage + 1)}
         disabled={currentPage >= totalPages}
-        className="px-4 py-2 rounded-lg border hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="px-4 py-2 rounded-lg border hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        اگلا
+        {t('pagination.next', lang)}
       </button>
     </div>
   );
