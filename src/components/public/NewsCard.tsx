@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { timeAgo } from '@/lib/urdu';
 import { formatViews } from '@/lib/utils';
-import { getWatermarkedUrl } from '@/lib/watermark';
+import { getWatermarkedUrl } from '@/lib/watermark-client';
 import SafeImage from './SafeImage';
 import { useLanguage } from '@/components/LanguageProvider';
 import { CATEGORY_ENGLISH_NAMES } from '@/lib/i18n';

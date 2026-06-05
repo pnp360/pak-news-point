@@ -4,7 +4,7 @@ import BreakingNews from '@/components/public/BreakingNews';
 import NewsCard from '@/components/public/NewsCard';
 import Sidebar from '@/components/public/Sidebar';
 import Link from 'next/link';
-import { getWatermarkedUrl } from '@/lib/watermark';
+import { getWatermarkedUrl } from '@/lib/watermark-client';
 import SafeImage from '@/components/public/SafeImage';
 import { timeAgo } from '@/lib/urdu';
 import { cleanArticleTitle } from '@/lib/translate';
