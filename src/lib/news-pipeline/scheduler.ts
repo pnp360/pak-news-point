@@ -109,8 +109,18 @@ async function isDuplicate(title: string, publishedAt: Date): Promise<boolean> {
 }
 
 /** Strip markdown, category prefixes, and non-text cruft from titles */
+const TITLE_SANITIZE: [RegExp, string][] = [
+  [/SpaceX/gi, 'اسپیس ایکس'],
+  [/NASA/gi, 'ناسا'],
+  [/\btrillion\b/gi, 'ٹریلین'],
+  [/\bbillion\b/gi, 'ارب'],
+  [/\bmillion\b/gi, 'ملین'],
+  [/\bAI\b/g, 'مصنوعی ذہانت (AI)'],
+  [/\bUK\b/g, 'برطانیہ'],
+  [/\bUAE\b/g, 'متحدہ عرب امارات'],
+];
 function cleanTitle(raw: string): string {
-  return raw
+  let result = raw
     .replace(/\[!\[.*?\]\(.*?\)\]/g, '')
     .replace(/!\[.*?\]\(.*?\)/g, '')
     .replace(/\[.*?\]\(.*?\)/g, '')
@@ -119,6 +129,10 @@ function cleanTitle(raw: string): string {
     .replace(/\b(live|breaking|update)\s*[-–—]\s*/gi, '')
     .replace(/\s+/g, ' ')
     .trim();
+  for (const [pattern, replacement] of TITLE_SANITIZE) {
+    result = result.replace(pattern, replacement);
+  }
+  return result.trim();
 }
 
 /**

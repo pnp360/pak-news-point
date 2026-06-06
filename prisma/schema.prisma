@@ -57,6 +57,7 @@ model Article {
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
 
+  @@unique([originalTitle, publishedAt])
   @@index([status, publishedAt])
   @@index([categoryId])
   @@index([authorId])
