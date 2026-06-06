@@ -110,8 +110,10 @@ async function isDuplicate(title: string, publishedAt: Date): Promise<boolean> {
 
 /** Strip markdown, category prefixes, and non-text cruft from titles */
 const TITLE_SANITIZE: [RegExp, string][] = [
+  [/سپَچے/g, 'اسپیس ایکس'],
   [/SpaceX/gi, 'اسپیس ایکس'],
   [/NASA/gi, 'ناسا'],
+  [/(\d+\.?\d*)\s*تن\b/g, '$1 ٹریلین'],
   [/\btrillion\b/gi, 'ٹریلین'],
   [/\bbillion\b/gi, 'ارب'],
   [/\bmillion\b/gi, 'ملین'],
@@ -227,25 +229,56 @@ export async function runPipeline(): Promise<PipelineResult> {
         const cleanedTitle = cleanTitle(title);
         const cleanedOriginalTitle = cleanTitle(article.originalTitle);
 
-        // 5) Store
-        await prisma.article.create({
-          data: {
-            title: cleanedTitle,
-            originalTitle: cleanedOriginalTitle,
-            slug: generateSlug(cleanedTitle),
-            excerpt: cleanBody.slice(0, 200),
-            content: paragraphs || `<p>${cleanedTitle}</p>`,
-            featuredImage: article.imageUrl || FALLBACK_IMAGE,
-            categoryId,
-            authorId: admin.id,
-            status: 'PUBLISHED',
-            publishedAt: article.publishedAt,
-            isBreaking: false,
-            isFeatured: false,
-          },
-        });
-
-        created++;
+        // 5) Store via upsert (INSERT … ON CONFLICT DO NOTHING equivalent)
+        if (cleanedOriginalTitle && article.publishedAt) {
+          await prisma.article.upsert({
+            where: {
+              originalTitle_publishedAt: {
+                originalTitle: cleanedOriginalTitle,
+                publishedAt: article.publishedAt,
+              },
+            },
+            update: {},
+            create: {
+              title: cleanedTitle,
+              originalTitle: cleanedOriginalTitle,
+              slug: generateSlug(cleanedTitle),
+              excerpt: cleanBody.slice(0, 200),
+              content: paragraphs || `<p>${cleanedTitle}</p>`,
+              featuredImage: article.imageUrl || FALLBACK_IMAGE,
+              categoryId,
+              authorId: admin.id,
+              status: 'PUBLISHED',
+              publishedAt: article.publishedAt,
+              isBreaking: false,
+              isFeatured: false,
+            },
+          });
+          created++;
+        } else {
+          const dup = await isDuplicate(article.originalTitle, article.publishedAt);
+          if (dup) {
+            result.skipped++;
+            continue;
+          }
+          await prisma.article.create({
+            data: {
+              title: cleanedTitle,
+              originalTitle: cleanedOriginalTitle,
+              slug: generateSlug(cleanedTitle),
+              excerpt: cleanBody.slice(0, 200),
+              content: paragraphs || `<p>${cleanedTitle}</p>`,
+              featuredImage: article.imageUrl || FALLBACK_IMAGE,
+              categoryId,
+              authorId: admin.id,
+              status: 'PUBLISHED',
+              publishedAt: article.publishedAt,
+              isBreaking: false,
+              isFeatured: false,
+            },
+          });
+          created++;
+        }
       } catch {
         errors++;
       }

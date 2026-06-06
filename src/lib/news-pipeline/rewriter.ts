@@ -112,6 +112,7 @@ async function callClaude(title: string, body: string): Promise<RewriteResult | 
  */
 const TRANSLITERATION_FIXES: [RegExp, string][] = [
   // Brand names
+  [/سپَچے/g, 'اسپیس ایکس'],  // common LLM Urdu misspelling of SpaceX
   [/\bSpaceX\b/gi, 'اسپیس ایکس'],
   [/\bNASA\b/gi, 'ناسا'],
   [/\bGoogle\b/gi, 'گوگل'],
@@ -126,7 +127,9 @@ const TRANSLITERATION_FIXES: [RegExp, string][] = [
   [/\bTwitter\b/gi, 'ٹوئٹر'],
   [/\bInstagram\b/gi, 'انسٹاگرام'],
 
-  // Financial & numeric terms
+  // Financial & numeric terms – cover raw LLM transliteration "تن" instead of "ٹریلین"
+  [/(\d+\.?\d*)\s*تن\b/g, '$1 ٹریلین'],
+  [/\bتن\b/g, 'ٹریلین'],
   [/\btrillion\b/gi, 'ٹریلین'],
   [/\bbillion\b/gi, 'ارب'],
   [/\bmillion\b/gi, 'ملین'],

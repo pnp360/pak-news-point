@@ -25,7 +25,7 @@ export default function BreakingNews({ articles }: BreakingNewsProps) {
         <div
           className="whitespace-nowrap inline-block hover:[animation-play-state:paused]"
           style={{
-            animation: 'continuousMarquee 35s linear infinite',
+            animation: 'infiniteMarquee 35s linear infinite',
             willChange: 'transform',
           }}
         >

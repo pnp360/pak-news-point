@@ -201,7 +201,8 @@ export default function WeatherWidget() {
           onChange={(e) => { setSearchQuery(e.target.value); setShowDropdown(true); }}
           onFocus={() => setShowDropdown(true)}
           placeholder="شہر تلاش کریں..."
-          className="w-full px-3 py-1.5 text-xs rounded-lg bg-white/70 border border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="weather-input-field w-full px-3 py-1.5 text-xs rounded-lg bg-white/70 border border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          style={{ direction: 'rtl' }}
         />
         {showDropdown && filteredCities.length > 0 && (
           <div className="absolute z-10 mt-1 w-full bg-white border border-blue-200 rounded-lg shadow-lg max-h-32 overflow-y-auto">

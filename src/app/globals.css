@@ -267,13 +267,38 @@ h1, h2, h3 {
 }
 
 /* Breaking news continuous RTL marquee */
-@keyframes continuousMarquee {
+@keyframes infiniteMarquee {
   0% {
     transform: translate3d(100%, 0, 0);
   }
   100% {
     transform: translate3d(-100%, 0, 0);
   }
+}
+
+.breaking-ticker-container {
+  width: 100%;
+  overflow: hidden;
+  background-color: #8b0000;
+  display: flex;
+  align-items: center;
+  direction: rtl;
+}
+
+.ticker-wrap {
+  display: flex;
+  white-space: nowrap;
+  animation: infiniteMarquee 35s linear infinite;
+}
+
+.ticker-wrap:hover {
+  animation-play-state: paused;
+}
+
+.ticker-item {
+  padding: 0 30px;
+  color: #ffffff;
+  display: inline-block;
 }
 
 .main-news-grid {
