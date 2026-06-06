@@ -5,7 +5,6 @@ import { sanitizeUrduPayload } from '@/lib/sanitize-urdu';
 export interface IngestInput {
   title: string;
   originalTitle?: string | null;
-  sourceUrl?: string | null;
   content: string;
   excerpt?: string | null;
   categoryId: string;
@@ -14,6 +13,24 @@ export interface IngestInput {
   publishedAt: Date;
   isBreaking?: boolean;
   isFeatured?: boolean;
+}
+
+/* In-memory dedup set scoped to the current process lifetime.
+ * Prevents re-insertion of identical content within the same run. */
+const seenHashes = new Set<string>();
+
+function simpleHash(str: string): string {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash |= 0;
+  }
+  return Math.abs(hash).toString(36);
+}
+
+function contentHash(title: string, content: string): string {
+  return simpleHash(title + '|' + content);
 }
 
 function generateSlug(title: string): string {
@@ -29,17 +46,13 @@ export async function ingestArticle(input: IngestInput): Promise<{ id: string; c
   try {
     const title = sanitizeUrduPayload(input.title);
     const originalTitle = input.originalTitle ? sanitizeUrduPayload(input.originalTitle) : null;
-    const sourceUrl = input.sourceUrl?.trim() || null;
     const content = sanitizeUrduPayload(input.content);
 
-    if (sourceUrl) {
-      const existing = await prisma.article.findFirst({
-        where: { sourceUrl },
-        select: { id: true },
-      });
-      if (existing) return { id: existing.id, created: false };
-    }
+    /* In-memory dedup — skip if identical content already ingested this run */
+    const hash = contentHash(title, content);
+    if (seenHashes.has(hash)) return null;
 
+    /* DB-level dedup by composite unique key */
     if (originalTitle && input.publishedAt) {
       const existing = await prisma.article.findUnique({
         where: {
@@ -50,7 +63,10 @@ export async function ingestArticle(input: IngestInput): Promise<{ id: string; c
         },
         select: { id: true },
       });
-      if (existing) return { id: existing.id, created: false };
+      if (existing) {
+        seenHashes.add(hash);
+        return { id: existing.id, created: false };
+      }
     }
 
     const article = await prisma.article.create({
@@ -60,7 +76,6 @@ export async function ingestArticle(input: IngestInput): Promise<{ id: string; c
         slug: generateSlug(title),
         excerpt: input.excerpt || title.slice(0, 200),
         content,
-        sourceUrl,
         featuredImage: input.featuredImage || null,
         categoryId: input.categoryId,
         authorId: input.authorId,
@@ -71,6 +86,7 @@ export async function ingestArticle(input: IngestInput): Promise<{ id: string; c
       },
     });
 
+    seenHashes.add(hash);
     return { id: article.id, created: true };
   } catch (err) {
     console.error('[ingestArticle] Failed:', err instanceof Error ? err.message : err);
