@@ -266,6 +266,16 @@ h1, h2, h3 {
   animation: slideDown 0.4s ease-out;
 }
 
+/* Breaking news continuous RTL marquee */
+@keyframes continuousMarquee {
+  0% {
+    transform: translate3d(100%, 0, 0);
+  }
+  100% {
+    transform: translate3d(-100%, 0, 0);
+  }
+}
+
 .main-news-grid {
   display: grid;
   grid-template-columns: 140px 1fr 160px;
