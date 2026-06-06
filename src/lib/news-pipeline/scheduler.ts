@@ -90,20 +90,17 @@ async function resolveCategory(categoryName: string): Promise<string | null> {
 }
 
 /**
- * Check if an article with the same title + publishedAt window already exists.
+ * Check if an article with the same (normalised) title already exists in the DB,
+ * regardless of publishedAt.  The scraper now returns a stable RSS pubDate per
+ * item, so old items are naturally excluded by the freshness filter.  This
+ * broad check catches any edge-case duplicate that slips through.
  */
-async function isDuplicate(title: string, publishedAt: Date): Promise<boolean> {
+async function isDuplicate(title: string): Promise<boolean> {
   const normalized = title.toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 50);
   if (!normalized) return true;
 
-  // Title + same publication window (±1 hour) — catches identical VOA/Geo repeats
-  const windowStart = new Date(publishedAt.getTime() - 60 * 60 * 1000);
-  const windowEnd = new Date(publishedAt.getTime() + 60 * 60 * 1000);
   const existing = await prisma.article.findFirst({
-    where: {
-      originalTitle: { contains: normalized.slice(0, 30) },
-      publishedAt: { gte: windowStart, lte: windowEnd },
-    },
+    where: { originalTitle: { contains: normalized.slice(0, 30) } },
     select: { id: true },
   });
   return !!existing;
@@ -190,9 +187,8 @@ export async function runPipeline(): Promise<PipelineResult> {
 
     for (const article of batch) {
       try {
-        // Check DB duplicate by title + publishedAt window
-        const dup = await isDuplicate(article.originalTitle, article.publishedAt);
-        if (dup) {
+        // Check DB duplicate by normalised title (any publishedAt)
+        if (await isDuplicate(article.originalTitle)) {
           result.skipped++;
           continue;
         }
@@ -258,8 +254,7 @@ export async function runPipeline(): Promise<PipelineResult> {
           });
           created++;
         } else {
-          const dup = await isDuplicate(article.originalTitle, article.publishedAt);
-          if (dup) {
+          if (await isDuplicate(article.originalTitle)) {
             result.skipped++;
             continue;
           }

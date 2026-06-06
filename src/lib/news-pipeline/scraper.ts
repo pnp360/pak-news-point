@@ -161,19 +161,19 @@ export async function scrapeSource(source: UrduFeedSource): Promise<ScrapedArtic
       const body = extractBody(item);
       const link = item.link || item.guid || '';
 
-      // Validate date: reject dates in the future or older than 7 days
-      let publishedAt: Date;
+      // Validate date: reject future dates; keep original RSS date as-is
+      // (even if old) so the DB dedup key (originalTitle, publishedAt) stays
+      // stable across pipeline runs.  Without a valid pubDate the item is
+      // skipped — the 48-hour freshness filter in the scheduler would also
+      // reject it, and we'd risk creating duplicates with a rolling timestamp.
+      let publishedAt: Date | null = null;
       if (item.pubDate) {
         const parsed = new Date(item.pubDate);
-        const now = Date.now();
-        if (!isNaN(parsed.getTime()) && parsed.getTime() <= now && parsed.getTime() > now - 7 * 24 * 60 * 60 * 1000) {
+        if (!isNaN(parsed.getTime()) && parsed.getTime() <= Date.now()) {
           publishedAt = parsed;
-        } else {
-          publishedAt = new Date();
         }
-      } else {
-        publishedAt = new Date();
       }
+      if (!publishedAt) continue; // skip items without a valid date
 
       articles.push({
         sourceName: source.name,
