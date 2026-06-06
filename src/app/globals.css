@@ -374,6 +374,19 @@ html[dir="ltr"] .main-news-grid {
   text-overflow: ellipsis;
 }
 
+/* Footer newsletter — prevents awkward wrapping on narrow viewports */
+.newsletter-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+@media (width < 480px) {
+  .newsletter-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
 /* Weather search input — RTL Urdu city search */
 .weather-search-input {
   direction: rtl;

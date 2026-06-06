@@ -53,9 +53,9 @@ export default function Footer() {
             </div>
             <h4 className="text-white font-bold mb-3">{t('footer.newsletter', lang)}</h4>
             <p className="text-sm mb-3">{t('footer.newsletter.desc', lang)}</p>
-            <form className="flex gap-2">
-              <input type="email" placeholder={t('footer.email.placeholder', lang)} className="flex-1 px-3 py-2 rounded bg-gray-800 border border-gray-700 text-sm focus:outline-none focus:border-primary-500" />
-              <button type="button" className="bg-primary-600 text-white px-4 py-2 rounded text-sm hover:bg-primary-700 transition-colors">{t('footer.subscribe', lang)}</button>
+            <form className="newsletter-container">
+              <input type="email" placeholder={t('footer.email.placeholder', lang)} className="flex-1 px-3 py-2 rounded bg-gray-800 border border-gray-700 text-sm focus:outline-none focus:border-primary-500 min-w-0" />
+              <button type="button" className="bg-primary-600 text-white px-4 py-2 rounded text-sm hover:bg-primary-700 transition-colors shrink-0">{t('footer.subscribe', lang)}</button>
             </form>
           </div>
         </div>

@@ -151,6 +151,29 @@ export default function HomePageClient({ data }: { data: HomePageData }) {
       <div className="main-news-grid">
         <div className="side-ad-column sticky top-24">
           <AdBanner format="skyscraper" />
+          {data.trendingArticles.length > 0 && (
+            <div className="mt-4 bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4">
+              <h3 className="text-sm font-bold border-b dark:border-gray-700 pb-2 mb-3 flex items-center gap-2">
+                <span className="w-1 h-5 bg-primary-600 rounded inline-block" />
+                {t('trending', lang)}
+              </h3>
+              <div className="space-y-3">
+                {data.trendingArticles.slice(0, 5).map((article: TrendingItem, i: number) => {
+                  const trendTitle = lang === 'en' && article.originalTitle ? article.originalTitle : article.title;
+                  return (
+                    <Link key={article.id} href={`/news/${article.slug}`} className="flex gap-2 group">
+                      <span className="text-primary-600 font-bold text-sm w-5 shrink-0 tabular-nums">
+                        {String(i + 1).padStart(2, '0')}
+                      </span>
+                      <p className="text-xs font-medium leading-[1.6] group-hover:text-primary-600 transition-colors line-clamp-2">
+                        {cleanArticleTitle(trendTitle)}
+                      </p>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="center-news-feed">
