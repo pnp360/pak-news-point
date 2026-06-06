@@ -18,7 +18,7 @@ export default function BreakingNews({ articles }: BreakingNewsProps) {
 
   return (
     <div className="breaking-ticker-container">
-      <span className="bg-[#ffcc00] text-black font-bold px-4 py-2 text-sm shrink-0 z-10 whitespace-nowrap flex items-center">
+      <span className="bg-[#ffcc00] text-black font-bold px-4 py-2 text-sm shrink-0 z-10 whitespace-nowrap flex items-center relative">
         {lang === 'en' ? 'BREAKING' : 'بریکنگ'}
       </span>
       <div className="overflow-hidden min-w-0 flex-1">

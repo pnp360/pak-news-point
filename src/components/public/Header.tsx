@@ -81,7 +81,7 @@ export default function Header({ breakingNews = [] }: HeaderProps) {
         <div className="container mx-auto px-4 flex items-center py-2 gap-3">
           {breakingNews.length > 0 && (
             <div className="flex items-center gap-2 flex-1 min-w-0 overflow-hidden" style={{ direction: 'rtl' }}>
-              <span className="bg-yellow-300 text-red-800 font-bold text-xs px-2 py-0.5 rounded shrink-0">
+              <span className="bg-yellow-300 text-red-800 font-bold text-xs px-2 py-0.5 rounded shrink-0 relative z-10">
                 {t('breaking', lang)}
               </span>
               <div className="overflow-hidden flex-1 min-w-0">

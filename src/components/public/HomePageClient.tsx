@@ -59,7 +59,7 @@ export default function HomePageClient({ data }: { data: HomePageData }) {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
           {mainFeatured && (
             <div className="lg:col-span-3">
-              <Link href={`/news/${mainFeatured.slug}`} className="hero-image-card group relative block overflow-hidden rounded-2xl shadow-sm h-full min-h-[300px] md:min-h-[450px] lg:min-h-[550px]">
+              <Link href={`/news/${mainFeatured.slug}`} className="hero-card-container group relative block overflow-hidden rounded-2xl shadow-sm h-full min-h-[300px] md:min-h-[450px] lg:min-h-[550px]">
                 <SafeImage
                   src={getWatermarkedUrl(mainFeatured.featuredImage || 'https://images.unsplash.com/photo-1555333145-deb2e18f22b0?w=1200&q=80')}
                   alt={mainFeaturedTitle}
