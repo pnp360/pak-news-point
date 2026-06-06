@@ -67,7 +67,7 @@ export default function HomePageClient({ data }: { data: HomePageData }) {
                   sizes="(max-width: 1024px) 100vw, 75vw"
                   className="object-cover group-hover:scale-105 transition-transform duration-700"
                 />
-                <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 70%, transparent 100%)' }} />
+                <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 50%, rgba(0,0,0,0.3) 100%)' }} />
                 <div className="absolute bottom-0 inset-x-0 p-4 md:p-8">
                   <span className="bg-primary-600 text-white px-3 py-1 rounded text-xs font-extrabold inline-block mb-3 uppercase tracking-wider shadow-lg">
                     {mainFeaturedCategory}
