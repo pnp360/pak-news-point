@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { scrapeAllSources, ScrapedArticle } from './scraper';
-import { rewriteArticle } from './rewriter';
+import { rewriteArticle, sanitizeRewrittenContent } from './rewriter';
 import { FALLBACK_IMAGE } from './sources';
 import slugify from 'slugify';
 
@@ -89,14 +89,20 @@ async function resolveCategory(categoryName: string): Promise<string | null> {
 }
 
 /**
- * Check if an article with a similar title already exists.
+ * Check if an article with the same title + publishedAt window already exists.
  */
-async function isDuplicate(title: string): Promise<boolean> {
+async function isDuplicate(title: string, publishedAt: Date): Promise<boolean> {
   const normalized = title.toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 50);
   if (!normalized) return true;
 
+  // Title + same publication window (±1 hour) — catches identical VOA/Geo repeats
+  const windowStart = new Date(publishedAt.getTime() - 60 * 60 * 1000);
+  const windowEnd = new Date(publishedAt.getTime() + 60 * 60 * 1000);
   const existing = await prisma.article.findFirst({
-    where: { title: { contains: normalized.slice(0, 30) } },
+    where: {
+      originalTitle: { contains: normalized.slice(0, 30) },
+      publishedAt: { gte: windowStart, lte: windowEnd },
+    },
     select: { id: true },
   });
   return !!existing;
@@ -166,8 +172,8 @@ export async function runPipeline(): Promise<PipelineResult> {
 
     for (const article of batch) {
       try {
-        // Check DB duplicate
-        const dup = await isDuplicate(article.originalTitle);
+        // Check DB duplicate by title + publishedAt window
+        const dup = await isDuplicate(article.originalTitle, article.publishedAt);
         if (dup) {
           result.skipped++;
           continue;
@@ -179,8 +185,9 @@ export async function runPipeline(): Promise<PipelineResult> {
 
         if (process.env.OPENAI_API_KEY || process.env.ANTHROPIC_API_KEY) {
           const rewrittenResult = await rewriteArticle(article.originalTitle, article.originalBody);
-          title = rewrittenResult.rewrittenTitle;
-          body = rewrittenResult.rewrittenBody;
+          const sanitized = sanitizeRewrittenContent(rewrittenResult.rewrittenTitle, rewrittenResult.rewrittenBody);
+          title = sanitized.title;
+          body = sanitized.body;
           rewritten++;
         }
 

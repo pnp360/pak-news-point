@@ -56,7 +56,7 @@ export default function HomePageClient({ data }: { data: any }) {
                   <span className="bg-primary-600 text-white px-4 py-1.5 rounded text-xs font-extrabold inline-block mb-4 uppercase tracking-wider shadow-lg">
                     {mainFeaturedCategory}
                   </span>
-                  <h1 className="text-white text-2xl md:text-3xl font-extrabold leading-[2.2] mb-4 group-hover:underline decoration-2 underline-offset-4 drop-shadow-lg break-words line-clamp-3">
+                  <h1 className="text-white text-2xl md:text-3xl font-extrabold leading-[2.5] mb-4 group-hover:underline decoration-2 underline-offset-4 drop-shadow-lg overflow-hidden">
                     {cleanArticleTitle(mainFeaturedTitle)}
                   </h1>
                   <div className="flex items-center gap-3 text-sm text-white/80 font-medium">

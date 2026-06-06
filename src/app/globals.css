@@ -318,12 +318,11 @@ html[dir="ltr"] .main-news-grid {
   gap: 12px;
 }
 
-/* Prevent mid-word truncation in card headlines */
+/* Safe Urdu Nastaliq-compatible word wrapping for card headlines.
+ * Must NOT use word-break: break-all / word-break: break-word because they
+ * break Urdu font ligatures (Nastaliq) and produce garbled characters. */
 .news-card h2,
 .news-card h3 {
   overflow-wrap: break-word;
-  word-wrap: break-word;
-  -ms-word-break: break-word;
-  word-break: break-word;
   hyphens: auto;
 }

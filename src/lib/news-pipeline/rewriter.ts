@@ -106,6 +106,50 @@ async function callClaude(title: string, body: string): Promise<RewriteResult | 
  * Rewrite a scraped Urdu article using the best available LLM.
  * Priority: OpenAI (GPT-4o) → Claude (Sonnet) → fallback (keep original).
  */
+/**
+ * Post-rewrite sanitization: fix known LLM transliteration errors
+ * for proper nouns, financial terms, and brand names.
+ */
+const TRANSLITERATION_FIXES: [RegExp, string][] = [
+  // Brand names
+  [/\bSpaceX\b/gi, 'اسپیس ایکس'],
+  [/\bNASA\b/gi, 'ناسا'],
+  [/\bGoogle\b/gi, 'گوگل'],
+  [/\bApple\b/gi, 'ایپل'],
+  [/\bMicrosoft\b/gi, 'مائیکروسافٹ'],
+  [/\bMeta\b/gi, 'میٹا'],
+  [/\bTesla\b/gi, 'ٹیسلا'],
+  [/\bNetflix\b/gi, 'نیٹ فلکس'],
+  [/\bDisney\b/gi, 'ڈزنی'],
+  [/\bYouTube\b/gi, 'یوٹیوب'],
+  [/\bWhatsApp\b/gi, 'واٹس ایپ'],
+  [/\bTwitter\b/gi, 'ٹوئٹر'],
+  [/\bInstagram\b/gi, 'انسٹاگرام'],
+
+  // Financial & numeric terms
+  [/\btrillion\b/gi, 'ٹریلین'],
+  [/\bbillion\b/gi, 'ارب'],
+  [/\bmillion\b/gi, 'ملین'],
+
+  // Countries & cities (to fix LLM hallucinations)
+  [/\bUK\b/gi, 'برطانیہ'],
+  [/\bUAE\b/gi, 'متحدہ عرب امارات'],
+  [/\bKSA\b/gi, 'سعودی عرب'],
+  [/\bIMF\b/gi, 'آئی ایم ایف'],
+  [/\bWHO\b/gi, 'ڈبلیو ایچ او'],
+  [/\bUN\b/gi, 'اقوام متحدہ'],
+];
+
+export function sanitizeRewrittenContent(title: string, body: string): { title: string; body: string } {
+  let cleanTitle = title;
+  let cleanBody = body;
+  for (const [pattern, replacement] of TRANSLITERATION_FIXES) {
+    cleanTitle = cleanTitle.replace(pattern, replacement);
+    cleanBody = cleanBody.replace(pattern, replacement);
+  }
+  return { title: cleanTitle, body: cleanBody };
+}
+
 export async function rewriteArticle(
   title: string,
   body: string

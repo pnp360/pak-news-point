@@ -205,10 +205,11 @@ export async function scrapeAllSources(): Promise<ScrapedArticle[]> {
     else failed++;
   }
 
-  // Deduplicate by title similarity
+  // Deduplicate by title + sourceUrl combination
   const seen = new Set<string>();
   const deduped = all.filter((a) => {
-    const key = a.originalTitle.toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 60);
+    const titleKey = a.originalTitle.toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 60);
+    const key = `${titleKey}::${a.sourceUrl}`;
     if (seen.has(key)) return false;
     seen.add(key);
     return true;
