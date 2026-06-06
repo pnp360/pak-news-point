@@ -43,7 +43,7 @@ export async function POST(req: Request) {
       data: { articleId, authorName, authorEmail, content, parentId: parentId || null },
     });
     return NextResponse.json(comment, { status: 201 });
-  } catch (e) {
+  } catch {
     return NextResponse.json({ error: 'Failed to create comment' }, { status: 500 });
   }
 }

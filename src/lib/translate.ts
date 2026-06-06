@@ -2291,14 +2291,14 @@ function stemWord(word: string): string | null {
   if (/(?:sh|ch|ss|o|x)es$/.test(w) && w.length > 4) attempts.push(w.slice(0, -2));
   if (w.endsWith('s') && !w.endsWith('ss') && w.length > 3) attempts.push(w.slice(0, -1));
   if (w.endsWith('ing') && w.length > 4) {
-    let s = w.slice(0, -3);
+    const s = w.slice(0, -3);
     attempts.push(s);
     if (s.length > 2 && s.at(-1) === s.at(-2)) attempts.push(s.slice(0, -1));
     if (!s.endsWith('e')) attempts.push(s + 'e');
   }
   if (w.endsWith('ied') && w.length > 4) attempts.push(w.slice(0, -3) + 'y');
   if (w.endsWith('ed') && !w.endsWith('eed') && w.length > 3) {
-    let s = w.slice(0, -2);
+    const s = w.slice(0, -2);
     attempts.push(s);
     if (!s.endsWith('e')) attempts.push(s + 'e');
   }
@@ -2435,26 +2435,6 @@ interface WordUnit {
   prep: boolean;   // is English preposition
   verb: boolean;   // is English verb (non-auxiliary)
   fixed: boolean;  // already reordered by a higher-priority rule
-}
-
-function translateWord(w: string): string {
-  const clean = w.replace(/[^a-zA-Z0-9\-']/g, '');
-  const lower = clean.toLowerCase();
-  const urdu = ENGLISH_TO_URDU[lower];
-  if (urdu !== undefined) return w.replace(clean, urdu);
-  const stemmed = stemWord(lower);
-  if (stemmed) return w.replace(clean, stemmed);
-  if (lower.includes('-')) {
-    const parts = lower.split('-');
-    const translated = parts.map(p => {
-      const u = ENGLISH_TO_URDU[p];
-      if (u !== undefined) return u;
-      const s = stemWord(p);
-      return s || transliterateWord(p);
-    }).filter(Boolean);
-    if (translated.length) return translated.join(' ');
-  }
-  return w.replace(clean, transliterateWord(clean));
 }
 
 function getUrdu(word: string): string {

@@ -37,12 +37,12 @@ export async function POST(req: NextRequest) {
         filename: file.name,
         mimeType: file.type,
         size: file.size,
-        uploadedById: (session.user as any).id,
+        uploadedById: (session.user as { id: string }).id,
       },
     });
 
     return NextResponse.json({ url, filename: file.name });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'فائل اپ لوڈ ناکام' }, { status: 500 });
   }
 }

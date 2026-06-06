@@ -13,12 +13,28 @@ import { useLanguage } from '@/components/LanguageProvider';
 import { t, CATEGORY_ENGLISH_NAMES, CATEGORY_URDU_NAMES } from '@/lib/i18n';
 import type { Language } from '@/lib/i18n';
 
-function capitalizeFirst(str: string): string {
-  if (!str) return str;
-  return str.charAt(0).toUpperCase() + str.slice(1);
+interface ArticleItem {
+  id: string; slug: string; title: string; originalTitle?: string | null;
+  featuredImage?: string | null; publishedAt: Date | null; views: number;
+  category: { name: string; nameUrdu: string; slug: string };
 }
 
-export default function HomePageClient({ data }: { data: any }) {
+interface TrendingItem {
+  id: string; slug: string; title: string; originalTitle?: string | null;
+  views: number; publishedAt: Date | null;
+}
+
+interface HomePageData {
+  breakingArticles: { id: string; title: string; originalTitle?: string | null; slug: string }[];
+  featuredArticles: ArticleItem[];
+  latestArticles: ArticleItem[];
+  trendingArticles: TrendingItem[];
+  latestFeed: ArticleItem[];
+  categories: { slug: string; name: string; nameUrdu: string }[];
+  categoryArticles: Record<string, ArticleItem[]>;
+}
+
+export default function HomePageClient({ data }: { data: HomePageData }) {
   const { lang } = useLanguage();
 
   const hasFeatured = data.featuredArticles.length > 0;
@@ -67,7 +83,7 @@ export default function HomePageClient({ data }: { data: any }) {
             </div>
           )}
           <div className="flex flex-col gap-3">
-            {heroSideStories.map((story: any) => {
+            {heroSideStories.map((story: ArticleItem) => {
               const sideTitle = lang === 'en' && story.originalTitle ? story.originalTitle : story.title;
               const sideCategory = lang === 'en'
                 ? (CATEGORY_ENGLISH_NAMES[story.category?.slug] || story.category?.name || story.category?.nameUrdu)
@@ -111,7 +127,7 @@ export default function HomePageClient({ data }: { data: any }) {
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.66 11.2C17.43 10.9 17.15 10.64 16.89 10.38C16.22 9.78 15.46 9.35 14.82 8.72C13.33 7.26 13 4.85 13.95 3C13 3.23 12.17 3.75 11.46 4.32C8.87 6.4 7.85 10.07 9.07 13.22C9.11 13.32 9.15 13.42 9.15 13.55C9.15 13.77 9 13.97 8.8 14.05C8.57 14.15 8.33 14.09 8.14 13.93C8.08 13.88 8.04 13.83 8 13.76C6.87 12.33 6.69 10.28 7.45 8.64C5.78 10 4.87 12.3 5 14.47C5.06 14.97 5.12 15.47 5.29 15.97C5.43 16.57 5.7 17.17 6 17.7C7.08 19.43 8.95 20.67 10.96 20.92C13.1 21.19 15.39 20.8 16.89 19.32C18.55 17.68 19.15 15.15 18.23 13C17.96 12.38 17.6 11.79 17.21 11.24L17.66 11.2Z" /></svg>
             {lang === 'en' ? 'Trending' : 'ٹرینڈنگ'}
           </span>
-          {data.trendingArticles.map((article: any, i: number) => {
+          {data.trendingArticles.map((article: TrendingItem, i: number) => {
             const trendTitle = lang === 'en' && article.originalTitle ? article.originalTitle : article.title;
             return (
               <Link
@@ -141,14 +157,14 @@ export default function HomePageClient({ data }: { data: any }) {
               {data.latestFeed.length > 0 && (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                   <div className="md:col-span-2">
-                    <NewsCard {...(data.latestFeed[0] as any)} variant="featured" />
+                    <NewsCard {...data.latestFeed[0]} variant="featured" />
                   </div>
                   <div>
-                    <NewsCard {...(data.latestFeed[1] as any)} />
+                    <NewsCard {...data.latestFeed[1]} />
                   </div>
-                  <NewsCard {...(data.latestFeed[2] as any)} />
-                  <NewsCard {...(data.latestFeed[3] as any)} />
-                  {data.latestFeed.slice(4).map((article: any) => (
+                  <NewsCard {...data.latestFeed[2]} />
+                  <NewsCard {...data.latestFeed[3]} />
+                  {data.latestFeed.slice(4).map((article) => (
                     <NewsCard key={article.id} {...article} />
                   ))}
                 </div>
@@ -156,8 +172,8 @@ export default function HomePageClient({ data }: { data: any }) {
             </section>
 
             {/* Category Zones */}
-            {Object.entries(data.categoryArticles as Record<string, any[]>).slice(0, 6).map(([slug, articles]: [string, any[]]) => {
-              const category = data.categories.find((c: any) => c.slug === slug);
+            {Object.entries(data.categoryArticles).slice(0, 6).map(([slug, articles]) => {
+              const category = data.categories.find((c) => c.slug === slug);
               if (!category || articles.length === 0) return null;
               const sliceEnd = slug === 'pakistan' ? 7 : slug === 'world' ? 3 : 5;
               const catTitle = lang === 'en' ? (CATEGORY_ENGLISH_NAMES[slug] || category.name) : (CATEGORY_URDU_NAMES[slug] || category.nameUrdu);
@@ -183,7 +199,7 @@ export default function HomePageClient({ data }: { data: any }) {
                         </Link>
                       </article>
                     </div>
-                    {articles.slice(1, sliceEnd).map((article: any) => (
+                    {articles.slice(1, sliceEnd).map((article) => (
                       <NewsCard key={article.id} {...article} />
                     ))}
                   </div>
@@ -215,7 +231,7 @@ export default function HomePageClient({ data }: { data: any }) {
               {t('trending', lang)}
             </h3>
             <div className="space-y-3">
-              {data.trendingArticles.slice(0, 5).map((article: any, i: number) => {
+              {data.trendingArticles.slice(0, 5).map((article: TrendingItem, i: number) => {
                 const trendTitle = lang === 'en' && article.originalTitle ? article.originalTitle : article.title;
                 return (
                   <Link

@@ -36,7 +36,6 @@ export async function processImage(imageBuffer: Buffer): Promise<Buffer> {
   const sharp = (await import('sharp')).default;
   const metadata = await sharp(imageBuffer).metadata();
   let w = metadata.width!;
-  const h = metadata.height!;
 
   const MIN_W = 1200;
   let pipeline = sharp(imageBuffer);

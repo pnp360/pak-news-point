@@ -135,7 +135,6 @@ export default function CommentSection({ articleId }: CommentSectionProps) {
               comment={comment}
               onReply={setReplyTo}
               replyTo={replyTo}
-              articleId={articleId}
             />
           ))}
         </div>
@@ -148,12 +147,10 @@ function CommentItem({
   comment,
   onReply,
   replyTo,
-  articleId,
 }: {
   comment: Comment;
   onReply: (id: string | null) => void;
   replyTo: string | null;
-  articleId: string;
 }) {
   return (
     <div className="bg-white border border-gray-100 rounded-xl p-5 shadow-sm">

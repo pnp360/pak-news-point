@@ -33,13 +33,12 @@ export default function ArticleEditor({ article }: Props) {
   const [title, setTitle] = useState(article?.title || '');
   const [excerpt, setExcerpt] = useState(article?.excerpt || '');
   const [categoryId, setCategoryId] = useState(article?.categoryId || '');
-  const [categories, setCategories] = useState<any[]>([]);
-  const [allTags, setAllTags] = useState<any[]>([]);
+  const [categories, setCategories] = useState<{ id: string; nameUrdu: string; slug: string }[]>([]);
+  const [allTags, setAllTags] = useState<{ id: string; name: string }[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>(
     article?.tags?.map((t) => t.tag.id) || []
   );
   const [featuredImage, setFeaturedImage] = useState(article?.featuredImage || '');
-  const [status, setStatus] = useState(article?.status || 'DRAFT');
   const [isBreaking, setIsBreaking] = useState(article?.isBreaking || false);
   const [isFeatured, setIsFeatured] = useState(article?.isFeatured || false);
   const [saving, setSaving] = useState(false);
@@ -237,7 +236,7 @@ export default function ArticleEditor({ article }: Props) {
 
     setImageBusy(true);
     try {
-      const catName = categories.find((c: any) => c.id === categoryId)?.nameUrdu || '';
+      const catName = categories.find((c) => c.id === categoryId)?.nameUrdu || '';
       const res = await fetch('/api/ai/image', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -314,7 +313,7 @@ export default function ArticleEditor({ article }: Props) {
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
           >
             <option value="">زمرہ منتخب کریں</option>
-            {categories.map((cat: any) => (
+            {categories.map((cat) => (
               <option key={cat.id} value={cat.id}>{cat.nameUrdu}</option>
             ))}
           </select>
@@ -450,7 +449,7 @@ export default function ArticleEditor({ article }: Props) {
       <div>
         <label className="block font-medium mb-1">ٹیگز</label>
         <div className="flex flex-wrap gap-2">
-          {allTags.map((tag: any) => (
+          {allTags.map((tag) => (
             <button
               key={tag.id}
               onClick={() => toggleTag(tag.id)}

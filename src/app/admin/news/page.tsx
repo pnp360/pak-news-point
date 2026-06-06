@@ -16,7 +16,7 @@ export default async function AdminNewsPage({ searchParams }: Props) {
   const pageSize = 20;
   const statusFilter = searchParams.status;
 
-  const where: any = {};
+  const where: Record<string, string> = {};
   if (statusFilter && ['DRAFT', 'PUBLISHED', 'SCHEDULED'].includes(statusFilter)) {
     where.status = statusFilter;
   }

@@ -3,7 +3,20 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
-export default function ColumnEditor({ column }: { column?: any }) {
+interface ColumnData {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string | null;
+  content: string;
+  featuredImage: string | null;
+  columnistName: string;
+  columnistBio: string | null;
+  categoryId: string | null;
+  status: string;
+}
+
+export default function ColumnEditor({ column }: { column?: ColumnData }) {
   const router = useRouter();
   const [title, setTitle] = useState(column?.title || '');
   const [slug, setSlug] = useState(column?.slug || '');
@@ -13,9 +26,8 @@ export default function ColumnEditor({ column }: { column?: any }) {
   const [columnistName, setColumnistName] = useState(column?.columnistName || '');
   const [columnistBio, setColumnistBio] = useState(column?.columnistBio || '');
   const [categoryId, setCategoryId] = useState(column?.categoryId || '');
-  const [status, setStatus] = useState(column?.status || 'DRAFT');
   const [saving, setSaving] = useState(false);
-  const [categories, setCategories] = useState<any[]>([]);
+  const [categories, setCategories] = useState<{ id: string; nameUrdu: string }[]>([]);
 
   useEffect(() => {
     fetch('/api/categories').then(r => r.json()).then(setCategories).catch(() => {});
@@ -151,7 +163,7 @@ export default function ColumnEditor({ column }: { column?: any }) {
                 className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
               >
                 <option value="">کوئی زمرہ نہیں</option>
-                {categories.map((cat: any) => (
+                {categories.map((cat) => (
                   <option key={cat.id} value={cat.id}>{cat.nameUrdu}</option>
                 ))}
               </select>

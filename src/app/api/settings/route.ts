@@ -13,7 +13,7 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
-  if (!session?.user || (session.user as any).role !== 'ADMIN') {
+  if (!session?.user || (session.user as { role: string }).role !== 'ADMIN') {
     return NextResponse.json({ error: 'غیر مجاز رسائی' }, { status: 401 });
   }
 

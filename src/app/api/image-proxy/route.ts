@@ -25,7 +25,6 @@ export async function GET(request: NextRequest) {
       return new NextResponse('Failed to fetch image', { status: 502 });
     }
 
-    const contentType = response.headers.get('content-type') || 'image/jpeg';
     const arrayBuffer = await response.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 

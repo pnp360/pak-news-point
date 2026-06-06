@@ -82,6 +82,7 @@ function upscaleImageUrl(url: string): string {
     .replace('/480x270/', '/976x549/');
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function extractImageUrl(item: any): string | null {
   const mc = item.mediaContent;
   if (mc) {
@@ -96,7 +97,7 @@ function extractImageUrl(item: any): string | null {
   if (thumb) {
     const arr = Array.isArray(thumb) ? thumb : [thumb];
     for (const t of arr) {
-      let url = t?.$?.url || t?.url;
+      const url = t?.$?.url || t?.url;
       if (url) return upscaleImageUrl(url);
     }
   }
@@ -189,6 +190,7 @@ function computeRelevance(titleA: string, titleB: string): number {
   return Math.min(jaccard + keywordMatch + containmentBonus + phraseBonus, 1);
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function getTextContent(item: any): string {
   const fields = [item.title, item.contentSnippet, item.content, item.summary, item.description].filter(Boolean);
   return fields.join(' ');

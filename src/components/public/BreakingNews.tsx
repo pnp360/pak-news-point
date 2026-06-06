@@ -17,23 +17,17 @@ export default function BreakingNews({ articles }: BreakingNewsProps) {
   if (displayArticles.length === 0) return null;
 
   return (
-    <div className="w-full max-w-[100vw] overflow-hidden bg-[#8b0000] flex items-stretch" style={{ direction: 'rtl' }}>
+    <div className="breaking-ticker-container">
       <span className="bg-[#ffcc00] text-black font-bold px-4 py-2 text-sm shrink-0 z-10 whitespace-nowrap flex items-center">
         {lang === 'en' ? 'BREAKING' : 'بریکنگ'}
       </span>
-      <div className="overflow-hidden min-w-0 py-2 flex-1">
-        <div
-          className="whitespace-nowrap inline-block hover:[animation-play-state:paused]"
-          style={{
-            animation: 'infiniteMarquee 35s linear infinite',
-            willChange: 'transform',
-          }}
-        >
+      <div className="overflow-hidden min-w-0 flex-1">
+        <div className="marquee-track py-2">
           {[...displayArticles, ...displayArticles, ...displayArticles].map((article, i) => (
             <a
               key={`${article.id}-${i}`}
               href={`/news/${article.slug}`}
-              className="inline-block text-sm md:text-base text-white hover:underline px-6"
+              className="ticker-item"
             >
               {article.displayTitle}
               <span className="mx-4 text-[#ffcc00]">◆</span>

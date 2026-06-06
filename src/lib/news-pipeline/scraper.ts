@@ -38,6 +38,7 @@ function isTrustedDomain(url: string): boolean {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function extractImage(item: any): string {
   // 1) <media:content>
   const mc = item.mediaContent;
@@ -84,6 +85,7 @@ function extractImage(item: any): string {
   return '';
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function extractBody(item: any): string {
   const fields = [
     item.contentEncoded,

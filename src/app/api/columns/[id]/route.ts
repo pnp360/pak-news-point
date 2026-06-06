@@ -11,7 +11,7 @@ export async function PATCH(request: Request, { params }: { params: { id: string
 
   try {
     const data = await request.json();
-    const updateData: any = {};
+    const updateData: Record<string, unknown> = {};
     if (data.title !== undefined) updateData.title = data.title;
     if (data.slug !== undefined) updateData.slug = data.slug;
     if (data.excerpt !== undefined) updateData.excerpt = data.excerpt;

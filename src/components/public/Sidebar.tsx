@@ -34,7 +34,7 @@ const sidebarCategories = [
   { slug: 'poetry' },
 ];
 
-export default function Sidebar({ trending, latest }: SidebarProps) {
+export default function Sidebar({ latest }: SidebarProps) {
   const { lang } = useLanguage();
 
   const stripMarkdown = (s: string) =>

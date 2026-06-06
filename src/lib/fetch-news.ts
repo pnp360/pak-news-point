@@ -111,7 +111,7 @@ export async function fetchAllFeeds(): Promise<{
             });
             if (existingUrdu) continue;
 
-            const description = item.contentSnippet || item.content || item.summary || (item as any).description || '';
+            const description = item.contentSnippet || item.content || item.summary || '';
             const urduDescription = description ? applyUrduJournalism(await translateToUrduAsync(description.slice(0, 300))) : '';
             const excerpt = urduDescription.slice(0, 200) || urduTitle;
 

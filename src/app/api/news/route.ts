@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
   const search = searchParams.get('search');
   const featured = searchParams.get('featured');
 
-  const where: any = {};
+  const where: Record<string, unknown> = {};
 
   if (status) where.status = status;
   if (category) where.category = { slug: category };
@@ -93,7 +93,7 @@ export async function POST(req: NextRequest) {
       content: sanitizeHtml(content),
       categoryId,
       featuredImage: featuredImage || null,
-      authorId: (session.user as any).id,
+      authorId: (session.user as { id: string }).id,
       status,
       isBreaking,
       isFeatured,

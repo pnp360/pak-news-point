@@ -6,7 +6,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Metadata } from 'next';
 import { getUrduDate, getHijriDate, timeAgo } from '@/lib/urdu';
-import type { Language } from '@/lib/i18n';
 import { CATEGORY_ENGLISH_NAMES } from '@/lib/i18n';
 import { formatViews, getReadingTime, stripMarkdown } from '@/lib/utils';
 import { getWatermarkedUrl } from '@/lib/watermark';

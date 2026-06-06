@@ -5,7 +5,7 @@ import Image from 'next/image';
 import toast from 'react-hot-toast';
 
 export default function AdminMediaPage() {
-  const [media, setMedia] = useState<any[]>([]);
+  const [media, setMedia] = useState<{ id: string; url: string; filename: string }[]>([]);
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => { fetchMedia(); }, []);
@@ -62,7 +62,7 @@ export default function AdminMediaPage() {
 
       {/* Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-        {media.map((item: any) => (
+        {media.map((item) => (
           <div key={item.id} className="bg-white rounded-xl shadow-sm overflow-hidden group cursor-pointer" onClick={() => copyUrl(item.url)}>
             <div className="relative h-32">
               <Image src={item.url} alt={item.filename} fill className="object-cover" />

@@ -43,10 +43,10 @@ async function getHomepageData() {
   const worldSlug = categories.find((c) => c.slug === 'world')?.slug;
 
   const pakistanArticles = pakistanSlug
-    ? latestArticles.filter((a) => (a as any).category?.slug === pakistanSlug)
+    ? latestArticles.filter((a) => a.category?.slug === pakistanSlug)
     : [];
   const worldArticles = worldSlug
-    ? latestArticles.filter((a) => (a as any).category?.slug === worldSlug)
+    ? latestArticles.filter((a) => a.category?.slug === worldSlug)
     : [];
 
   const latestFeed: typeof latestArticles = [];
@@ -66,12 +66,12 @@ async function getHomepageData() {
 
   const remainingLatest = latestArticles.filter((a) => {
     if (!pakistanSlug || !worldSlug) return false;
-    const s = (a as any).category?.slug;
+    const s = a.category?.slug;
     return s !== pakistanSlug && s !== worldSlug;
   });
   latestFeed.push(...remainingLatest);
 
-  const categoryArticles: Record<string, any[]> = {};
+  const categoryArticles: Record<string, { id: string; slug: string; title: string; featuredImage?: string | null; publishedAt: Date | null; views: number; category: { name: string; nameUrdu: string; slug: string } }[]> = {};
   for (const cat of categories) {
     let take = 5;
     if (cat.slug === 'pakistan') take = 8;

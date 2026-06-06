@@ -3,7 +3,19 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
-export default function VideoEditor({ video }: { video?: any }) {
+interface VideoData {
+  id: string;
+  title: string;
+  slug: string;
+  description: string | null;
+  videoUrl: string;
+  thumbnail: string | null;
+  reporterName: string | null;
+  categoryId: string | null;
+  status: string;
+}
+
+export default function VideoEditor({ video }: { video?: VideoData }) {
   const router = useRouter();
   const [title, setTitle] = useState(video?.title || '');
   const [slug, setSlug] = useState(video?.slug || '');
@@ -12,9 +24,8 @@ export default function VideoEditor({ video }: { video?: any }) {
   const [thumbnail, setThumbnail] = useState(video?.thumbnail || '');
   const [reporterName, setReporterName] = useState(video?.reporterName || '');
   const [categoryId, setCategoryId] = useState(video?.categoryId || '');
-  const [status, setStatus] = useState(video?.status || 'DRAFT');
   const [saving, setSaving] = useState(false);
-  const [categories, setCategories] = useState<any[]>([]);
+  const [categories, setCategories] = useState<{ id: string; nameUrdu: string }[]>([]);
 
   useEffect(() => {
     fetch('/api/categories').then(r => r.json()).then(setCategories).catch(() => {});
@@ -147,7 +158,7 @@ export default function VideoEditor({ video }: { video?: any }) {
                 className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
               >
                 <option value="">کوئی زمرہ نہیں</option>
-                {categories.map((cat: any) => (
+                {categories.map((cat) => (
                   <option key={cat.id} value={cat.id}>{cat.nameUrdu}</option>
                 ))}
               </select>

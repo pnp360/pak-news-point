@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 
 export default function AdminSettingsPage() {
-  const [settings, setSettings] = useState<Record<string, string>>({});
   const [dailyLimit, setDailyLimit] = useState('100');
   const [siteName, setSiteName] = useState('');
   const [siteDescription, setSiteDescription] = useState('');
@@ -15,7 +14,6 @@ export default function AdminSettingsPage() {
   const fetchSettings = async () => {
     const res = await fetch('/api/settings');
     const data = await res.json();
-    setSettings(data);
     setDailyLimit(data.daily_news_limit || '100');
     setSiteName(data.site_name || 'Azad Khabar');
     setSiteDescription(data.site_description || '');

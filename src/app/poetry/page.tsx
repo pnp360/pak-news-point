@@ -289,7 +289,7 @@ function PoetryCard({ item, index }: { item: PoetEntry; index: number }) {
 }
 
 function CoupletCard({ couplet, index }: { couplet: { first: string; second: string; poet: string; genre: string }; index: number }) {
-  const [toast, setToast] = useState(false);
+  const [, setToast] = useState(false);
 
   const handleCopy = async () => {
     await copyToClipboard(shareText(couplet.first, couplet.second, couplet.poet));

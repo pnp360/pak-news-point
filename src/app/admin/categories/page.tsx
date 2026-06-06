@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 
 export default function AdminCategoriesPage() {
-  const [categories, setCategories] = useState<any[]>([]);
+  const [categories, setCategories] = useState<{ id: string; name: string; nameUrdu: string; description?: string; order: number; slug?: string; _count?: { articles: number } }[]>([]);
   const [name, setName] = useState('');
   const [nameUrdu, setNameUrdu] = useState('');
   const [description, setDescription] = useState('');
@@ -63,7 +63,7 @@ export default function AdminCategoriesPage() {
     }
   };
 
-  const startEdit = (cat: any) => {
+  const startEdit = (cat: { id: string; name: string; nameUrdu: string; description?: string; order: number }) => {
     setEditingId(cat.id);
     setName(cat.name);
     setNameUrdu(cat.nameUrdu);
@@ -150,7 +150,7 @@ export default function AdminCategoriesPage() {
                 </tr>
               </thead>
               <tbody className="divide-y">
-                {categories.map((cat: any) => (
+                {categories.map((cat) => (
                   <tr key={cat.id} className="hover:bg-gray-50">
                     <td className="p-3">{cat.order}</td>
                     <td className="p-3">{cat.name}</td>

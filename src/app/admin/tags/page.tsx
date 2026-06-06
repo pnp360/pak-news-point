@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 
 export default function AdminTagsPage() {
-  const [tags, setTags] = useState<any[]>([]);
+  const [tags, setTags] = useState<{ id: string; name: string; _count?: { articles: number } }[]>([]);
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -84,7 +84,7 @@ export default function AdminTagsPage() {
         <div className="lg:col-span-2 bg-white rounded-xl shadow-sm p-6">
           <h2 className="text-lg font-bold mb-4">تمام ٹیگز</h2>
           <div className="flex flex-wrap gap-2">
-            {tags.map((tag: any) => (
+            {tags.map((tag) => (
               <div key={tag.id} className="bg-gray-100 px-3 py-1.5 rounded-lg flex items-center gap-2">
                 <span>{tag.name}</span>
                 <span className="text-xs text-gray-500">({tag._count?.articles || 0})</span>

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 
 export default function AdminUsersPage() {
-  const [users, setUsers] = useState<any[]>([]);
+  const [users, setUsers] = useState<{ id: string; name?: string; email: string; role: string; createdAt: string }[]>([]);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -131,7 +131,7 @@ export default function AdminUsersPage() {
                 </tr>
               </thead>
               <tbody className="divide-y">
-                {users.map((user: any) => (
+                {users.map((user) => (
                   <tr key={user.id} className="hover:bg-gray-50">
                     <td className="p-3">{user.name || '-'}</td>
                     <td className="p-3">{user.email}</td>

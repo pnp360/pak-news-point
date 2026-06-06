@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 
 export default function AIRewritePage() {
-  const [articles, setArticles] = useState<any[]>([]);
+  const [articles, setArticles] = useState<{ id: string; title: string; content: string; category?: { nameUrdu: string } }[]>([]);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [running, setRunning] = useState(false);
   const [results, setResults] = useState<{ id: string; title: string; success: boolean }[]>([]);
@@ -29,7 +29,7 @@ export default function AIRewritePage() {
   };
 
   const selectAll = () => {
-    setSelected(new Set(articles.map((a: any) => a.id)));
+    setSelected(new Set(articles.map((a) => a.id)));
   };
 
   const deselectAll = () => {
@@ -48,7 +48,7 @@ export default function AIRewritePage() {
     const selectedIds = Array.from(selected);
 
     for (const id of selectedIds) {
-      const article = articles.find((a: any) => a.id === id);
+      const article = articles.find((a) => a.id === id);
       if (!article) continue;
 
       const res = await fetch('/api/ai/rewrite', {
@@ -108,7 +108,7 @@ export default function AIRewritePage() {
           <p className="text-gray-500 text-center py-8">کوئی ڈرافٹ خبر نہیں ہے</p>
         ) : (
           <div className="space-y-2 mb-6">
-            {articles.map((article: any) => {
+            {articles.map((article) => {
               const done = results.find((r) => r.id === article.id);
               return (
                 <label

@@ -59,9 +59,9 @@ async function fetchCityWeather(city: string): Promise<CityWeather | null> {
   }
 }
 
-function extractForecast(data: any, days: number): ForecastDay[] {
+function extractForecast(data: { weather?: { date: string; maxtempC: string; mintempC: string; hourly: { weatherDesc: { value: string }[]; weatherIconUrl: { value: string }[] }[] }[] }, days: number): ForecastDay[] {
   if (!data?.weather) return [];
-  return data.weather.slice(0, days).map((day: any) => ({
+  return data.weather.slice(0, days).map((day) => ({
     date: day.date || '',
     temp_max_c: day.maxtempC || '--',
     temp_min_c: day.mintempC || '--',
