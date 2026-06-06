@@ -44,6 +44,7 @@ function SkeletonLoader() {
 export default function SafeImage({ src, alt, className, fill, width, height }: SafeImageProps) {
   const [error, setError] = useState(false);
   const [loaded, setLoaded] = useState(false);
+  const [useDirect, setUseDirect] = useState(false);
   const mountedRef = useRef(true);
 
   useEffect(() => {
@@ -53,14 +54,25 @@ export default function SafeImage({ src, alt, className, fill, width, height }: 
   useEffect(() => {
     setError(false);
     setLoaded(false);
+    setUseDirect(false);
   }, [src]);
 
   const onError = useCallback(() => {
-    if (mountedRef.current) {
-      setError(true);
-      setLoaded(true);
+    if (!mountedRef.current) return;
+    /* If the proxy failed, try the original image URL directly */
+    if (!useDirect && src.startsWith('/api/image-proxy')) {
+      try {
+        const direct = new URL(src, window.location.origin).searchParams.get('url');
+        if (direct) {
+          setUseDirect(true);
+          setLoaded(false);
+          return;
+        }
+      } catch {}
     }
-  }, []);
+    setError(true);
+    setLoaded(true);
+  }, [src, useDirect]);
 
   const onLoad = useCallback(() => {
     if (mountedRef.current) {
@@ -69,8 +81,11 @@ export default function SafeImage({ src, alt, className, fill, width, height }: 
   }, []);
 
   const cleanAlt = stripMarkdown(alt);
+  const imgSrc = useDirect && src.startsWith('/api/image-proxy')
+    ? new URL(src, 'http://x').searchParams.get('url') || src
+    : src;
 
-  if (!src || error) {
+  if (!imgSrc || error) {
     return <BrandedFallback className={className} fill={fill} />;
   }
 
@@ -79,7 +94,7 @@ export default function SafeImage({ src, alt, className, fill, width, height }: 
       <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
         {!loaded && <SkeletonLoader />}
         <img
-          src={src}
+          src={imgSrc}
           alt={cleanAlt}
           className={className}
           style={{ width: '100%', height: '100%' }}
@@ -95,7 +110,7 @@ export default function SafeImage({ src, alt, className, fill, width, height }: 
     <div style={{ position: 'relative', width: width || 400, height: height || 250, overflow: 'hidden' }}>
       {!loaded && <SkeletonLoader />}
       <img
-        src={src}
+        src={imgSrc}
         alt={cleanAlt}
         className={className}
         style={{ width: '100%', height: '100%' }}

@@ -195,7 +195,7 @@ export default function HomePageClient({ data }: { data: HomePageData }) {
                             sizes="(max-width: 768px) 100vw, 50vw"
                             className="object-cover group-hover:scale-105 transition-transform duration-500"
                           />
-                          <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 70%, transparent 100%)' }} />
+                <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 50%, rgba(0,0,0,0.3) 100%)' }} />
                           <div className="absolute bottom-0 inset-x-0 p-4">
                             <h3 className="text-white font-extrabold text-lg leading-[2] group-hover:underline drop-shadow-lg break-words line-clamp-3">{cleanArticleTitle(articles[0].title)}</h3>
                             <span className="text-white/80 text-xs mt-1 block font-medium">{articles[0].publishedAt && timeAgo(articles[0].publishedAt, lang)}</span>

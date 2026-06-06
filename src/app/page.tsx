@@ -11,7 +11,7 @@ async function getHomepageData() {
 
   const [breakingArticles, englishArticles, rawFeatured, rawLatest, trendingArticles] = await Promise.all([
     prisma.article.findMany({
-      where: { status: 'PUBLISHED', isBreaking: true },
+      where: { status: 'PUBLISHED', isBreaking: true, publishedAt: { gte: recentSince } },
       orderBy: { publishedAt: 'desc' },
       take: 10,
       select: { id: true, title: true, originalTitle: true, slug: true },
