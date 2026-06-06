@@ -3,8 +3,13 @@ export const dynamic = 'force-dynamic';
 import { prisma } from '@/lib/prisma';
 import HomePageClient from '@/components/public/HomePageClient';
 
+const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1555333145-deb2e18f22b0?w=800&q=75';
+const RECENT_DAYS = 90;
+
 async function getHomepageData() {
-  const [breakingArticles, englishArticles, featuredArticles, latestArticles, trendingArticles] = await Promise.all([
+  const recentSince = new Date(Date.now() - RECENT_DAYS * 24 * 60 * 60 * 1000);
+
+  const [breakingArticles, englishArticles, rawFeatured, rawLatest, trendingArticles] = await Promise.all([
     prisma.article.findMany({
       where: { status: 'PUBLISHED', isBreaking: true },
       orderBy: { publishedAt: 'desc' },
@@ -12,7 +17,7 @@ async function getHomepageData() {
       select: { id: true, title: true, originalTitle: true, slug: true },
     }),
     prisma.article.findMany({
-      where: { status: 'PUBLISHED', originalTitle: { not: null } },
+      where: { status: 'PUBLISHED', originalTitle: { not: null }, publishedAt: { gte: recentSince } },
       orderBy: { publishedAt: 'desc' },
       take: 10,
       select: { id: true, title: true, originalTitle: true, slug: true },
@@ -24,13 +29,13 @@ async function getHomepageData() {
       include: { category: { select: { name: true, nameUrdu: true, slug: true } } },
     }),
     prisma.article.findMany({
-      where: { status: 'PUBLISHED' },
+      where: { status: 'PUBLISHED', publishedAt: { gte: recentSince } },
       orderBy: { publishedAt: 'desc' },
       take: 20,
       include: { category: { select: { name: true, nameUrdu: true, slug: true } } },
     }),
     prisma.article.findMany({
-      where: { status: 'PUBLISHED' },
+      where: { status: 'PUBLISHED', publishedAt: { gte: recentSince } },
       orderBy: { views: 'desc' },
       take: 10,
       select: { id: true, title: true, originalTitle: true, slug: true, views: true, publishedAt: true },
@@ -38,6 +43,14 @@ async function getHomepageData() {
   ]);
 
   const categories = await prisma.category.findMany({ orderBy: { order: 'asc' } });
+
+  /* Fill missing featuredImage with a real fallback URL so SafeImage
+     renders a photograph instead of an empty grey branded block. */
+  function fillImage<T extends { featuredImage?: string | null }>(items: T[]): T[] {
+    return items.map((a) => ({ ...a, featuredImage: a.featuredImage || FALLBACK_IMAGE }));
+  }
+  const featuredArticles = fillImage(rawFeatured);
+  const latestArticles = fillImage(rawLatest);
 
   const pakistanSlug = categories.find((c) => c.slug === 'pakistan')?.slug;
   const worldSlug = categories.find((c) => c.slug === 'world')?.slug;
@@ -71,18 +84,18 @@ async function getHomepageData() {
   });
   latestFeed.push(...remainingLatest);
 
-  const categoryArticles: Record<string, { id: string; slug: string; title: string; featuredImage?: string | null; publishedAt: Date | null; views: number; category: { name: string; nameUrdu: string; slug: string } }[]> = {};
+  const categoryArticles: Record<string, typeof latestArticles[0][]> = {};
   for (const cat of categories) {
     let take = 5;
     if (cat.slug === 'pakistan') take = 8;
     else if (cat.slug === 'world') take = 4;
     const articles = await prisma.article.findMany({
-      where: { status: 'PUBLISHED', categoryId: cat.id },
+      where: { status: 'PUBLISHED', categoryId: cat.id, publishedAt: { gte: recentSince } },
       orderBy: { publishedAt: 'desc' },
       take,
       include: { category: { select: { name: true, nameUrdu: true, slug: true } } },
     });
-    if (articles.length > 0) categoryArticles[cat.slug] = articles;
+    if (articles.length > 0) categoryArticles[cat.slug] = fillImage(articles);
   }
 
   return { breakingArticles, englishArticles, featuredArticles, latestArticles, latestFeed, trendingArticles, categories, categoryArticles };

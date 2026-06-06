@@ -59,7 +59,7 @@ export default function HomePageClient({ data }: { data: HomePageData }) {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
           {mainFeatured && (
             <div className="lg:col-span-3">
-              <Link href={`/news/${mainFeatured.slug}`} className="group relative block overflow-hidden rounded-2xl shadow-sm h-full min-h-[450px] md:min-h-[550px]">
+              <Link href={`/news/${mainFeatured.slug}`} className="group relative block overflow-hidden rounded-2xl shadow-sm h-full min-h-[300px] md:min-h-[450px] lg:min-h-[550px]">
                 <SafeImage
                   src={getWatermarkedUrl(mainFeatured.featuredImage || 'https://images.unsplash.com/photo-1555333145-deb2e18f22b0?w=1200&q=80')}
                   alt={mainFeaturedTitle}
@@ -68,30 +68,30 @@ export default function HomePageClient({ data }: { data: HomePageData }) {
                   className="object-cover group-hover:scale-105 transition-transform duration-700"
                 />
                 <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 70%, transparent 100%)' }} />
-                <div className="absolute bottom-0 inset-x-0 p-6 md:p-8">
-                  <span className="bg-primary-600 text-white px-4 py-1.5 rounded text-xs font-extrabold inline-block mb-4 uppercase tracking-wider shadow-lg">
+                <div className="absolute bottom-0 inset-x-0 p-4 md:p-8">
+                  <span className="bg-primary-600 text-white px-3 py-1 rounded text-xs font-extrabold inline-block mb-3 uppercase tracking-wider shadow-lg">
                     {mainFeaturedCategory}
                   </span>
-                  <h1 className="hero-banner-title-clamp text-white text-2xl md:text-3xl font-extrabold leading-[2.5] mb-4 group-hover:underline decoration-2 underline-offset-4 drop-shadow-lg">
+                  <h1 className="hero-banner-title-clamp text-white text-xl sm:text-2xl md:text-3xl font-extrabold leading-[2] md:leading-[2.5] mb-3 group-hover:underline decoration-2 underline-offset-4 drop-shadow-lg">
                     {cleanArticleTitle(mainFeaturedTitle)}
                   </h1>
-                  <div className="flex items-center gap-3 text-sm text-white/80 font-medium">
+                  <div className="flex items-center gap-3 text-xs md:text-sm text-white/80 font-medium">
                     {mainFeatured.publishedAt && <span>{timeAgo(mainFeatured.publishedAt, lang)}</span>}
                   </div>
                 </div>
               </Link>
             </div>
           )}
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-3 min-w-0">
             {heroSideStories.map((story: ArticleItem) => {
               const sideTitle = lang === 'en' && story.originalTitle ? story.originalTitle : story.title;
               const sideCategory = lang === 'en'
                 ? (CATEGORY_ENGLISH_NAMES[story.category?.slug] || story.category?.name || story.category?.nameUrdu)
                 : (CATEGORY_URDU_NAMES[story.category?.slug] || story.category?.nameUrdu);
               return (
-                <article key={story.id} className="news-card">
-                  <Link href={`/news/${story.slug}`} className="group flex flex-row-reverse items-center gap-4 bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow border border-gray-100 dark:bg-gray-800 dark:border-gray-700">
-                    <div className="relative w-28 aspect-video shrink-0 rounded-md overflow-hidden">
+                <article key={story.id} className="news-card min-w-0">
+                  <Link href={`/news/${story.slug}`} className="group flex flex-row-reverse items-center gap-3 bg-white rounded-xl p-3 shadow-sm hover:shadow-md transition-shadow border border-gray-100 dark:bg-gray-800 dark:border-gray-700 min-w-0">
+                    <div className="relative w-24 sm:w-28 aspect-video shrink rounded-md overflow-hidden min-w-[72px]">
                       <SafeImage
                         src={getWatermarkedUrl(story.featuredImage || '')}
                         alt={sideTitle}

@@ -1,7 +1,7 @@
 const ALLOWED_HOSTS = ['images.pexels.com', 'images.unsplash.com', 'plus.unsplash.com', 'source.unsplash.com'];
 
 function getCacheBuster(): number {
-  return 2;
+  return Math.floor(Date.now() / (60 * 60 * 1000));
 }
 
 export function getWatermarkedUrl(url: string): string {

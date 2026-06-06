@@ -67,7 +67,7 @@ export function isValidImageUrl(url: string): boolean {
 }
 
 function getCacheBuster(): number {
-  return 2;
+  return Math.floor(Date.now() / (60 * 60 * 1000));
 }
 
 export function getWatermarkedUrl(url: string): string {
