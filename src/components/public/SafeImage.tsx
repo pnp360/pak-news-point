@@ -2,6 +2,10 @@
 
 import { useState, useCallback, useEffect, useRef } from 'react';
 
+function stripMarkdown(text: string): string {
+  return text.replace(/\[!\[.*?\]\(.*?\)\]|!\[.*?\]\(.*?\)|\[.*?\]\(.*?\)/g, '').trim();
+}
+
 interface SafeImageProps {
   src: string;
   alt: string;
@@ -64,6 +68,8 @@ export default function SafeImage({ src, alt, className, fill, width, height }: 
     }
   }, []);
 
+  const cleanAlt = stripMarkdown(alt);
+
   if (!src || error) {
     return <BrandedFallback className={className} fill={fill} />;
   }
@@ -74,7 +80,7 @@ export default function SafeImage({ src, alt, className, fill, width, height }: 
         {!loaded && <SkeletonLoader />}
         <img
           src={src}
-          alt={alt}
+          alt={cleanAlt}
           className={className}
           style={{ width: '100%', height: '100%' }}
           onError={onError}
@@ -90,7 +96,7 @@ export default function SafeImage({ src, alt, className, fill, width, height }: 
       {!loaded && <SkeletonLoader />}
       <img
         src={src}
-        alt={alt}
+        alt={cleanAlt}
         className={className}
         style={{ width: '100%', height: '100%' }}
         onError={onError}

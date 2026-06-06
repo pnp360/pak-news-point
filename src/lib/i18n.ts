@@ -13,6 +13,19 @@ export const CATEGORY_ENGLISH_NAMES: Record<string, string> = {
   poetry: 'Poetry',
 };
 
+/** Maps category slugs to Urdu display names (authoritative source, not DB) */
+export const CATEGORY_URDU_NAMES: Record<string, string> = {
+  pakistan: 'پاکستان',
+  world: 'دنیا',
+  sports: 'کھیل',
+  business: 'کاروبار',
+  entertainment: 'شوبز',
+  technology: 'سائنس و ٹیکنالوجی',
+  health: 'صحت',
+  education: 'تعلیم',
+  poetry: 'شاعری',
+};
+
 export const translations: Record<string, { ur: string; en: string }> = {
   'site.name': { ur: 'آزاد خبر', en: 'Azad Khabar' },
   'site.description': { ur: 'پاکستان کی تازہ ترین خبریں', en: 'Latest news from Pakistan' },

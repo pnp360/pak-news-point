@@ -1,5 +1,5 @@
 import Parser from 'rss-parser';
-import { URDU_FEED_SOURCES, TRUSTED_IMAGE_DOMAINS, UrduFeedSource } from './sources';
+import { URDU_FEED_SOURCES, TRUSTED_IMAGE_DOMAINS, UrduFeedSource, classifyArticleCategory } from './sources';
 
 const parser = new Parser({
   timeout: 15000,
@@ -126,7 +126,10 @@ const ITEM_CATEGORY_MAP: Record<string, string> = {
 export async function scrapeSource(source: UrduFeedSource): Promise<ScrapedArticle[]> {
   try {
     const feed = await parser.parseURL(source.url);
-    if (!feed.items?.length) return [];
+    if (!feed.items?.length) {
+      console.warn(`[scraper] ${source.name}: 0 items parsed`);
+      return [];
+    }
 
     const articles: ScrapedArticle[] = [];
 
@@ -144,6 +147,12 @@ export async function scrapeSource(source: UrduFeedSource): Promise<ScrapedArtic
             break;
           }
         }
+      }
+
+      // Content-based keyword classifier overrides mixed-source feeds (e.g., Geo News)
+      const classified = classifyArticleCategory(title);
+      if (classified && classified !== category) {
+        category = classified;
       }
 
       const imageUrl = extractImage(item);
@@ -176,8 +185,10 @@ export async function scrapeSource(source: UrduFeedSource): Promise<ScrapedArtic
       });
     }
 
+    console.log(`[scraper] ${source.name}: ${articles.length} articles (category: ${source.category})`);
     return articles;
-  } catch {
+  } catch (err) {
+    console.error(`[scraper] ${source.name} FAILED:`, err instanceof Error ? err.message : err);
     return [];
   }
 }
@@ -188,16 +199,21 @@ export async function scrapeAllSources(): Promise<ScrapedArticle[]> {
   );
 
   const all: ScrapedArticle[] = [];
+  let failed = 0;
   for (const r of results) {
     if (r.status === 'fulfilled') all.push(...r.value);
+    else failed++;
   }
 
   // Deduplicate by title similarity
   const seen = new Set<string>();
-  return all.filter((a) => {
+  const deduped = all.filter((a) => {
     const key = a.originalTitle.toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 60);
     if (seen.has(key)) return false;
     seen.add(key);
     return true;
   });
+
+  console.log(`[scraper] Total: ${all.length} raw, ${deduped.length} unique, ${failed} failed sources`);
+  return deduped;
 }

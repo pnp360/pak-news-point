@@ -103,3 +103,80 @@ export const TRUSTED_IMAGE_DOMAINS = [
   'independenturdu.com',
   'aljazeera.com',
 ];
+
+/**
+ * Keyword-based category classifier for mixed-content feeds (e.g., Geo News Urdu).
+ * Checks article titles and overrides the source-level category when international
+ * keywords are detected.
+ */
+const CLASSIFIER_RULES: { category: string; keywords: RegExp[] }[] = [
+  {
+    category: 'World',
+    keywords: [
+      /trump|biden|putin|zelensky|netanyahu|modi|ukraine|russia|iran|israel|gaza|hamas|hezbollah|china|india/i,
+      /nasa|space|mars|moon\s*(mission|landing)|satellite|telescope/i,
+      /prince\s+(william|harry|charles|george)|royal\s+(family|wedding|baby)|king\s+charles|queen/i,
+      /european\s+union|brexit|paris|london|washington|moscow|beijing|kabul/i,
+      /united\s+nations|nato|imf|world\s+bank|white\s+house|pentagon/i,
+      /earthquake|flood|tsunami|hurricane|climate|pandemic|epidemic/i,
+    ],
+  },
+  {
+    category: 'Entertainment',
+    keywords: [
+      /hollywood|bollywood|oscar|grammy|emmy|netflix|disney/i,
+      /actor|actress|singer|movie|film|album|concert|celebrity/i,
+      /barry\s+keoghan|sabrina\s+carpenter|taylor\s+swift|beyonce/i,
+    ],
+  },
+  {
+    category: 'Sports',
+    keywords: [
+      /cricket|world\s+cup|psl|ipl|tennis|football|soccer|olympics/i,
+      /babar\s+azam|shaheen|federer|nadal|djokovic|messi|ronaldo/i,
+    ],
+  },
+  {
+    category: 'Technology',
+    keywords: [
+      /artificial\s+intelligence|ai|chatgpt|gpt|openai|google|apple|microsoft|meta|tesla|twitter|x\.(com|social)/i,
+      /smartphone|iphone|android|cyber|hacking|data\s+breach|5g|blockchain|bitcoin/i,
+    ],
+  },
+  {
+    category: 'Business',
+    keywords: [
+      /stock\s+market|wall\s+street|dollar|rupee|inflation|interest\s+rate|gdp|economy/i,
+      /petrol|diesel|gold\s+(price|rate)|crude\s+oil|psx|kse|100\s+index/i,
+    ],
+  },
+  {
+    category: 'Health',
+    keywords: [
+      /covid|corona|vaccine|hospital|doctor|disease|health|medical|surgery|treatment/i,
+      /dengue|polio|malaria|diabetes|cancer|heart|kidney|liver|transplant/i,
+    ],
+  },
+  {
+    category: 'Education',
+    keywords: [
+      /university|college|school|education|exam|result|student|scholarship/i,
+      /board\s+(exam|result)|matric|intermediate|b\.a|b\.sc|m\.a|m\.sc|phd/i,
+    ],
+  },
+];
+
+/**
+ * Run the keyword classifier on an article title.
+ * Returns the detected category or null if no rule matches.
+ */
+export function classifyArticleCategory(title: string): string | null {
+  for (const rule of CLASSIFIER_RULES) {
+    for (const pattern of rule.keywords) {
+      if (pattern.test(title)) {
+        return rule.category;
+      }
+    }
+  }
+  return null;
+}

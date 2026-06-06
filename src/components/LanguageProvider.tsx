@@ -3,6 +3,15 @@
 import { createContext, useContext, useEffect, useState, useCallback, ReactNode } from 'react';
 import type { Language } from '@/lib/i18n';
 
+const COOKIE_NAME = 'lang';
+const COOKIE_MAX_AGE = 365 * 24 * 60 * 60; // 1 year
+
+function setCookie(lang: Language) {
+  try {
+    document.cookie = `${COOKIE_NAME}=${lang};path=/;max-age=${COOKIE_MAX_AGE};SameSite=Lax`;
+  } catch {}
+}
+
 interface LanguageContextType {
   lang: Language;
   setLang: (lang: Language) => void;
@@ -24,21 +33,29 @@ export default function LanguageProvider({ children }: { children: ReactNode }) 
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const stored = localStorage.getItem('lang') as Language | null;
+    // Prefer cookie (set by server), fall back to localStorage
+    const cookieLang = document.cookie
+      .split('; ')
+      .find((row) => row.startsWith(`${COOKIE_NAME}=`))
+      ?.split('=')[1] as Language | undefined;
+    const stored = cookieLang || (localStorage.getItem('lang') as Language | null);
     if (stored === 'en' || stored === 'ur') {
       setLangState(stored);
     }
     setMounted(true);
   }, []);
 
-  const setLang = useCallback((newLang: Language) => {
-    setLangState(newLang);
-    try { localStorage.setItem('lang', newLang); } catch {}
+  const syncAttributes = useCallback((newLang: Language) => {
     document.documentElement.lang = newLang;
     document.documentElement.dir = newLang === 'ur' ? 'rtl' : 'ltr';
-    document.body.classList.toggle('font-serif', newLang === 'ur');
-    document.body.classList.toggle('font-sans', newLang === 'en');
   }, []);
+
+  const setLang = useCallback((newLang: Language) => {
+    setLangState(newLang);
+    syncAttributes(newLang);
+    setCookie(newLang);
+    try { localStorage.setItem('lang', newLang); } catch {}
+  }, [syncAttributes]);
 
   const toggleLang = useCallback(() => {
     setLang(lang === 'ur' ? 'en' : 'ur');
@@ -47,12 +64,9 @@ export default function LanguageProvider({ children }: { children: ReactNode }) 
   // Sync attributes on mount
   useEffect(() => {
     if (mounted) {
-      document.documentElement.lang = lang;
-      document.documentElement.dir = lang === 'ur' ? 'rtl' : 'ltr';
-      document.body.classList.toggle('font-serif', lang === 'ur');
-      document.body.classList.toggle('font-sans', lang === 'en');
+      syncAttributes(lang);
     }
-  }, [mounted, lang]);
+  }, [mounted, lang, syncAttributes]);
 
   return (
     <LanguageContext.Provider value={{ lang, setLang, toggleLang }}>

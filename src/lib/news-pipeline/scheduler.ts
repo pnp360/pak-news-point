@@ -235,7 +235,7 @@ export async function runPipeline(): Promise<PipelineResult> {
     result.errors = errors;
     result.success = true;
   } catch (e) {
-    console.error('Pipeline error:', e);
+    console.error('[pipeline] Fatal error:', e instanceof Error ? e.message : e);
     result.errors++;
   } finally {
     // Record run time & release lock
@@ -247,6 +247,12 @@ export async function runPipeline(): Promise<PipelineResult> {
     await releaseLock();
     result.durationMs = Date.now() - start;
   }
+
+  console.log(
+    `[pipeline] Done: ${result.scraped} scraped, ${result.rewritten} rewritten, ` +
+    `${result.created} created, ${result.skipped} skipped, ${result.errors} errors ` +
+    `in ${(result.durationMs / 1000).toFixed(1)}s`
+  );
 
   return result;
 }

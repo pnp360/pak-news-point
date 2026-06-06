@@ -10,7 +10,7 @@ import { timeAgo } from '@/lib/urdu';
 import { cleanArticleTitle } from '@/lib/translate';
 import AdBanner from '@/components/public/AdBanner';
 import { useLanguage } from '@/components/LanguageProvider';
-import { t, CATEGORY_ENGLISH_NAMES } from '@/lib/i18n';
+import { t, CATEGORY_ENGLISH_NAMES, CATEGORY_URDU_NAMES } from '@/lib/i18n';
 import type { Language } from '@/lib/i18n';
 
 function capitalizeFirst(str: string): string {
@@ -32,7 +32,7 @@ export default function HomePageClient({ data }: { data: any }) {
     : mainFeatured?.title || '';
   const mainFeaturedCategory = lang === 'en'
     ? (CATEGORY_ENGLISH_NAMES[mainFeatured?.category?.slug] || mainFeatured?.category?.name || mainFeatured?.category?.nameUrdu)
-    : mainFeatured?.category?.nameUrdu;
+    : (CATEGORY_URDU_NAMES[mainFeatured?.category?.slug] || mainFeatured?.category?.nameUrdu);
 
   return (
     <div className="mx-auto px-4 py-4" style={{ maxWidth: '1400px' }}>
@@ -71,7 +71,7 @@ export default function HomePageClient({ data }: { data: any }) {
               const sideTitle = lang === 'en' && story.originalTitle ? story.originalTitle : story.title;
               const sideCategory = lang === 'en'
                 ? (CATEGORY_ENGLISH_NAMES[story.category?.slug] || story.category?.name || story.category?.nameUrdu)
-                : story.category?.nameUrdu;
+                : (CATEGORY_URDU_NAMES[story.category?.slug] || story.category?.nameUrdu);
               return (
                 <article key={story.id} className="news-card">
                   <Link href={`/news/${story.slug}`} className="group flex flex-row-reverse items-center gap-4 bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow border border-gray-100 dark:bg-gray-800 dark:border-gray-700">
@@ -160,7 +160,7 @@ export default function HomePageClient({ data }: { data: any }) {
               const category = data.categories.find((c: any) => c.slug === slug);
               if (!category || articles.length === 0) return null;
               const sliceEnd = slug === 'pakistan' ? 7 : slug === 'world' ? 3 : 5;
-              const catTitle = lang === 'en' ? (CATEGORY_ENGLISH_NAMES[slug] || category.name) : category.nameUrdu;
+              const catTitle = lang === 'en' ? (CATEGORY_ENGLISH_NAMES[slug] || category.name) : (CATEGORY_URDU_NAMES[slug] || category.nameUrdu);
               return (
                 <section key={slug} className="mb-10">
                   <SectionHeader title={catTitle} href={`/${slug}`} lang={lang} />

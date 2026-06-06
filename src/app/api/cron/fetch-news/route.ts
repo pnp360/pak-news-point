@@ -1,3 +1,24 @@
+/*
+ * News pipeline cron endpoint.
+ *
+ * Vercel Hobby plan blocks sub-daily cron schedules (minimum is 1/day).
+ * Use an external cron service (e.g. cron-job.org) to hit this every 30 min.
+ *
+ * How to set up cron-job.org:
+ *   1. Create a free account at https://cron-job.org
+ *   2. Create a cron job with:
+ *      - URL: https://azadkhabar.vercel.app/api/cron/fetch-news
+ *      - Method: GET
+ *      - Interval: Every 30 minutes (cron: 'every 30 min')
+ *      - Optional: add header Authorization: Bearer <your-CRON_SECRET>
+ *      - Execution timeout: 120 seconds
+ *   3. In Vercel env vars, add CRON_SECRET matching the header above
+ *
+ * The endpoint:
+ *   - Supports Bearer token auth via CRON_SECRET env var
+ *   - Has a built-in 30-min throttle (see shouldRunPipeline in scheduler.ts)
+ *   - Returns JSON: { scraped, rewritten, created, skipped, errors, durationMs }
+ */
 export const maxDuration = 120;
 export const dynamic = 'force-dynamic';
 

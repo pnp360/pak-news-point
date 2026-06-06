@@ -6,7 +6,7 @@ import { formatViews } from '@/lib/utils';
 import { getWatermarkedUrl } from '@/lib/watermark-client';
 import SafeImage from './SafeImage';
 import { useLanguage } from '@/components/LanguageProvider';
-import { CATEGORY_ENGLISH_NAMES } from '@/lib/i18n';
+import { CATEGORY_ENGLISH_NAMES, CATEGORY_URDU_NAMES } from '@/lib/i18n';
 
 interface NewsCardProps {
   title: string;
@@ -26,7 +26,7 @@ export default function NewsCard({
   const { lang } = useLanguage();
   const rawTitle = lang === 'en' && originalTitle ? originalTitle : title;
   const displayTitle = rawTitle.replace(/\[!\[.*?\]\(.*?\)\]|!\[.*?\]\(.*?\)|\[.*?\]\(.*?\)/g, '').trim();
-  const categoryName = lang === 'en' ? (CATEGORY_ENGLISH_NAMES[category.slug] || category.nameUrdu) : category.nameUrdu;
+  const categoryName = lang === 'en' ? (CATEGORY_ENGLISH_NAMES[category.slug] || category.nameUrdu) : (CATEGORY_URDU_NAMES[category.slug] || category.nameUrdu);
   const imgSrc = getWatermarkedUrl(featuredImage || '');
   const viewsLabel = lang === 'en' ? 'views' : 'ملاحظات';
 

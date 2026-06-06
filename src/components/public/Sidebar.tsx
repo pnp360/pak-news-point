@@ -6,7 +6,7 @@ import PrayerTimesWidget from './PrayerTimesWidget';
 import RatesWidget from './RatesWidget';
 import PoetryWidget from './PoetryWidget';
 import { useLanguage } from '@/components/LanguageProvider';
-import { t, CATEGORY_ENGLISH_NAMES } from '@/lib/i18n';
+import { t, CATEGORY_ENGLISH_NAMES, CATEGORY_URDU_NAMES } from '@/lib/i18n';
 
 interface SidebarArticle {
   id: string;
@@ -113,7 +113,7 @@ export default function Sidebar({ trending, latest }: SidebarProps) {
           {sidebarCategories.map((cat) => {
             const catName = lang === 'en'
               ? (CATEGORY_ENGLISH_NAMES[cat.slug] || cat.slug)
-              : t(`categories.${cat.slug}` as any, 'ur');
+              : (CATEGORY_URDU_NAMES[cat.slug] || cat.slug);
             return (
               <Link
                 key={cat.slug}

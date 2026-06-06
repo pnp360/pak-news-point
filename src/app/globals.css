@@ -99,18 +99,21 @@ html {
 }
 
 body {
-  font-family: 'Noto Nastaliq Urdu', serif;
   line-height: 2.25;
 }
 
 html[dir="rtl"] body {
   direction: rtl;
   text-align: right;
+  font-family: 'Noto Nastaliq Urdu', serif;
+  line-height: 2.25;
 }
 
 html[dir="ltr"] body {
   direction: ltr;
   text-align: left;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.75;
 }
 
 h1, h2, h3 {
