@@ -72,7 +72,7 @@ export default function HomePageClient({ data }: { data: HomePageData }) {
                   <span className="bg-primary-600 text-white px-4 py-1.5 rounded text-xs font-extrabold inline-block mb-4 uppercase tracking-wider shadow-lg">
                     {mainFeaturedCategory}
                   </span>
-                  <h1 className="text-white text-2xl md:text-3xl font-extrabold leading-[2.5] mb-4 group-hover:underline decoration-2 underline-offset-4 drop-shadow-lg overflow-hidden">
+                  <h1 className="hero-banner-title-clamp text-white text-2xl md:text-3xl font-extrabold leading-[2.5] mb-4 group-hover:underline decoration-2 underline-offset-4 drop-shadow-lg">
                     {cleanArticleTitle(mainFeaturedTitle)}
                   </h1>
                   <div className="flex items-center gap-3 text-sm text-white/80 font-medium">
@@ -120,26 +120,30 @@ export default function HomePageClient({ data }: { data: HomePageData }) {
         <AdBanner format="leaderboard" />
       </div>
 
-      {/* Trending Strip — show all in English mode */}
-      <section className="mb-10 bg-gradient-to-l from-primary-600 to-primary-700 rounded-2xl p-4 text-white">
-        <div className="flex items-center gap-4 overflow-x-auto scrollbar-hide">
-          <span className="text-sm font-bold whitespace-nowrap flex items-center gap-1.5 bg-white/20 px-3 py-1.5 rounded-full">
+      {/* Trending Strip — continuous marquee */}
+      <section className="mb-10 bg-gradient-to-l from-primary-600 to-primary-700 rounded-2xl p-4 text-white overflow-hidden" style={{ direction: 'rtl' }}>
+        <div className="flex items-center gap-4">
+          <span className="text-sm font-bold whitespace-nowrap flex items-center gap-1.5 bg-white/20 px-3 py-1.5 rounded-full shrink-0 relative z-10">
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.66 11.2C17.43 10.9 17.15 10.64 16.89 10.38C16.22 9.78 15.46 9.35 14.82 8.72C13.33 7.26 13 4.85 13.95 3C13 3.23 12.17 3.75 11.46 4.32C8.87 6.4 7.85 10.07 9.07 13.22C9.11 13.32 9.15 13.42 9.15 13.55C9.15 13.77 9 13.97 8.8 14.05C8.57 14.15 8.33 14.09 8.14 13.93C8.08 13.88 8.04 13.83 8 13.76C6.87 12.33 6.69 10.28 7.45 8.64C5.78 10 4.87 12.3 5 14.47C5.06 14.97 5.12 15.47 5.29 15.97C5.43 16.57 5.7 17.17 6 17.7C7.08 19.43 8.95 20.67 10.96 20.92C13.1 21.19 15.39 20.8 16.89 19.32C18.55 17.68 19.15 15.15 18.23 13C17.96 12.38 17.6 11.79 17.21 11.24L17.66 11.2Z" /></svg>
             {lang === 'en' ? 'Trending' : 'ٹرینڈنگ'}
           </span>
-          {data.trendingArticles.map((article: TrendingItem, i: number) => {
-            const trendTitle = lang === 'en' && article.originalTitle ? article.originalTitle : article.title;
-            return (
-              <Link
-                key={article.id}
-                href={`/news/${article.slug}`}
-                className="flex items-center gap-2 whitespace-nowrap hover:bg-white/10 px-3 py-2 rounded-lg transition-colors shrink-0"
-              >
-                <span className="text-lg font-bold text-white/50 tabular-nums">{String(i + 1).padStart(2, '0')}</span>
-                <span className="text-sm font-medium">{cleanArticleTitle(trendTitle)}</span>
-              </Link>
-            );
-          })}
+          <div className="overflow-hidden flex-1 min-w-0">
+            <div className="marquee-track">
+              {[...data.trendingArticles, ...data.trendingArticles, ...data.trendingArticles].map((article: TrendingItem, i: number) => {
+                const trendTitle = lang === 'en' && article.originalTitle ? article.originalTitle : article.title;
+                return (
+                  <Link
+                    key={`${article.id}-${i}`}
+                    href={`/news/${article.slug}`}
+                    className="ticker-item flex items-center gap-2"
+                  >
+                    <span className="text-lg font-bold text-white/50 tabular-nums">{String((i % data.trendingArticles.length) + 1).padStart(2, '0')}</span>
+                    <span className="text-sm font-medium">{cleanArticleTitle(trendTitle)}</span>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </section>
 

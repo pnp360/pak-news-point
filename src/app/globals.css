@@ -362,3 +362,18 @@ html[dir="ltr"] .main-news-grid {
   overflow-wrap: break-word;
   hyphens: auto;
 }
+
+/* Hero banner title clamp — safe truncation without fracturing multi-byte Arabic/Urdu glyphs */
+.hero-banner-title-clamp {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Weather search input — RTL Urdu city search */
+.weather-search-input {
+  direction: rtl;
+  font-family: 'Noto Nastaliq Urdu', serif;
+}

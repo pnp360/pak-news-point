@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import { scrapeAllSources, ScrapedArticle } from './scraper';
 import { rewriteArticle, sanitizeRewrittenContent } from './rewriter';
+import { sanitizeUrduPayload } from '@/lib/sanitize-urdu';
 import { FALLBACK_IMAGE } from './sources';
 import slugify from 'slugify';
 
@@ -134,6 +135,7 @@ function cleanTitle(raw: string): string {
   for (const [pattern, replacement] of TITLE_SANITIZE) {
     result = result.replace(pattern, replacement);
   }
+  result = sanitizeUrduPayload(result);
   return result.trim();
 }
 

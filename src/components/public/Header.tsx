@@ -80,20 +80,18 @@ export default function Header({ breakingNews = [] }: HeaderProps) {
       <div className="bg-primary-600 text-white">
         <div className="container mx-auto px-4 flex items-center py-2 gap-3">
           {breakingNews.length > 0 && (
-            <div className="flex items-center gap-2 flex-1 min-w-0">
+            <div className="flex items-center gap-2 flex-1 min-w-0 overflow-hidden" style={{ direction: 'rtl' }}>
               <span className="bg-yellow-300 text-red-800 font-bold text-xs px-2 py-0.5 rounded shrink-0">
                 {t('breaking', lang)}
               </span>
               <div className="overflow-hidden flex-1 min-w-0">
-                <div className="whitespace-nowrap animate-scroll-left inline-block">
-                  {breakingNews.map((item, i) => (
-                    <span key={item.slug}>
-                      <Link href={`/news/${item.slug}`} className="hover:underline text-sm">
+                <div className="marquee-track py-0">
+                  {[...breakingNews, ...breakingNews, ...breakingNews].map((item, i) => (
+                    <span key={`${item.slug}-${i}`} className="ticker-item text-sm">
+                      <Link href={`/news/${item.slug}`} className="hover:underline">
                         {item.title}
                       </Link>
-                      {i < breakingNews.length - 1 && (
-                        <span className="mx-3 text-red-300">|</span>
-                      )}
+                      <span className="mx-3 text-red-300">◆</span>
                     </span>
                   ))}
                 </div>

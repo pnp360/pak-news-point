@@ -143,6 +143,8 @@ const TRANSLITERATION_FIXES: [RegExp, string][] = [
   [/\bUN\b/gi, 'اقوام متحدہ'],
 ];
 
+import { sanitizeUrduPayload } from '@/lib/sanitize-urdu';
+
 export function sanitizeRewrittenContent(title: string, body: string): { title: string; body: string } {
   let cleanTitle = title;
   let cleanBody = body;
@@ -150,6 +152,8 @@ export function sanitizeRewrittenContent(title: string, body: string): { title: 
     cleanTitle = cleanTitle.replace(pattern, replacement);
     cleanBody = cleanBody.replace(pattern, replacement);
   }
+  cleanTitle = sanitizeUrduPayload(cleanTitle);
+  cleanBody = sanitizeUrduPayload(cleanBody);
   return { title: cleanTitle, body: cleanBody };
 }
 
