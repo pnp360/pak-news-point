@@ -294,7 +294,8 @@ h1, h2, h3 {
 }
 
 .ticker-item {
-  padding: 0 30px;
+  padding-left: 30px;
+  padding-right: 30px;
   color: #ffffff;
   display: inline-block;
   text-decoration: none;
@@ -374,11 +375,22 @@ html[dir="ltr"] .main-news-grid {
   text-overflow: ellipsis;
 }
 
+/* Hero image dark scrim — gradient overlay behind text for WCAG contrast */
+.hero-image-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0; top: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 10%, rgba(0, 0, 0, 0.3) 50%, transparent 100%);
+  z-index: 1;
+  pointer-events: none;
+}
+
 /* Footer newsletter — prevents awkward wrapping on narrow viewports */
 .newsletter-container {
   display: flex;
+  flex-direction: row-reverse;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 @media (width < 480px) {
   .newsletter-container {

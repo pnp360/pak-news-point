@@ -2576,6 +2576,14 @@ export function cleanArticleTitle(title: string): string {
   }
   result = result.replace(/\bAI\b/g, 'مصنوعی ذہانت (AI)');
   result = result.replace(/\bUK\b/g, 'برطانیہ');
+  /* Display-time sanitization for known Urdu misspellings that may already
+     exist in the database from earlier ingestion pipeline runs. */
+  result = result.replace(/\bسپَچے\b/g, 'اسپیس ایکس');
+  result = result.replace(/\bSpaceX\b/gi, 'اسپیس ایکس');
+  result = result.replace(/\bتن\b(?!\s*ٹریلین)/g, 'ٹریلین');
+  result = result.replace(/\btrillion\b/gi, 'ٹریلین');
+  result = result.replace(/\bbillion\b/gi, 'ارب');
+  result = result.replace(/\bmillion\b/gi, 'ملین');
   return result.trim();
 }
 

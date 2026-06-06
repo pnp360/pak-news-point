@@ -12,7 +12,7 @@ function AdContent() {
       </p>
       <div className="flex flex-wrap items-baseline justify-center gap-1">
         <span className="text-xs md:text-sm text-white/80">
-          For your ads email us at:
+          اشتہار کے لیے ای میل کریں:
         </span>
         <span
           className="text-xs md:text-sm text-white font-semibold"
@@ -58,7 +58,7 @@ export default function AdBanner({ format = 'sidebar' }: AdBannerProps) {
             </p>
             <div className="flex flex-col items-center gap-0.5">
               <span className="text-xs text-white/80">
-                For your ads email us at:
+                اشتہار کے لیے ای میل کریں:
               </span>
               <span
                 className="text-xs text-white font-semibold"

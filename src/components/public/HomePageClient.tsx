@@ -59,7 +59,7 @@ export default function HomePageClient({ data }: { data: HomePageData }) {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
           {mainFeatured && (
             <div className="lg:col-span-3">
-              <Link href={`/news/${mainFeatured.slug}`} className="group relative block overflow-hidden rounded-2xl shadow-sm h-full min-h-[300px] md:min-h-[450px] lg:min-h-[550px]">
+              <Link href={`/news/${mainFeatured.slug}`} className="hero-image-card group relative block overflow-hidden rounded-2xl shadow-sm h-full min-h-[300px] md:min-h-[450px] lg:min-h-[550px]">
                 <SafeImage
                   src={getWatermarkedUrl(mainFeatured.featuredImage || 'https://images.unsplash.com/photo-1555333145-deb2e18f22b0?w=1200&q=80')}
                   alt={mainFeaturedTitle}
@@ -67,8 +67,7 @@ export default function HomePageClient({ data }: { data: HomePageData }) {
                   sizes="(max-width: 1024px) 100vw, 75vw"
                   className="object-cover group-hover:scale-105 transition-transform duration-700"
                 />
-                <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 50%, rgba(0,0,0,0.3) 100%)' }} />
-                <div className="absolute bottom-0 inset-x-0 p-4 md:p-8">
+                <div className="absolute bottom-0 inset-x-0 p-4 md:p-8" style={{ zIndex: 2 }}>
                   <span className="bg-primary-600 text-white px-3 py-1 rounded text-xs font-extrabold inline-block mb-3 uppercase tracking-wider shadow-lg">
                     {mainFeaturedCategory}
                   </span>

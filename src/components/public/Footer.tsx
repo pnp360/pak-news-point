@@ -46,7 +46,7 @@ export default function Footer() {
             <h4 className="text-white font-bold mb-4">{t('footer.social', lang)}</h4>
             <div className="flex gap-3 mb-6">
               {socials.map((s) => (
-                <a key={s.name} href={s.href} target="_blank" rel="noopener noreferrer" className="bg-gray-800 hover:bg-primary-600 p-2 rounded-full transition-colors" aria-label={s.name}>
+                <a key={s.name} href={s.href} target="_blank" rel="noopener noreferrer" className="bg-gray-800 hover:bg-primary-600 p-2 rounded-full transition-colors text-white" aria-label={s.name}>
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d={s.icon} /></svg>
                 </a>
               ))}
