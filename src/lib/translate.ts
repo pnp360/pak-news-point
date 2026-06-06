@@ -2584,6 +2584,9 @@ export function cleanArticleTitle(title: string): string {
   result = result.replace(/\btrillion\b/gi, 'ٹریلین');
   result = result.replace(/\bbillion\b/gi, 'ارب');
   result = result.replace(/\bmillion\b/gi, 'ملین');
+  /* Strip embedded date patterns from RSS titles e.g. "14 مارچ 2025" */
+  result = result.replace(/[|]\s*\d{1,2}\s+(جنوری|فروری|مارچ|اپریل|مئی|جون|جولائی|اگست|ستمبر|اکتوبر|نومبر|دسمبر)\s+\d{4}\s*/g, '');
+  result = result.replace(/\d{1,2}\s+(جنوری|فروری|مارچ|اپریل|مئی|جون|جولائی|اگست|ستمبر|اکتوبر|نومبر|دسمبر)\s+\d{4}\s*[|]/g, '');
   return result.trim();
 }
 
