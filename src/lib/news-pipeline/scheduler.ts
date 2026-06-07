@@ -90,17 +90,16 @@ async function resolveCategory(categoryName: string): Promise<string | null> {
 }
 
 /**
- * Check if an article with the same (normalised) title already exists in the DB,
- * regardless of publishedAt.  The scraper now returns a stable RSS pubDate per
- * item, so old items are naturally excluded by the freshness filter.  This
- * broad check catches any edge-case duplicate that slips through.
+ * Check if an article with the same (cleaned) title already exists in the DB,
+ * regardless of publishedAt.  Uses the same cleanTitle normalisation that the
+ * pipeline applies before storage so the search key matches stored values.
  */
-async function isDuplicate(title: string): Promise<boolean> {
-  const normalized = title.toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 50);
-  if (!normalized) return true;
+async function isDuplicate(rawTitle: string): Promise<boolean> {
+  const cleaned = cleanTitle(rawTitle);
+  if (!cleaned || cleaned.length < 10) return true;
 
   const existing = await prisma.article.findFirst({
-    where: { originalTitle: { contains: normalized.slice(0, 30) } },
+    where: { originalTitle: { contains: cleaned.slice(0, 40) } },
     select: { id: true },
   });
   return !!existing;
@@ -178,9 +177,9 @@ export async function runPipeline(): Promise<PipelineResult> {
     let errors = 0;
     let rewritten = 0;
 
-    // Filter to articles from last 48 hours only (ignore stale/archived RSS items)
-    const fortyEightHoursAgo = new Date(Date.now() - 48 * 60 * 60 * 1000);
-    const fresh = scraped.filter((a) => a.publishedAt >= fortyEightHoursAgo);
+    // Filter to articles from last 7 days (ignore stale/archived RSS items)
+    const cutoff = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+    const fresh = scraped.filter((a) => a.publishedAt >= cutoff);
 
     // Take top 15 most recent to stay within rate limits
     const batch = fresh.sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime()).slice(0, 15);
