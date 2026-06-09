@@ -2,7 +2,6 @@ import { prisma } from '@/lib/prisma';
 import { scrapeAllSources, ScrapedArticle } from './scraper';
 import { rewriteArticle, sanitizeRewrittenContent } from './rewriter';
 import { sanitizeUrduPayload } from '@/lib/sanitize-urdu';
-import { FALLBACK_IMAGE } from './sources';
 import slugify from 'slugify';
 
 const PIPELINE_LOCK_KEY = 'newsPipelineLock';
@@ -105,7 +104,28 @@ async function isDuplicate(rawTitle: string): Promise<boolean> {
   return !!existing;
 }
 
-/** Strip markdown, category prefixes, and non-text cruft from titles */
+/** Diverse fallback images so image-less articles don't repeat the same photo. */
+const FALLBACK_IMAGES = [
+  'https://images.unsplash.com/photo-1504711434969-e33886168d8c?w=800&q=75',
+  'https://images.unsplash.com/photo-1495020689067-958852a7765e?w=800&q=75',
+  'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=75',
+  'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&q=75',
+  'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&q=75',
+  'https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=800&q=75',
+  'https://images.unsplash.com/photo-1461360228754-6e81c478b882?w=800&q=75',
+  'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=75',
+  'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=75',
+  'https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=800&q=75',
+];
+
+function pickFallback(key: string): string {
+  let hash = 0;
+  for (let i = 0; i < key.length; i++) {
+    hash = ((hash << 5) - hash) + key.charCodeAt(i);
+    hash |= 0;
+  }
+  return FALLBACK_IMAGES[Math.abs(hash) % FALLBACK_IMAGES.length];
+}
 const TITLE_SANITIZE: [RegExp, string][] = [
   [/سپَچے/g, 'اسپیس ایکس'],
   [/SpaceX/gi, 'اسپیس ایکس'],
@@ -242,7 +262,7 @@ export async function runPipeline(): Promise<PipelineResult> {
               slug: generateSlug(cleanedTitle),
               excerpt: cleanBody.slice(0, 200),
               content: paragraphs || `<p>${cleanedTitle}</p>`,
-              featuredImage: article.imageUrl || FALLBACK_IMAGE,
+              featuredImage: article.imageUrl || pickFallback(cleanedTitle),
               categoryId,
               authorId: admin.id,
               status: 'PUBLISHED',
@@ -264,7 +284,7 @@ export async function runPipeline(): Promise<PipelineResult> {
               slug: generateSlug(cleanedTitle),
               excerpt: cleanBody.slice(0, 200),
               content: paragraphs || `<p>${cleanedTitle}</p>`,
-              featuredImage: article.imageUrl || FALLBACK_IMAGE,
+              featuredImage: article.imageUrl || pickFallback(cleanedTitle),
               categoryId,
               authorId: admin.id,
               status: 'PUBLISHED',
