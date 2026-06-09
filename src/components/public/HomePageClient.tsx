@@ -78,7 +78,7 @@ export default function HomePageClient({ data }: { data: HomePageData }) {
               const sideCategory = CATEGORY_URDU_NAMES[story.category?.slug] || story.category?.nameUrdu;
               return (
                 <article key={story.id} className="min-w-0 flex-1">
-                  <Link href={`/news/${story.slug}`} className="group relative block overflow-hidden rounded-xl h-full min-h-[100px]" style={{ aspectRatio: 'auto' }}>
+                  <Link href={`/news/${story.slug}`} className="card-base group relative block overflow-hidden h-full min-h-[100px] border-0" style={{ aspectRatio: 'auto' }}>
                     <SafeImage
                       src={getWatermarkedUrl(story.featuredImage || '')}
                       alt={story.title}
@@ -175,7 +175,7 @@ export default function HomePageClient({ data }: { data: HomePageData }) {
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
                     <div className="md:col-span-2 md:row-span-2">
                       <article className="news-card h-full">
-                        <Link href={`/news/${articles[0].slug}`} className="group relative block overflow-hidden rounded-2xl shadow-sm h-full min-h-[280px]">
+                        <Link href={`/news/${articles[0].slug}`} className="card-base group relative block overflow-hidden h-full min-h-[280px] border-0">
                           <SafeImage
                             src={getWatermarkedUrl(articles[0].featuredImage || '')}
                             alt={articles[0].title}

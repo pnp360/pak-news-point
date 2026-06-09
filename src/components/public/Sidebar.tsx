@@ -53,7 +53,7 @@ export default function Sidebar({ latest }: SidebarProps) {
   return (
     <aside className="space-y-5">
       {/* Latest */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-5 border border-gray-100 dark:border-gray-700/50">
+      <div className="card-base p-5">
         <SectionTitle>تازہ ترین</SectionTitle>
         <div className="space-y-3">
           {latestDisplay.slice(0, 5).map((article, i) => (
@@ -76,19 +76,19 @@ export default function Sidebar({ latest }: SidebarProps) {
       </div>
 
       {/* Weather Widget */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-5 border border-gray-100 dark:border-gray-700/50">
+      <div className="card-base p-5">
         <SectionTitle>موسم</SectionTitle>
         <WeatherWidget />
       </div>
 
       {/* Currency & Gold Rates */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-5 border border-gray-100 dark:border-gray-700/50">
+      <div className="card-base p-5">
         <SectionTitle>زر مبادلہ کی شرح</SectionTitle>
         <RatesWidget />
       </div>
 
       {/* Prayer Times */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-5 border border-gray-100 dark:border-gray-700/50">
+      <div className="card-base p-5">
         <SectionTitle>اوقات نماز</SectionTitle>
         <PrayerTimesWidget />
       </div>
@@ -97,7 +97,7 @@ export default function Sidebar({ latest }: SidebarProps) {
       <PoetryWidget />
 
       {/* Categories */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-5 border border-gray-100 dark:border-gray-700/50">
+      <div className="card-base p-5">
         <SectionTitle>اقسام</SectionTitle>
         <div className="grid grid-cols-2 gap-2">
           {sidebarCategories.map((cat) => {

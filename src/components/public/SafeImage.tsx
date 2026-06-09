@@ -35,9 +35,7 @@ function BrandedFallback({ className, fill }: { className?: string; fill?: boole
 
 function SkeletonLoader() {
   return (
-    <div
-      className="absolute inset-0 bg-[length:200%_100%] bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 animate-skeleton"
-    />
+    <div className="absolute inset-0 img-shimmer" />
   );
 }
 

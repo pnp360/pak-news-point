@@ -12,53 +12,69 @@ const socials = [
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-900 text-gray-300 mt-12">
-      <div className="container mx-auto px-4 py-10">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div>
+    <footer className="bg-gray-900 text-gray-300 mt-12 relative">
+      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-l from-primary-500 via-primary-600 to-primary-700" />
+      <div className="container mx-auto px-4 py-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="sm:col-span-2 lg:col-span-1">
             <Logo showTagline />
           </div>
           <div>
-            <h4 className="text-white font-bold mb-4">اہم زمرے</h4>
-            <ul className="space-y-2 text-sm">
-              <li><Link href="/pakistan" className="hover:text-white transition-colors">پاکستان</Link></li>
-              <li><Link href="/world" className="hover:text-white transition-colors">دنیا</Link></li>
-              <li><Link href="/sports" className="hover:text-white transition-colors">کھیل</Link></li>
-              <li><Link href="/business" className="hover:text-white transition-colors">کاروبار</Link></li>
-              <li><Link href="/technology" className="hover:text-white transition-colors">سائنس و ٹیکنالوجی</Link></li>
+            <h4 className="text-white font-bold mb-4 flex items-center gap-2">
+              <span className="w-1 h-4 bg-primary-500 rounded-full" />
+              اہم زمرے
+            </h4>
+            <ul className="space-y-2.5 text-sm">
+              <li><Link href="/pakistan" className="hover:text-white transition-colors hover:translate-x-1 inline-block">پاکستان</Link></li>
+              <li><Link href="/world" className="hover:text-white transition-colors hover:translate-x-1 inline-block">دنیا</Link></li>
+              <li><Link href="/sports" className="hover:text-white transition-colors hover:translate-x-1 inline-block">کھیل</Link></li>
+              <li><Link href="/business" className="hover:text-white transition-colors hover:translate-x-1 inline-block">کاروبار</Link></li>
+              <li><Link href="/technology" className="hover:text-white transition-colors hover:translate-x-1 inline-block">سائنس و ٹیکنالوجی</Link></li>
             </ul>
           </div>
           <div>
-            <h4 className="text-white font-bold mb-4">معلومات</h4>
-            <ul className="space-y-2 text-sm">
-              <li><Link href="/about" className="hover:text-white transition-colors">ہمارے بارے میں</Link></li>
-              <li><Link href="/contact" className="hover:text-white transition-colors">رابطہ کریں</Link></li>
-              <li><Link href="/search" className="hover:text-white transition-colors">خبریں تلاش کریں</Link></li>
-              <li><Link href="/privacy-policy" className="hover:text-white transition-colors">پرائیویسی پالیسی</Link></li>
-              <li><Link href="/terms" className="hover:text-white transition-colors">شرائط و ضوابط</Link></li>
+            <h4 className="text-white font-bold mb-4 flex items-center gap-2">
+              <span className="w-1 h-4 bg-primary-500 rounded-full" />
+              معلومات
+            </h4>
+            <ul className="space-y-2.5 text-sm">
+              <li><Link href="/about" className="hover:text-white transition-colors hover:translate-x-1 inline-block">ہمارے بارے میں</Link></li>
+              <li><Link href="/contact" className="hover:text-white transition-colors hover:translate-x-1 inline-block">رابطہ کریں</Link></li>
+              <li><Link href="/search" className="hover:text-white transition-colors hover:translate-x-1 inline-block">خبریں تلاش کریں</Link></li>
+              <li><Link href="/privacy-policy" className="hover:text-white transition-colors hover:translate-x-1 inline-block">پرائیویسی پالیسی</Link></li>
+              <li><Link href="/terms" className="hover:text-white transition-colors hover:translate-x-1 inline-block">شرائط و ضوابط</Link></li>
             </ul>
           </div>
           <div>
-            <h4 className="text-white font-bold mb-4">سوشل میڈیا</h4>
-            <div className="flex gap-3 mb-6">
+            <h4 className="text-white font-bold mb-4 flex items-center gap-2">
+              <span className="w-1 h-4 bg-primary-500 rounded-full" />
+              سوشل میڈیا
+            </h4>
+            <div className="flex gap-2.5 mb-6">
               {socials.map((s) => (
-                <a key={s.name} href={s.href} target="_blank" rel="noopener noreferrer" className="bg-gray-800 hover:bg-primary-600 p-2 rounded-full transition-colors text-white" aria-label={s.name}>
+                <a key={s.name} href={s.href} target="_blank" rel="noopener noreferrer" className="bg-gray-800 hover:bg-primary-600 p-2.5 rounded-full transition-all duration-200 hover:scale-110 hover:shadow-lg hover:shadow-primary-600/30 text-white" aria-label={s.name}>
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d={s.icon} /></svg>
                 </a>
               ))}
             </div>
-            <h4 className="text-white font-bold mb-3">خبرنامہ</h4>
-            <p className="text-sm mb-3">تازہ ترین خبریں اپنی ای میل پر حاصل کریں</p>
+            <h4 className="text-white font-bold mb-3 flex items-center gap-2">
+              <span className="w-1 h-4 bg-primary-500 rounded-full" />
+              خبرنامہ
+            </h4>
+            <p className="text-sm mb-3 text-gray-400">تازہ ترین خبریں اپنی ای میل پر حاصل کریں</p>
             <form className="newsletter-container">
-              <input type="email" placeholder="آپ کا ای میل" className="flex-1 px-3 py-2 rounded bg-gray-800 border border-gray-700 text-sm focus:outline-none focus:border-primary-500 min-w-0" />
-              <button type="button" className="bg-primary-600 text-white px-4 py-2 rounded text-sm hover:bg-primary-700 transition-colors shrink-0">سبسکرائب کریں</button>
+              <input type="email" placeholder="آپ کا ای میل" className="flex-1 px-3 py-2.5 rounded-xl bg-gray-800 border border-gray-700 text-sm focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500/30 min-w-0 transition-all" />
+              <button type="button" className="bg-primary-600 text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-primary-700 transition-colors shrink-0 shadow-lg shadow-primary-600/20">سبسکرائب</button>
             </form>
           </div>
         </div>
 
-        <div className="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-sm">
-          <p>&copy; {new Date().getFullYear()} Azad Khabar - جملہ حقوق محفوظ ہیں</p>
-          <p className="text-gray-500">آزاد خبر — سچائی آپ کا حق ہے</p>
+        <div className="border-t border-gray-800 mt-10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-sm">
+          <p>&copy; {new Date().getFullYear()} Azad Khabar — جملہ حقوق محفوظ ہیں</p>
+          <p className="text-gray-500 flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 bg-primary-500 rounded-full inline-block" />
+            آزاد خبر — سچائی آپ کا حق ہے
+          </p>
         </div>
       </div>
     </footer>
