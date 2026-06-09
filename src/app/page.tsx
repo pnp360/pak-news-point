@@ -5,28 +5,11 @@ import HomePageClient from '@/components/public/HomePageClient';
 
 const RECENT_DAYS = 90;
 
-/** Diverse fallback images so image-less articles don't all share the same photo.
- *  Each article picks a consistent image based on a hash of its id. */
-const FALLBACK_IMAGES = [
-  'https://images.unsplash.com/photo-1504711434969-e33886168d8c?w=800&q=75',  // news studio
-  'https://images.unsplash.com/photo-1495020689067-958852a7765e?w=800&q=75',  // newspaper
-  'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=75',  // globe
-  'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&q=75',  // data/tech
-  'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&q=75',  // nature
-  'https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=800&q=75',  // earth from space
-  'https://images.unsplash.com/photo-1461360228754-6e81c478b882?w=800&q=75',  // cityscape
-  'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=75',  // building
-  'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=75',  // laptop/news
-  'https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=800&q=75',  // code/data
-];
-
-function pickFallback(id: string): string {
-  let hash = 0;
-  for (let i = 0; i < id.length; i++) {
-    hash = ((hash << 5) - hash) + id.charCodeAt(i);
-    hash |= 0;
-  }
-  return FALLBACK_IMAGES[Math.abs(hash) % FALLBACK_IMAGES.length];
+/** Generate a unique placeholder image per article using its slug as a seed.
+ *  picsum.photos returns a different random photo for each seed. */
+function pickFallback(id: string, slug?: string): string {
+  const seed = slug || id;
+  return `https://picsum.photos/seed/${seed}/800/600`;
 }
 
 async function getHomepageData() {
@@ -61,8 +44,7 @@ async function getHomepageData() {
 
   const categories = await prisma.category.findMany({ orderBy: { order: 'asc' } });
 
-  /* Fill missing featuredImage with a diverse fallback so different
-     articles get different placeholder images instead of all sharing one. */
+  /* Fill missing featuredImage with a unique placeholder per article. */
   function fillImage<T extends { id: string; featuredImage?: string | null }>(items: T[]): T[] {
     return items.map((a) => ({ ...a, featuredImage: a.featuredImage || pickFallback(a.id) }));
   }
