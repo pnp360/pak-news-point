@@ -202,14 +202,14 @@ h1, h2, h3 {
 .marquee-track {
   display: flex;
   white-space: nowrap;
-  animation: infiniteCrawl 40s linear infinite;
+  animation: infiniteCrawl 30s linear infinite;
 }
 
 .marquee-track:hover { animation-play-state: paused; }
 
 @keyframes infiniteCrawl {
-  0% { transform: translate3d(100%, 0, 0); }
-  100% { transform: translate3d(-100%, 0, 0); }
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
 }
 
 .ticker-item {

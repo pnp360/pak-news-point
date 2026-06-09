@@ -50,13 +50,16 @@ export default function Sidebar({ latest }: SidebarProps) {
     displayTitle: stripMarkdown(a.title),
   }));
 
+  /* Show articles 6-10 so they differ from the main feed's top 5 */
+  const sidebarLatest = latestDisplay.length > 5 ? latestDisplay.slice(5, 10) : latestDisplay.slice(0, 5);
+
   return (
     <aside className="space-y-5">
       {/* Latest */}
       <div className="card-base p-5">
         <SectionTitle>تازہ ترین</SectionTitle>
         <div className="space-y-3">
-          {latestDisplay.slice(0, 5).map((article, i) => (
+          {sidebarLatest.map((article, i) => (
             <Link
               key={article.id}
               href={`/news/${article.slug}`}

@@ -129,6 +129,8 @@ function cleanTitle(raw: string): string {
   for (const [pattern, replacement] of TITLE_SANITIZE) {
     result = result.replace(pattern, replacement);
   }
+  /* Normalise variant spellings for dedup */
+  result = result.replace(/([\s»«"'،,])نا(?=[\s»«"'،,]|$)|^نا(?=[\s»«"'،,])/g, '$1نہ');
   result = sanitizeUrduPayload(result);
   return result.trim();
 }

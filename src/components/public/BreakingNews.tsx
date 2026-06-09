@@ -15,7 +15,7 @@ export default function BreakingNews({ articles }: BreakingNewsProps) {
       </span>
       <div className="overflow-hidden min-w-0 flex-1">
         <div className="marquee-track py-2.5">
-          {[...articles, ...articles, ...articles].map((article, i) => (
+          {[...articles, ...articles].map((article, i) => (
             <a
               key={`${article.id}-${i}`}
               href={`/news/${article.slug}`}

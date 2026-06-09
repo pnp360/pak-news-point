@@ -5,11 +5,27 @@ import HomePageClient from '@/components/public/HomePageClient';
 
 const RECENT_DAYS = 90;
 
-/** Generate a unique placeholder image per article using its slug as a seed.
- *  picsum.photos returns a different random photo for each seed. */
+/** Generate a unique placeholder image per article using its slug as a seed. */
 function pickFallback(id: string, slug?: string): string {
   const seed = slug || id;
   return `https://picsum.photos/seed/${seed}/800/600`;
+}
+
+/** Category keywords for homepage relevance filtering (prevents misclassified articles). */
+const CATEGORY_KEYWORDS: Record<string, RegExp[]> = {
+  sports: [
+    /کرکٹ|ورلڈ\s?کپ|ٹینس|فٹ\s?بال|اولمپک/i,
+    /بابر\s?اعظم|شاہین|فیڈرر|نڈال|جاکووچ|میسی|رونالڈو/i,
+    /کھیل|میچ|ٹیم|کپتان|وکٹ|رن|گیند/i,
+    /cricket|world\s+cup|psl|ipl|tennis|football|soccer|olympics/i,
+    /babar\s+azam|shaheen|federer|nadal|djokovic|messi|ronaldo/i,
+  ],
+};
+
+function isRelevantToCategory(slug: string, title: string): boolean {
+  const keywords = CATEGORY_KEYWORDS[slug];
+  if (!keywords) return true;
+  return keywords.some((re) => re.test(title));
 }
 
 async function getHomepageData() {
@@ -44,7 +60,6 @@ async function getHomepageData() {
 
   const categories = await prisma.category.findMany({ orderBy: { order: 'asc' } });
 
-  /* Fill missing featuredImage with a unique placeholder per article. */
   function fillImage<T extends { id: string; featuredImage?: string | null }>(items: T[]): T[] {
     return items.map((a) => ({ ...a, featuredImage: a.featuredImage || pickFallback(a.id) }));
   }
@@ -83,17 +98,20 @@ async function getHomepageData() {
   });
   latestFeed.push(...remainingLatest);
 
+  /* Category sections — no date limit so even old categories show content */
   const categoryArticles: Record<string, typeof latestArticles[0][]> = {};
   for (const cat of categories) {
     let take = 5;
     if (cat.slug === 'pakistan') take = 8;
     else if (cat.slug === 'world') take = 4;
-    const articles = await prisma.article.findMany({
-      where: { status: 'PUBLISHED', categoryId: cat.id, publishedAt: { gte: recentSince } },
+    let articles = await prisma.article.findMany({
+      where: { status: 'PUBLISHED', categoryId: cat.id },
       orderBy: { publishedAt: 'desc' },
       take,
       include: { category: { select: { name: true, nameUrdu: true, slug: true } } },
     });
+    /* Filter out clearly misclassified articles for strict categories */
+    articles = articles.filter((a) => isRelevantToCategory(cat.slug, a.title));
     if (articles.length > 0) categoryArticles[cat.slug] = fillImage(articles);
   }
 

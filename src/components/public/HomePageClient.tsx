@@ -51,7 +51,7 @@ export default function HomePageClient({ data }: { data: HomePageData }) {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
           {mainFeatured && (
             <div className="lg:col-span-3">
-              <Link href={`/news/${mainFeatured.slug}`} className="hero-card-container group relative block overflow-hidden rounded-2xl shadow-sm h-full min-h-[300px] md:min-h-[450px] lg:min-h-[520px]">
+              <Link href={`/news/${mainFeatured.slug}`} className="group relative block overflow-hidden rounded-2xl shadow-sm h-full min-h-[300px] md:min-h-[450px] lg:min-h-[520px]">
                 <SafeImage
                   src={getWatermarkedUrl(mainFeatured.featuredImage || 'https://images.unsplash.com/photo-1555333145-deb2e18f22b0?w=1200&q=80')}
                   alt={mainFeaturedTitle}
@@ -59,6 +59,7 @@ export default function HomePageClient({ data }: { data: HomePageData }) {
                   sizes="(max-width: 1024px) 100vw, 75vw"
                   className="object-cover group-hover:scale-105 transition-transform duration-700"
                 />
+                <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.92) 10%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.15) 85%, transparent 100%)', zIndex: 1 }} />
                 <div className="absolute bottom-0 inset-x-0 p-4 md:p-8" style={{ zIndex: 2 }}>
                   <span className="bg-primary-600 text-white px-3 py-1 rounded text-xs font-extrabold inline-block mb-3 uppercase tracking-wider shadow-lg">
                     {mainFeaturedCategory}
@@ -77,7 +78,7 @@ export default function HomePageClient({ data }: { data: HomePageData }) {
             {heroSideStories.map((story: ArticleItem) => {
               const sideCategory = CATEGORY_URDU_NAMES[story.category?.slug] || story.category?.nameUrdu;
               return (
-                <article key={story.id} className="min-w-0 flex-1">
+                  <article key={story.id} className="min-w-0 flex-1">
                   <Link href={`/news/${story.slug}`} className="card-base group relative block overflow-hidden h-full min-h-[100px] border-0" style={{ aspectRatio: 'auto' }}>
                     <SafeImage
                       src={getWatermarkedUrl(story.featuredImage || '')}
@@ -86,8 +87,8 @@ export default function HomePageClient({ data }: { data: HomePageData }) {
                       sizes="(max-width: 1024px) 25vw, 15vw"
                       className="object-cover group-hover:scale-105 transition-transform duration-500"
                     />
-                    <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0.1) 100%)' }} />
-                    <div className="absolute bottom-0 inset-x-0 p-3">
+                    <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0.1) 100%)', zIndex: 1 }} />
+                    <div className="absolute bottom-0 inset-x-0 p-3" style={{ zIndex: 2 }}>
                       <span className="text-[10px] text-primary-300 font-bold uppercase tracking-wider">{sideCategory}</span>
                       <h3 className="text-sm font-bold leading-[1.6] text-white drop-shadow-lg line-clamp-2">
                         {cleanArticleTitle(story.title)}
@@ -115,7 +116,7 @@ export default function HomePageClient({ data }: { data: HomePageData }) {
           </span>
           <div className="overflow-hidden flex-1 min-w-0">
             <div className="marquee-track">
-              {[...data.trendingArticles, ...data.trendingArticles, ...data.trendingArticles].map((article: TrendingItem, i: number) => (
+              {[...data.trendingArticles, ...data.trendingArticles].map((article: TrendingItem, i: number) => (
                 <Link
                   key={`${article.id}-${i}`}
                   href={`/news/${article.slug}`}
@@ -183,8 +184,8 @@ export default function HomePageClient({ data }: { data: HomePageData }) {
                             sizes="(max-width: 768px) 100vw, 50vw"
                             className="object-cover group-hover:scale-105 transition-transform duration-500"
                           />
-                          <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 50%, rgba(0,0,0,0.3) 100%)' }} />
-                          <div className="absolute bottom-0 inset-x-0 p-4">
+                          <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 50%, rgba(0,0,0,0.3) 100%)', zIndex: 1 }} />
+                          <div className="absolute bottom-0 inset-x-0 p-4" style={{ zIndex: 2 }}>
                             <h3 className="text-white font-extrabold text-lg leading-[2] group-hover:underline drop-shadow-lg break-words line-clamp-3">{cleanArticleTitle(articles[0].title)}</h3>
                             <span className="text-white/80 text-xs mt-1 block font-medium">{articles[0].publishedAt && timeAgo(articles[0].publishedAt)}</span>
                           </div>

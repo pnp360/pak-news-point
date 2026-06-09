@@ -20,15 +20,26 @@ const PRAYER_NAMES_URDU: Record<string, string> = {
   Isha: 'عشاء',
 };
 
+const HIJRI_MONTHS_URDU: Record<string, string> = {
+  'محرم': 'محرم', 'صفر': 'صفر', 'ربیع الاول': 'ربیع الاول', 'ربیع الثانی': 'ربیع الثانی',
+  'جمادی الاول': 'جمادی الاول', 'جمادی الثانی': 'جمادی الثانی', 'رجب': 'رجب',
+  'شعبان': 'شعبان', 'رمضان': 'رمضان', 'شوال': 'شوال', 'ذو القعدہ': 'ذو القعدہ',
+  'ذو الحجہ': 'ذو الحجہ',
+};
+
 function getHijriDate(date: Date): string {
   try {
-    const hijri = new Intl.DateTimeFormat('ar-SA-islamic', {
+    const parts = new Intl.DateTimeFormat('ar-SA-islamic', {
       day: 'numeric',
       month: 'long',
       year: 'numeric',
       timeZone: 'Asia/Karachi',
-    }).format(date);
-    return hijri;
+    }).formatToParts(date);
+    const day = parts.find((p) => p.type === 'day')?.value || '';
+    const month = parts.find((p) => p.type === 'month')?.value || '';
+    const year = parts.find((p) => p.type === 'year')?.value || '';
+    const urduMonth = HIJRI_MONTHS_URDU[month] || month;
+    return `${urduMonth} ${day} ${year} ہجری`;
   } catch {
     return '';
   }

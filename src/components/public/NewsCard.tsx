@@ -105,7 +105,7 @@ export default function NewsCard({
             {displayTitle}
           </h3>
           {excerpt && (
-            <p className="text-gray-500 dark:text-gray-400 text-sm mb-2.5 leading-[1.6] line-clamp-2">{excerpt}</p>
+            <p className="text-gray-500 dark:text-gray-400 text-sm mb-2.5 leading-[1.6] line-clamp-3">{excerpt}</p>
           )}
           <div className="flex items-center gap-3 text-xs text-gray-400 dark:text-gray-500">
             {publishedAt && <span>{timeAgo(publishedAt)}</span>}
