@@ -32,6 +32,15 @@ const sidebarCategories = [
   { slug: 'poetry' },
 ];
 
+function SectionTitle({ children }: { children: string }) {
+  return (
+    <div className="flex items-center gap-2 mb-4 pb-2 border-b border-gray-100 dark:border-gray-700">
+      <span className="w-1.5 h-5 bg-gradient-to-b from-primary-500 to-primary-600 rounded-full" />
+      <h3 className="text-sm font-bold">{children}</h3>
+    </div>
+  );
+}
+
 export default function Sidebar({ latest }: SidebarProps) {
   const stripMarkdown = (s: string) =>
     s.replace(/\[!\[.*?\]\(.*?\)\]|!\[.*?\]\(.*?\)|\[.*?\]\(.*?\)/g, '').trim();
@@ -42,25 +51,22 @@ export default function Sidebar({ latest }: SidebarProps) {
   }));
 
   return (
-    <aside className="space-y-8">
+    <aside className="space-y-5">
       {/* Latest */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-5">
-        <h3 className="text-lg font-bold border-b dark:border-gray-700 pb-3 mb-4 flex items-center gap-2">
-          <span className="w-1 h-6 bg-primary-600 rounded inline-block" />
-          تازہ ترین
-        </h3>
-        <div className="space-y-4">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-5 border border-gray-100 dark:border-gray-700/50">
+        <SectionTitle>تازہ ترین</SectionTitle>
+        <div className="space-y-3">
           {latestDisplay.slice(0, 5).map((article, i) => (
             <Link
               key={article.id}
               href={`/news/${article.slug}`}
-              className="flex gap-3 group"
+              className="flex gap-3 group items-start"
             >
-              <span className="text-primary-600 font-bold text-lg w-7 shrink-0">
+              <span className="text-primary-600/70 font-bold text-base w-6 shrink-0 tabular-nums leading-none mt-0.5">
                 {String(i + 1).padStart(2, '0')}
               </span>
               <div className="flex-1 min-w-0">
-                <h4 className="text-sm font-medium leading-[1.5] group-hover:text-primary-600">
+                <h4 className="text-sm font-medium leading-[1.6] group-hover:text-primary-600 transition-colors line-clamp-2">
                   {article.displayTitle}
                 </h4>
               </div>
@@ -70,29 +76,20 @@ export default function Sidebar({ latest }: SidebarProps) {
       </div>
 
       {/* Weather Widget */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-5">
-        <h3 className="text-lg font-bold border-b dark:border-gray-700 pb-3 mb-4 flex items-center gap-2">
-          <span className="w-1 h-6 bg-primary-600 rounded inline-block" />
-          موسم
-        </h3>
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-5 border border-gray-100 dark:border-gray-700/50">
+        <SectionTitle>موسم</SectionTitle>
         <WeatherWidget />
       </div>
 
       {/* Currency & Gold Rates */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-5">
-        <h3 className="text-lg font-bold border-b dark:border-gray-700 pb-3 mb-4 flex items-center gap-2">
-          <span className="w-1 h-6 bg-primary-600 rounded inline-block" />
-          زر مبادلہ کی شرح
-        </h3>
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-5 border border-gray-100 dark:border-gray-700/50">
+        <SectionTitle>زر مبادلہ کی شرح</SectionTitle>
         <RatesWidget />
       </div>
 
       {/* Prayer Times */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-5">
-        <h3 className="text-lg font-bold border-b dark:border-gray-700 pb-3 mb-4 flex items-center gap-2">
-          <span className="w-1 h-6 bg-primary-600 rounded inline-block" />
-          اوقات نماز
-        </h3>
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-5 border border-gray-100 dark:border-gray-700/50">
+        <SectionTitle>اوقات نماز</SectionTitle>
         <PrayerTimesWidget />
       </div>
 
@@ -100,11 +97,8 @@ export default function Sidebar({ latest }: SidebarProps) {
       <PoetryWidget />
 
       {/* Categories */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-5">
-        <h3 className="text-lg font-bold border-b dark:border-gray-700 pb-3 mb-4 flex items-center gap-2">
-          <span className="w-1 h-6 bg-primary-600 rounded inline-block" />
-          اقسام
-        </h3>
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-5 border border-gray-100 dark:border-gray-700/50">
+        <SectionTitle>اقسام</SectionTitle>
         <div className="grid grid-cols-2 gap-2">
           {sidebarCategories.map((cat) => {
             const catName = CATEGORY_URDU_NAMES[cat.slug] || cat.slug;
@@ -112,7 +106,7 @@ export default function Sidebar({ latest }: SidebarProps) {
               <Link
                 key={cat.slug}
                 href={`/${cat.slug}`}
-                className="block bg-gray-50 hover:bg-primary-50 hover:text-primary-700 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 text-sm font-medium px-3 py-2 rounded-lg transition-colors text-center"
+                className="block bg-gray-50 hover:bg-primary-50 hover:text-primary-700 dark:bg-gray-700/50 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 text-sm font-medium px-3 py-2 rounded-lg transition-colors text-center"
               >
                 {catName}
               </Link>
