@@ -1,8 +1,6 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useLanguage } from '@/components/LanguageProvider';
-import { t } from '@/lib/i18n';
 
 interface PaginationProps {
   currentPage: number;
@@ -11,7 +9,6 @@ interface PaginationProps {
 }
 
 export default function Pagination({ currentPage, totalPages, basePath }: PaginationProps) {
-  const { lang } = useLanguage();
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -39,7 +36,7 @@ export default function Pagination({ currentPage, totalPages, basePath }: Pagina
         disabled={currentPage <= 1}
         className="px-4 py-2 rounded-lg border hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        {t('pagination.previous', lang)}
+        پچھلا
       </button>
       {pages.map((page, i) =>
         typeof page === 'string' ? (
@@ -63,7 +60,7 @@ export default function Pagination({ currentPage, totalPages, basePath }: Pagina
         disabled={currentPage >= totalPages}
         className="px-4 py-2 rounded-lg border hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        {t('pagination.next', lang)}
+        اگلا
       </button>
     </div>
   );

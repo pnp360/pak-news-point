@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { cookies } from 'next/headers';
 import './globals.css';
 import Header from '@/components/public/Header';
 import Footer from '@/components/public/Footer';
@@ -45,11 +44,6 @@ export const metadata: Metadata = {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://azadkhabar.vercel.app';
 
-  const cookieStore = cookies();
-  const langFromCookie = cookieStore.get('lang')?.value;
-  const lang = langFromCookie === 'en' ? 'en' : 'ur';
-  const dir = lang === 'ur' ? 'rtl' : 'ltr';
-
   const breakingNews = await prisma.article.findMany({
     where: { status: 'PUBLISHED' },
     orderBy: { publishedAt: 'desc' },
@@ -73,18 +67,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   };
 
   return (
-    <html lang={lang} dir={dir} suppressHydrationWarning>
+    <html lang="ur" dir="rtl" suppressHydrationWarning>
       <head>
         <script
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
                 try {
-                  var lang = localStorage.getItem('lang');
-                  if (lang === 'en' || lang === 'ur') {
-                    document.documentElement.lang = lang;
-                    document.documentElement.dir = lang === 'en' ? 'ltr' : 'rtl';
-                  }
                   var theme = localStorage.getItem('theme');
                   if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                     document.documentElement.classList.add('dark');

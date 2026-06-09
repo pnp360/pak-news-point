@@ -9,18 +9,12 @@ const RECENT_DAYS = 90;
 async function getHomepageData() {
   const recentSince = new Date(Date.now() - RECENT_DAYS * 24 * 60 * 60 * 1000);
 
-  const [breakingArticles, englishArticles, rawFeatured, rawLatest, trendingArticles] = await Promise.all([
+  const [breakingArticles, rawFeatured, rawLatest, trendingArticles] = await Promise.all([
     prisma.article.findMany({
       where: { status: 'PUBLISHED', isBreaking: true, publishedAt: { gte: recentSince } },
       orderBy: { publishedAt: 'desc' },
       take: 10,
-      select: { id: true, title: true, originalTitle: true, slug: true },
-    }),
-    prisma.article.findMany({
-      where: { status: 'PUBLISHED', originalTitle: { not: null }, publishedAt: { gte: recentSince } },
-      orderBy: { publishedAt: 'desc' },
-      take: 10,
-      select: { id: true, title: true, originalTitle: true, slug: true },
+      select: { id: true, title: true, slug: true },
     }),
     prisma.article.findMany({
       where: { status: 'PUBLISHED', isFeatured: true },
@@ -38,7 +32,7 @@ async function getHomepageData() {
       where: { status: 'PUBLISHED', publishedAt: { gte: recentSince } },
       orderBy: { views: 'desc' },
       take: 10,
-      select: { id: true, title: true, originalTitle: true, slug: true, views: true, publishedAt: true },
+      select: { id: true, title: true, slug: true, views: true, publishedAt: true },
     }),
   ]);
 
@@ -98,7 +92,7 @@ async function getHomepageData() {
     if (articles.length > 0) categoryArticles[cat.slug] = fillImage(articles);
   }
 
-  return { breakingArticles, englishArticles, featuredArticles, latestArticles, latestFeed, trendingArticles, categories, categoryArticles };
+  return { breakingArticles, featuredArticles, latestArticles, latestFeed, trendingArticles, categories, categoryArticles };
 }
 
 export default async function HomePage() {

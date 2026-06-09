@@ -5,8 +5,6 @@ import { notFound } from 'next/navigation';
 import NewsCard from '@/components/public/NewsCard';
 import AdBanner from '@/components/public/AdBanner';
 import Pagination from '@/components/public/Pagination';
-import LangText from '@/components/LangText';
-import { CATEGORY_ENGLISH_NAMES } from '@/lib/i18n';
 
 interface Props {
   params: { category: string };
@@ -54,9 +52,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
   return (
     <div className="container mx-auto px-4 py-6">
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 mb-6">
-        <h1 className="text-3xl font-bold">
-          <LangText ur={category.nameUrdu} en={CATEGORY_ENGLISH_NAMES[category.slug] || category.name} />
-        </h1>
+        <h1 className="text-3xl font-bold">{category.nameUrdu}</h1>
         {category.description && (
           <p className="text-gray-600 dark:text-gray-400 mt-2">{category.description}</p>
         )}
@@ -64,7 +60,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
 
       {articles.length === 0 ? (
         <div className="text-center py-20 text-gray-500">
-          <p className="text-xl"><LangText ur="اس زمرے میں کوئی خبر نہیں ہے" en="No articles in this category" /></p>
+          <p className="text-xl">اس زمرے میں کوئی خبر نہیں ہے</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 xl:grid-cols-[160px_1fr_160px] gap-4 items-start">

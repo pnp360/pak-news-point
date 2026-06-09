@@ -4,8 +4,6 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { HiMenu, HiX, HiSearch, HiSun, HiMoon } from 'react-icons/hi';
 import Logo from './Logo';
-import { useLanguage } from '@/components/LanguageProvider';
-import { t } from '@/lib/i18n';
 
 interface BreakingItem {
   slug: string;
@@ -29,7 +27,6 @@ const categories = [
 ];
 
 export default function Header({ breakingNews = [] }: HeaderProps) {
-  const { lang, toggleLang } = useLanguage();
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -49,7 +46,7 @@ export default function Header({ breakingNews = [] }: HeaderProps) {
 
   useEffect(() => {
     setTodayDate(
-      new Date().toLocaleDateString(lang === 'ur' ? 'ur-PK' : 'en-PK', {
+      new Date().toLocaleDateString('ur-PK', {
         weekday: 'long',
         day: 'numeric',
         month: 'long',
@@ -57,7 +54,7 @@ export default function Header({ breakingNews = [] }: HeaderProps) {
         timeZone: 'Asia/Karachi',
       })
     );
-  }, [lang]);
+  }, []);
 
   const [scrolled, setScrolled] = useState(false);
 
@@ -82,7 +79,7 @@ export default function Header({ breakingNews = [] }: HeaderProps) {
           {breakingNews.length > 0 && (
             <div className="flex items-center gap-2 flex-1 min-w-0 overflow-hidden" style={{ direction: 'rtl' }}>
               <span className="bg-yellow-300 text-red-800 font-bold text-xs px-2 py-0.5 rounded shrink-0 relative z-10">
-                {t('breaking', lang)}
+                بریکنگ
               </span>
               <div className="overflow-hidden flex-1 min-w-0">
                 <div className="marquee-track py-0">
@@ -105,10 +102,9 @@ export default function Header({ breakingNews = [] }: HeaderProps) {
       {/* Logo + Navigation + Utilities — RTL-aware flex row */}
       <div className="border-b dark:border-slate-600 shadow-sm">
         <div className="flex justify-between items-center w-full px-6 py-3">
-          {/* Logo: first child → rightmost in RTL */}
           <Logo />
 
-          {/* Desktop nav: flows after logo */}
+          {/* Desktop nav */}
           <div className="hidden md:flex items-center">
             <nav className="flex items-center gap-1">
               {categories.map((cat) => (
@@ -124,26 +120,19 @@ export default function Header({ breakingNews = [] }: HeaderProps) {
             </nav>
           </div>
 
-          {/* Utility icons: last child → leftmost in RTL */}
+          {/* Utility icons */}
           <div className="flex items-center gap-2 shrink-0">
             <button
               onClick={toggleDark}
               className="p-2 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-full"
-              aria-label={t('theme.dark', lang)}
+              aria-label="ڈارک موڈ"
             >
               {darkMode ? <HiSun className="w-5 h-5" /> : <HiMoon className="w-5 h-5" />}
             </button>
             <button
-              onClick={toggleLang}
-              className="px-2 py-1 text-xs font-bold border border-gray-300 dark:border-slate-500 rounded hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
-              aria-label={t('language.toggle', lang)}
-            >
-              {t('language.toggle', lang)}
-            </button>
-            <button
               onClick={() => setSearchOpen(!searchOpen)}
               className="p-2 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-full"
-              aria-label={t('search.button', lang)}
+              aria-label="تلاش"
             >
               <HiSearch className="w-5 h-5" />
             </button>
@@ -182,20 +171,20 @@ export default function Header({ breakingNews = [] }: HeaderProps) {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={t('search.placeholder', lang)}
+              placeholder="خبریں تلاش کریں..."
               className="flex-1 px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-slate-800 dark:text-white"
             />
             <button
               type="submit"
               className="bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700"
             >
-              {t('search.button', lang)}
+              تلاش
             </button>
           </form>
         </div>
       )}
 
-      {/* Sticky nav spacer (for the scrolling effect) */}
+      {/* Sticky nav spacer */}
       <nav className={`md:hidden border-t dark:border-slate-600 bg-white dark:bg-slate-800 transition-shadow duration-300 ${scrolled ? 'nav-shadow' : ''} sticky top-0 z-50`}>
         <div className="container mx-auto px-4">
           <ul className="flex overflow-x-auto scrollbar-hide">

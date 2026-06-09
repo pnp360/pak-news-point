@@ -4,7 +4,6 @@ import { prisma } from '@/lib/prisma';
 import NewsCard from '@/components/public/NewsCard';
 import AdBanner from '@/components/public/AdBanner';
 import Pagination from '@/components/public/Pagination';
-import LangText from '@/components/LangText';
 
 interface Props {
   searchParams: { q?: string; page?: string };
@@ -54,19 +53,19 @@ export default async function SearchPage({ searchParams }: Props) {
     <div className="container mx-auto px-4 py-6">
       <h1 className="text-3xl font-bold mb-6">
         {query ? (
-          <><LangText ur="تلاش:" en="Search:" /> {query}</>
+          <>تلاش: {query}</>
         ) : (
-          <LangText ur="تمام خبریں" en="All News" />
+          'تمام خبریں'
         )}
       </h1>
       <p className="text-gray-500 mb-6">
-        {total} <LangText ur="نتائج ملے" en="results found" />
+        {total} نتائج ملے
       </p>
 
       {articles.length === 0 ? (
         <div className="text-center py-20 text-gray-500">
-          <p className="text-xl"><LangText ur="کوئی خبر نہیں ملی" en="No articles found" /></p>
-          <p className="mt-2"><LangText ur="براہ کرم دوسرے کلیدی الفاظ سے تلاش کریں" en="Please try different keywords" /></p>
+          <p className="text-xl">کوئی خبر نہیں ملی</p>
+          <p className="mt-2">براہ کرم دوسرے کلیدی الفاظ سے تلاش کریں</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 xl:grid-cols-[160px_1fr_160px] gap-4 items-start">

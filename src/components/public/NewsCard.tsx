@@ -5,14 +5,12 @@ import { timeAgo } from '@/lib/urdu';
 import { formatViews } from '@/lib/utils';
 import { getWatermarkedUrl } from '@/lib/watermark-client';
 import SafeImage from './SafeImage';
-import { useLanguage } from '@/components/LanguageProvider';
-import { CATEGORY_ENGLISH_NAMES, CATEGORY_URDU_NAMES } from '@/lib/i18n';
+import { CATEGORY_URDU_NAMES } from '@/lib/i18n';
 import { cleanArticleTitle } from '@/lib/translate';
 
 interface NewsCardProps {
   title: string;
   slug: string;
-  originalTitle?: string | null;
   excerpt?: string | null;
   featuredImage?: string | null;
   category: { nameUrdu: string; slug: string };
@@ -22,14 +20,12 @@ interface NewsCardProps {
 }
 
 export default function NewsCard({
-  title, originalTitle, slug, excerpt, featuredImage, category, publishedAt, views, variant = 'default',
+  title, slug, excerpt, featuredImage, category, publishedAt, views, variant = 'default',
 }: NewsCardProps) {
-  const { lang } = useLanguage();
-  const rawTitle = lang === 'en' && originalTitle ? originalTitle : title;
-  const displayTitle = cleanArticleTitle(rawTitle.replace(/\[!\[.*?\]\(.*?\)\]|!\[.*?\]\(.*?\)|\[.*?\]\(.*?\)/g, '').trim());
-  const categoryName = lang === 'en' ? (CATEGORY_ENGLISH_NAMES[category.slug] || category.nameUrdu) : (CATEGORY_URDU_NAMES[category.slug] || category.nameUrdu);
+  const displayTitle = cleanArticleTitle(title.replace(/\[!\[.*?\]\(.*?\)\]|!\[.*?\]\(.*?\)|\[.*?\]\(.*?\)/g, '').trim());
+  const categoryName = CATEGORY_URDU_NAMES[category.slug] || category.nameUrdu;
   const imgSrc = getWatermarkedUrl(featuredImage || '');
-  const viewsLabel = lang === 'en' ? 'views' : 'ملاحظات';
+  const viewsLabel = 'ملاحظات';
 
   if (variant === 'featured') {
     return (
@@ -53,7 +49,7 @@ export default function NewsCard({
               {displayTitle}
             </h2>
             <div className="flex items-center gap-4 text-sm text-white/80 font-medium">
-              {publishedAt && <span>{timeAgo(publishedAt, lang)}</span>}
+              {publishedAt && <span>{timeAgo(publishedAt)}</span>}
               {views > 0 && <span>{formatViews(views)} {viewsLabel}</span>}
             </div>
           </div>
@@ -81,7 +77,7 @@ export default function NewsCard({
               {displayTitle}
             </h3>
             <div className="flex items-center gap-2 mt-1.5 text-xs text-gray-400">
-              {publishedAt && <span>{timeAgo(publishedAt, lang)}</span>}
+              {publishedAt && <span>{timeAgo(publishedAt)}</span>}
             </div>
           </div>
         </Link>
@@ -110,7 +106,7 @@ export default function NewsCard({
             <p className="text-gray-500 text-sm mb-3 leading-[1.6]">{excerpt}</p>
           )}
           <div className="flex items-center gap-3 text-xs text-gray-400">
-            {publishedAt && <span>{timeAgo(publishedAt, lang)}</span>}
+            {publishedAt && <span>{timeAgo(publishedAt)}</span>}
             {views > 0 && <span>{formatViews(views)} {viewsLabel}</span>}
           </div>
         </div>
@@ -118,4 +114,3 @@ export default function NewsCard({
     </article>
   );
 }
-

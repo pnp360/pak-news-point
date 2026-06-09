@@ -2,8 +2,6 @@
 
 import Link from 'next/link';
 import Logo from './Logo';
-import { useLanguage } from '@/components/LanguageProvider';
-import { t } from '@/lib/i18n';
 
 const socials = [
   { name: 'Facebook', href: 'https://facebook.com/azadkhabar', icon: 'M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z' },
@@ -13,8 +11,6 @@ const socials = [
 ];
 
 export default function Footer() {
-  const { lang } = useLanguage();
-
   return (
     <footer className="bg-gray-900 text-gray-300 mt-12">
       <div className="container mx-auto px-4 py-10">
@@ -23,27 +19,27 @@ export default function Footer() {
             <Logo showTagline />
           </div>
           <div>
-            <h4 className="text-white font-bold mb-4">{t('footer.categories', lang)}</h4>
+            <h4 className="text-white font-bold mb-4">اہم زمرے</h4>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/pakistan" className="hover:text-white transition-colors">{t('categories.pakistan', lang)}</Link></li>
-              <li><Link href="/world" className="hover:text-white transition-colors">{t('categories.world', lang)}</Link></li>
-              <li><Link href="/sports" className="hover:text-white transition-colors">{t('categories.sports', lang)}</Link></li>
-              <li><Link href="/business" className="hover:text-white transition-colors">{t('categories.business', lang)}</Link></li>
-              <li><Link href="/technology" className="hover:text-white transition-colors">{t('categories.technology', lang)}</Link></li>
+              <li><Link href="/pakistan" className="hover:text-white transition-colors">پاکستان</Link></li>
+              <li><Link href="/world" className="hover:text-white transition-colors">دنیا</Link></li>
+              <li><Link href="/sports" className="hover:text-white transition-colors">کھیل</Link></li>
+              <li><Link href="/business" className="hover:text-white transition-colors">کاروبار</Link></li>
+              <li><Link href="/technology" className="hover:text-white transition-colors">سائنس و ٹیکنالوجی</Link></li>
             </ul>
           </div>
           <div>
-            <h4 className="text-white font-bold mb-4">{t('footer.info', lang)}</h4>
+            <h4 className="text-white font-bold mb-4">معلومات</h4>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/about" className="hover:text-white transition-colors">{t('footer.about', lang)}</Link></li>
-              <li><Link href="/contact" className="hover:text-white transition-colors">{t('footer.contact', lang)}</Link></li>
-              <li><Link href="/search" className="hover:text-white transition-colors">{t('footer.search', lang)}</Link></li>
-              <li><Link href="/privacy-policy" className="hover:text-white transition-colors">{t('footer.privacy', lang)}</Link></li>
-              <li><Link href="/terms" className="hover:text-white transition-colors">{t('footer.terms', lang)}</Link></li>
+              <li><Link href="/about" className="hover:text-white transition-colors">ہمارے بارے میں</Link></li>
+              <li><Link href="/contact" className="hover:text-white transition-colors">رابطہ کریں</Link></li>
+              <li><Link href="/search" className="hover:text-white transition-colors">خبریں تلاش کریں</Link></li>
+              <li><Link href="/privacy-policy" className="hover:text-white transition-colors">پرائیویسی پالیسی</Link></li>
+              <li><Link href="/terms" className="hover:text-white transition-colors">شرائط و ضوابط</Link></li>
             </ul>
           </div>
           <div>
-            <h4 className="text-white font-bold mb-4">{t('footer.social', lang)}</h4>
+            <h4 className="text-white font-bold mb-4">سوشل میڈیا</h4>
             <div className="flex gap-3 mb-6">
               {socials.map((s) => (
                 <a key={s.name} href={s.href} target="_blank" rel="noopener noreferrer" className="bg-gray-800 hover:bg-primary-600 p-2 rounded-full transition-colors text-white" aria-label={s.name}>
@@ -51,18 +47,18 @@ export default function Footer() {
                 </a>
               ))}
             </div>
-            <h4 className="text-white font-bold mb-3">{t('footer.newsletter', lang)}</h4>
-            <p className="text-sm mb-3">{t('footer.newsletter.desc', lang)}</p>
+            <h4 className="text-white font-bold mb-3">خبرنامہ</h4>
+            <p className="text-sm mb-3">تازہ ترین خبریں اپنی ای میل پر حاصل کریں</p>
             <form className="newsletter-container">
-              <input type="email" placeholder={t('footer.email.placeholder', lang)} className="flex-1 px-3 py-2 rounded bg-gray-800 border border-gray-700 text-sm focus:outline-none focus:border-primary-500 min-w-0" />
-              <button type="button" className="bg-primary-600 text-white px-4 py-2 rounded text-sm hover:bg-primary-700 transition-colors shrink-0">{t('footer.subscribe', lang)}</button>
+              <input type="email" placeholder="آپ کا ای میل" className="flex-1 px-3 py-2 rounded bg-gray-800 border border-gray-700 text-sm focus:outline-none focus:border-primary-500 min-w-0" />
+              <button type="button" className="bg-primary-600 text-white px-4 py-2 rounded text-sm hover:bg-primary-700 transition-colors shrink-0">سبسکرائب کریں</button>
             </form>
           </div>
         </div>
 
         <div className="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-sm">
-          <p>&copy; {new Date().getFullYear()} Azad Khabar - {t('footer.rights', lang)}</p>
-          <p className="text-gray-500">{t('footer.tagline', lang)}</p>
+          <p>&copy; {new Date().getFullYear()} Azad Khabar - جملہ حقوق محفوظ ہیں</p>
+          <p className="text-gray-500">آزاد خبر — سچائی آپ کا حق ہے</p>
         </div>
       </div>
     </footer>

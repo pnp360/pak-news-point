@@ -5,13 +5,11 @@ import WeatherWidget from './WeatherWidget';
 import PrayerTimesWidget from './PrayerTimesWidget';
 import RatesWidget from './RatesWidget';
 import PoetryWidget from './PoetryWidget';
-import { useLanguage } from '@/components/LanguageProvider';
-import { t, CATEGORY_ENGLISH_NAMES, CATEGORY_URDU_NAMES } from '@/lib/i18n';
+import { CATEGORY_URDU_NAMES } from '@/lib/i18n';
 
 interface SidebarArticle {
   id: string;
   title: string;
-  originalTitle?: string | null;
   slug: string;
   views: number;
   publishedAt: Date | null;
@@ -35,15 +33,13 @@ const sidebarCategories = [
 ];
 
 export default function Sidebar({ latest }: SidebarProps) {
-  const { lang } = useLanguage();
-
   const stripMarkdown = (s: string) =>
     s.replace(/\[!\[.*?\]\(.*?\)\]|!\[.*?\]\(.*?\)|\[.*?\]\(.*?\)/g, '').trim();
 
-  const latestDisplay = latest.map((a) => {
-    const raw = lang === 'en' && a.originalTitle ? a.originalTitle : a.title;
-    return { ...a, displayTitle: stripMarkdown(raw) };
-  });
+  const latestDisplay = latest.map((a) => ({
+    ...a,
+    displayTitle: stripMarkdown(a.title),
+  }));
 
   return (
     <aside className="space-y-8">
@@ -51,7 +47,7 @@ export default function Sidebar({ latest }: SidebarProps) {
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-5">
         <h3 className="text-lg font-bold border-b dark:border-gray-700 pb-3 mb-4 flex items-center gap-2">
           <span className="w-1 h-6 bg-primary-600 rounded inline-block" />
-          {t('sidebar.latest', lang)}
+          تازہ ترین
         </h3>
         <div className="space-y-4">
           {latestDisplay.slice(0, 5).map((article, i) => (
@@ -77,7 +73,7 @@ export default function Sidebar({ latest }: SidebarProps) {
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-5">
         <h3 className="text-lg font-bold border-b dark:border-gray-700 pb-3 mb-4 flex items-center gap-2">
           <span className="w-1 h-6 bg-primary-600 rounded inline-block" />
-          {t('sidebar.weather', lang)}
+          موسم
         </h3>
         <WeatherWidget />
       </div>
@@ -86,7 +82,7 @@ export default function Sidebar({ latest }: SidebarProps) {
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-5">
         <h3 className="text-lg font-bold border-b dark:border-gray-700 pb-3 mb-4 flex items-center gap-2">
           <span className="w-1 h-6 bg-primary-600 rounded inline-block" />
-          {t('sidebar.rates', lang)}
+          زر مبادلہ کی شرح
         </h3>
         <RatesWidget />
       </div>
@@ -95,7 +91,7 @@ export default function Sidebar({ latest }: SidebarProps) {
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-5">
         <h3 className="text-lg font-bold border-b dark:border-gray-700 pb-3 mb-4 flex items-center gap-2">
           <span className="w-1 h-6 bg-primary-600 rounded inline-block" />
-          {t('sidebar.prayer', lang)}
+          اوقات نماز
         </h3>
         <PrayerTimesWidget />
       </div>
@@ -107,13 +103,11 @@ export default function Sidebar({ latest }: SidebarProps) {
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-5">
         <h3 className="text-lg font-bold border-b dark:border-gray-700 pb-3 mb-4 flex items-center gap-2">
           <span className="w-1 h-6 bg-primary-600 rounded inline-block" />
-          {t('sidebar.categories', lang)}
+          اقسام
         </h3>
         <div className="grid grid-cols-2 gap-2">
           {sidebarCategories.map((cat) => {
-            const catName = lang === 'en'
-              ? (CATEGORY_ENGLISH_NAMES[cat.slug] || cat.slug)
-              : (CATEGORY_URDU_NAMES[cat.slug] || cat.slug);
+            const catName = CATEGORY_URDU_NAMES[cat.slug] || cat.slug;
             return (
               <Link
                 key={cat.slug}

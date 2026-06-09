@@ -5,7 +5,6 @@ import { notFound } from 'next/navigation';
 import NewsCard from '@/components/public/NewsCard';
 import AdBanner from '@/components/public/AdBanner';
 import Pagination from '@/components/public/Pagination';
-import LangText from '@/components/LangText';
 
 interface Props {
   params: { id: string };
@@ -52,13 +51,13 @@ export default async function AuthorPage({ params, searchParams }: Props) {
         </div>
         <div>
           <h1 className="text-2xl font-bold">{author.name || 'Author'}</h1>
-          <p className="text-gray-500">{total} <LangText ur="خبریں" en="articles" /></p>
+          <p className="text-gray-500">{total} خبریں</p>
         </div>
       </div>
 
       {articles.length === 0 ? (
         <div className="text-center py-20 text-gray-500">
-          <p className="text-xl"><LangText ur="اس مصنف کی کوئی خبر نہیں ہے" en="No articles by this author" /></p>
+          <p className="text-xl">اس مصنف کی کوئی خبر نہیں ہے</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 xl:grid-cols-[160px_1fr_160px] gap-4 items-start">
