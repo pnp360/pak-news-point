@@ -44,6 +44,14 @@ export default function HomePageClient({ data }: { data: HomePageData }) {
 
   return (
     <div className="mx-auto px-4 py-4" style={{ maxWidth: '1360px' }}>
+      {/* Site title banner */}
+      <div className="text-center mb-5 py-4">
+        <h1 className="text-3xl md:text-5xl font-bold text-primary-700 dark:text-primary-400 font-nastaliq leading-[2]">
+          آزاد خبر
+        </h1>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">پاکستان کی معروف خبروں کی ویب سائٹ</p>
+      </div>
+
       <BreakingNews articles={data.breakingArticles} />
 
       {/* Hero Zone */}

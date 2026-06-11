@@ -5,15 +5,6 @@ import { useEffect, useState } from 'react';
 import { HiMenu, HiX, HiSearch, HiSun, HiMoon } from 'react-icons/hi';
 import Logo from './Logo';
 
-interface BreakingItem {
-  slug: string;
-  title: string;
-}
-
-interface HeaderProps {
-  breakingNews?: BreakingItem[];
-}
-
 const categories = [
   { name: 'پاکستان', slug: 'pakistan' },
   { name: 'دنیا', slug: 'world' },
@@ -26,7 +17,7 @@ const categories = [
   { name: 'شاعری', slug: 'poetry' },
 ];
 
-export default function Header({ breakingNews = [] }: HeaderProps) {
+export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -73,29 +64,10 @@ export default function Header({ breakingNews = [] }: HeaderProps) {
 
   return (
     <header className="bg-white dark:bg-slate-800">
-      {/* Top bar — date + breaking ticker side by side */}
+      {/* Top bar — date only */}
       <div className="bg-gradient-to-l from-primary-700 via-primary-600 to-primary-700 text-white">
-        <div className="container mx-auto px-4 flex items-center py-2.5 gap-3">
-          {breakingNews.length > 0 && (
-            <div className="flex items-center gap-2 flex-1 min-w-0 overflow-hidden" style={{ direction: 'rtl' }}>
-              <span className="bg-yellow-300 text-red-800 font-bold text-xs px-2 py-0.5 rounded shrink-0 relative z-10">
-                بریکنگ
-              </span>
-              <div className="overflow-hidden flex-1 min-w-0">
-                <div className="marquee-track py-0">
-                  {[...breakingNews, ...breakingNews, ...breakingNews].map((item, i) => (
-                    <span key={`${item.slug}-${i}`} className="ticker-item text-sm">
-                      <Link href={`/news/${item.slug}`} className="hover:underline">
-                        {item.title}
-                      </Link>
-                      <span className="mx-3 text-red-300">◆</span>
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-          <span className="text-xs whitespace-nowrap shrink-0 bg-white/10 px-3 py-1.5 rounded" style={{ unicodeBidi: 'plaintext' }}>{todayDate}</span>
+        <div className="container mx-auto px-4 flex items-center py-2 justify-center">
+          <span className="text-xs bg-white/10 px-3 py-1.5 rounded" style={{ unicodeBidi: 'plaintext' }}>{todayDate}</span>
         </div>
       </div>
 

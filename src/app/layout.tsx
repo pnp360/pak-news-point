@@ -4,8 +4,6 @@ import Header from '@/components/public/Header';
 import Footer from '@/components/public/Footer';
 import AutoFetchTrigger from '@/components/public/AutoFetchTrigger';
 import { Providers } from './providers';
-import { prisma } from '@/lib/prisma';
-
 export const metadata: Metadata = {
   title: {
     default: 'Azad Khabar - تازہ ترین خبریں',
@@ -43,13 +41,6 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://azadkhabar.vercel.app';
-
-  const breakingNews = await prisma.article.findMany({
-    where: { status: 'PUBLISHED' },
-    orderBy: { publishedAt: 'desc' },
-    take: 10,
-    select: { slug: true, title: true },
-  });
 
   const websiteJsonLd = {
     '@context': 'https://schema.org',
@@ -90,7 +81,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
         />
         <Providers>
-          <Header breakingNews={breakingNews} />
+          <Header />
           <main>{children}</main>
           <Footer />
           <AutoFetchTrigger />
