@@ -66,14 +66,14 @@ export default function Header() {
     <header className="bg-white dark:bg-slate-800">
       {/* Top bar — date only */}
       <div className="bg-gradient-to-l from-primary-700 via-primary-600 to-primary-700 text-white">
-        <div className="container mx-auto px-4 flex items-center py-2 justify-center">
+        <div className="container mx-auto px-4 flex items-center py-1.5 md:py-2 justify-center">
           <span className="text-xs bg-white/10 px-3 py-1.5 rounded" style={{ unicodeBidi: 'plaintext' }}>{todayDate}</span>
         </div>
       </div>
 
       {/* Logo + Navigation + Utilities */}
       <div className="border-b dark:border-slate-700/60 bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm">
-        <div className="flex justify-between items-center w-full px-6 py-3">
+        <div className="flex justify-between items-center w-full px-4 md:px-6 py-2 md:py-3">
           <Logo />
 
           {/* Desktop nav */}
@@ -120,12 +120,12 @@ export default function Header() {
 
         {/* Mobile nav */}
         {menuOpen && (
-          <nav className="md:hidden border-t dark:border-slate-700/60 pb-2 pt-2 px-6 bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm">
+          <nav className="md:hidden border-t dark:border-slate-700/60 pb-1 pt-1 px-4 bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm">
             {categories.map((cat) => (
               <Link
                 key={cat.slug}
                 href={`/${cat.slug}`}
-                className="block px-4 py-3 hover:bg-gray-100 dark:hover:bg-slate-700 hover:text-primary-600 font-medium rounded-lg transition-all"
+                className="block px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-slate-700 hover:text-primary-600 font-medium rounded-lg text-sm"
                 onClick={() => setMenuOpen(false)}
               >
                 {cat.name}

@@ -51,11 +51,12 @@ export default function HomePageClient({ data }: { data: HomePageData }) {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-3">
           {mainFeatured && (
             <div className="lg:col-span-3">
-              <Link href={`/news/${mainFeatured.slug}`} className="group relative block overflow-hidden rounded-2xl shadow-sm h-full min-h-[260px] md:min-h-[380px] lg:min-h-[440px]">
+              <Link href={`/news/${mainFeatured.slug}`} className="group relative block overflow-hidden rounded-2xl shadow-sm h-full min-h-[200px] md:min-h-[380px] lg:min-h-[440px]">
                 <SafeImage
                   src={getWatermarkedUrl(mainFeatured.featuredImage || 'https://images.unsplash.com/photo-1555333145-deb2e18f22b0?w=1200&q=80')}
                   alt={mainFeaturedTitle}
                   fill
+                  priority
                   sizes="(max-width: 1024px) 100vw, 75vw"
                   className="object-cover group-hover:scale-105 transition-transform duration-700"
                 />
@@ -88,9 +89,9 @@ export default function HomePageClient({ data }: { data: HomePageData }) {
                       className="object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                     <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0.1) 100%)', zIndex: 1 }} />
-                    <div className="absolute bottom-0 inset-x-0 p-2.5" style={{ zIndex: 2 }}>
-                      <span className="text-[10px] text-primary-300 font-bold uppercase tracking-wider">{sideCategory}</span>
-                      <h3 className="text-xs font-bold leading-[1.5] text-white drop-shadow-lg line-clamp-2">
+                    <div className="absolute bottom-0 inset-x-0 p-2" style={{ zIndex: 2 }}>
+                      <span className="text-[9px] text-primary-300 font-bold uppercase tracking-wider">{sideCategory}</span>
+                      <h3 className="text-[11px] font-bold leading-[1.4] text-white drop-shadow-lg line-clamp-2">
                         {cleanArticleTitle(story.title)}
                       </h3>
                     </div>

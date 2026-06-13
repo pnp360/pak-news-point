@@ -14,6 +14,7 @@ interface SafeImageProps {
   sizes?: string;
   width?: number;
   height?: number;
+  priority?: boolean;
 }
 
 function BrandedFallback({ className, fill }: { className?: string; fill?: boolean }) {
@@ -33,13 +34,7 @@ function BrandedFallback({ className, fill }: { className?: string; fill?: boole
   );
 }
 
-function SkeletonLoader() {
-  return (
-    <div className="absolute inset-0 img-shimmer" />
-  );
-}
-
-export default function SafeImage({ src, alt, className, fill, width, height }: SafeImageProps) {
+export default function SafeImage({ src, alt, className, fill, sizes, width, height, priority }: SafeImageProps) {
   const [error, setError] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [useDirect, setUseDirect] = useState(false);
@@ -57,7 +52,6 @@ export default function SafeImage({ src, alt, className, fill, width, height }: 
 
   const onError = useCallback(() => {
     if (!mountedRef.current) return;
-    /* If the proxy failed, try the original image URL directly */
     if (!useDirect && src.startsWith('/api/image-proxy')) {
       try {
         const direct = new URL(src, window.location.origin).searchParams.get('url');
@@ -73,9 +67,7 @@ export default function SafeImage({ src, alt, className, fill, width, height }: 
   }, [src, useDirect]);
 
   const onLoad = useCallback(() => {
-    if (mountedRef.current) {
-      setLoaded(true);
-    }
+    if (mountedRef.current) setLoaded(true);
   }, []);
 
   const cleanAlt = stripMarkdown(alt);
@@ -87,35 +79,31 @@ export default function SafeImage({ src, alt, className, fill, width, height }: 
     return <BrandedFallback className={className} fill={fill} />;
   }
 
+  const imgProps: React.ImgHTMLAttributes<HTMLImageElement> & { fetchPriority?: 'high' | 'low' | 'auto' } = {
+    src: imgSrc,
+    alt: cleanAlt,
+    className,
+    sizes,
+    style: { width: '100%', height: '100%', objectFit: 'cover' },
+    onError,
+    onLoad,
+    loading: priority ? 'eager' as const : 'lazy' as const,
+    fetchPriority: priority ? 'high' as const : 'auto' as const,
+  };
+
   if (fill) {
     return (
       <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
-        {!loaded && <SkeletonLoader />}
-        <img
-          src={imgSrc}
-          alt={cleanAlt}
-          className={className}
-          style={{ width: '100%', height: '100%' }}
-          onError={onError}
-          onLoad={onLoad}
-          loading="lazy"
-        />
+        {!loaded && <div className="absolute inset-0 img-shimmer" />}
+        <img {...imgProps} />
       </div>
     );
   }
 
   return (
     <div style={{ position: 'relative', width: width || 400, height: height || 250, overflow: 'hidden' }}>
-      {!loaded && <SkeletonLoader />}
-      <img
-        src={imgSrc}
-        alt={cleanAlt}
-        className={className}
-        style={{ width: '100%', height: '100%' }}
-        onError={onError}
-        onLoad={onLoad}
-        loading="lazy"
-      />
+      {!loaded && <div className="absolute inset-0 img-shimmer" />}
+      <img {...imgProps} />
     </div>
   );
 }
