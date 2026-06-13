@@ -1,15 +1,17 @@
 'use client';
 
-import BreakingNews from '@/components/public/BreakingNews';
+import dynamic from 'next/dynamic';
 import NewsCard from '@/components/public/NewsCard';
-import Sidebar from '@/components/public/Sidebar';
 import Link from 'next/link';
 import { getWatermarkedUrl } from '@/lib/watermark-client';
 import SafeImage from '@/components/public/SafeImage';
 import { timeAgo } from '@/lib/urdu';
 import { cleanArticleTitle } from '@/lib/translate';
-import AdBanner from '@/components/public/AdBanner';
 import { CATEGORY_URDU_NAMES } from '@/lib/i18n';
+
+const BreakingNews = dynamic(() => import('@/components/public/BreakingNews'), { ssr: false });
+const AdBanner = dynamic(() => import('@/components/public/AdBanner'), { ssr: false });
+const Sidebar = dynamic(() => import('@/components/public/Sidebar'), { ssr: false });
 
 interface ArticleItem {
   id: string; slug: string; title: string;

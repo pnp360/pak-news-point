@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { HiMenu, HiX, HiSearch, HiSun, HiMoon } from 'react-icons/hi';
 import Logo from './Logo';
 
 const categories = [
@@ -16,6 +15,32 @@ const categories = [
   { name: 'تعلیم', slug: 'education' },
   { name: 'شاعری', slug: 'poetry' },
 ];
+
+function MenuIcon() {
+  return (
+    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
+  );
+}
+function CloseIcon() {
+  return (
+    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+  );
+}
+function SearchIcon() {
+  return (
+    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+  );
+}
+function SunIcon() {
+  return (
+    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+  );
+}
+function MoonIcon() {
+  return (
+    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+  );
+}
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -83,7 +108,7 @@ export default function Header() {
                 <Link
                   key={cat.slug}
                   href={`/${cat.slug}`}
-                  className="px-3 py-2 text-sm font-medium hover:text-primary-600 whitespace-nowrap rounded-lg hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-all duration-200"
+                  className="px-3 py-2 text-sm font-medium hover:text-primary-600 whitespace-nowrap rounded-lg hover:bg-primary-50 dark:hover:bg-primary-900/20"
                   onClick={() => setMenuOpen(false)}
                 >
                   {cat.name}
@@ -96,24 +121,24 @@ export default function Header() {
           <div className="flex items-center gap-1 shrink-0">
             <button
               onClick={toggleDark}
-              className="p-2 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-full transition-colors"
+              className="p-2 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-full touch-manipulation"
               aria-label="ڈارک موڈ"
             >
-              {darkMode ? <HiSun className="w-5 h-5" /> : <HiMoon className="w-5 h-5" />}
+              {darkMode ? <SunIcon /> : <MoonIcon />}
             </button>
             <button
               onClick={() => setSearchOpen(!searchOpen)}
-              className="p-2 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-full transition-colors"
+              className="p-2 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-full touch-manipulation"
               aria-label="تلاش"
             >
-              <HiSearch className="w-5 h-5" />
+              <SearchIcon />
             </button>
             <button
               onClick={() => setMenuOpen(!menuOpen)}
-              className="p-2 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-full md:hidden transition-colors"
+              className="p-2 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-full md:hidden touch-manipulation"
               aria-label="مینو"
             >
-              {menuOpen ? <HiX className="w-5 h-5" /> : <HiMenu className="w-5 h-5" />}
+              {menuOpen ? <CloseIcon /> : <MenuIcon />}
             </button>
           </div>
         </div>
@@ -125,7 +150,7 @@ export default function Header() {
               <Link
                 key={cat.slug}
                 href={`/${cat.slug}`}
-                className="block px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-slate-700 hover:text-primary-600 font-medium rounded-lg text-sm"
+                className="block px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-slate-700 hover:text-primary-600 font-medium rounded-lg text-sm active:bg-gray-200"
                 onClick={() => setMenuOpen(false)}
               >
                 {cat.name}
@@ -144,12 +169,12 @@ export default function Header() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="خبریں تلاش کریں..."
-              className="flex-1 px-4 py-2.5 border border-gray-300 dark:border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-slate-800 dark:text-white transition-all"
+              className="flex-1 px-4 py-2.5 border border-gray-300 dark:border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-slate-800 dark:text-white text-base md:text-sm"
               autoFocus
             />
             <button
               type="submit"
-              className="bg-primary-600 text-white px-6 py-2.5 rounded-xl font-medium hover:bg-primary-700 transition-colors shadow-lg shadow-primary-600/20"
+              className="bg-primary-600 text-white px-6 py-2.5 rounded-xl font-medium hover:bg-primary-700 touch-manipulation"
             >
               تلاش
             </button>
@@ -165,7 +190,7 @@ export default function Header() {
               <li key={cat.slug}>
                 <Link
                   href={`/${cat.slug}`}
-                  className="block px-4 py-3 hover:text-primary-600 whitespace-nowrap font-medium text-sm transition-colors"
+                  className="block px-4 py-3 hover:text-primary-600 whitespace-nowrap font-medium text-sm active:text-primary-600 touch-manipulation"
                   onClick={() => setMenuOpen(false)}
                 >
                   {cat.name}
