@@ -59,12 +59,9 @@ export default async function TagPage({ params, searchParams }: Props) {
           <p className="text-xl">اس ٹیگ میں کوئی خبر نہیں ہے</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 xl:grid-cols-[160px_1fr_160px] gap-4 items-start">
-          <div className="hidden xl:block sticky top-24">
-            <AdBanner format="skyscraper" />
-          </div>
-          <div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="flex flex-col lg:flex-row gap-8">
+          <div className="flex-1 min-w-0">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
               {articles.map((article) => (
                 <NewsCard key={article.id} {...article} />
               ))}
@@ -75,9 +72,11 @@ export default async function TagPage({ params, searchParams }: Props) {
               basePath={`/tag/${params.slug}`}
             />
           </div>
-          <div className="hidden xl:block sticky top-24">
-            <AdBanner format="skyscraper" />
-          </div>
+          <aside className="w-full lg:w-72 shrink-0">
+            <div className="sticky top-24 space-y-5">
+              <AdBanner format="skyscraper" />
+            </div>
+          </aside>
         </div>
       )}
     </div>

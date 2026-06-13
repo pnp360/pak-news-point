@@ -110,13 +110,15 @@ export default function HomePageClient({ data }: { data: HomePageData }) {
         </div>
       </section>
 
+      <hr className="section-divider" />
+
       {/* Leaderboard Ad */}
-      <div className="mb-8">
+      <div className="mb-10">
         <AdBanner format="leaderboard" />
       </div>
 
       {/* Trending Strip */}
-      <section className="mb-10 bg-gradient-to-l from-primary-600 to-primary-700 rounded-2xl p-4 text-white overflow-hidden" style={{ direction: 'rtl' }}>
+      <section className="mb-10 bg-gradient-to-l from-primary-600 to-primary-700 rounded-2xl p-4 text-white overflow-hidden shadow-lg" style={{ direction: 'rtl' }}>
         <div className="flex items-center gap-4">
           <span className="text-sm font-bold whitespace-nowrap flex items-center gap-1.5 bg-white/20 px-3 py-1.5 rounded-full shrink-0 relative z-10">
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.66 11.2C17.43 10.9 17.15 10.64 16.89 10.38C16.22 9.78 15.46 9.35 14.82 8.72C13.33 7.26 13 4.85 13.95 3C13 3.23 12.17 3.75 11.46 4.32C8.87 6.4 7.85 10.07 9.07 13.22C9.11 13.32 9.15 13.42 9.15 13.55C9.15 13.77 9 13.97 8.8 14.05C8.57 14.15 8.33 14.09 8.14 13.93C8.08 13.88 8.04 13.83 8 13.76C6.87 12.33 6.69 10.28 7.45 8.64C5.78 10 4.87 12.3 5 14.47C5.06 14.97 5.12 15.47 5.29 15.97C5.43 16.57 5.7 17.17 6 17.7C7.08 19.43 8.95 20.67 10.96 20.92C13.1 21.19 15.39 20.8 16.89 19.32C18.55 17.68 19.15 15.15 18.23 13C17.96 12.38 17.6 11.79 17.21 11.24L17.66 11.2Z" /></svg>
@@ -138,6 +140,8 @@ export default function HomePageClient({ data }: { data: HomePageData }) {
           </div>
         </div>
       </section>
+
+      <hr className="section-divider" />
 
       {/* Main Content + Sidebar */}
       <div className="flex flex-col lg:flex-row gap-8">
@@ -215,8 +219,10 @@ export default function HomePageClient({ data }: { data: HomePageData }) {
             );
           })}
 
+          <hr className="section-divider" />
+
           {/* Newsletter CTA */}
-          <section className="mb-10 relative overflow-hidden rounded-2xl">
+          <section className="mb-10 relative overflow-hidden rounded-2xl shadow-lg">
             <div className="absolute inset-0 bg-gradient-to-br from-primary-700 via-primary-600 to-red-800" />
             <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 20% 50%, white 0%, transparent 50%), radial-gradient(circle at 80% 50%, white 0%, transparent 50%)' }} />
             <div className="relative p-8 md:p-12 text-white text-center">
@@ -243,16 +249,18 @@ export default function HomePageClient({ data }: { data: HomePageData }) {
 
 function SectionHeader({ title, href }: { title: string; href?: string }) {
   return (
-    <div className="flex items-center justify-between mb-5 pb-3 border-b-2 border-primary-600/20 dark:border-primary-400/10">
-      <h2 className="text-lg font-bold flex items-center gap-2">
-        <span className="w-2 h-6 bg-gradient-to-b from-primary-500 to-primary-700 rounded inline-block" />
+    <div className="flex items-center justify-between mb-6 pb-0">
+      <h2 className="text-xl font-bold flex items-center gap-3">
+        <span className="relative flex items-center">
+          <span className="w-2.5 h-7 bg-gradient-to-b from-primary-500 to-primary-700 rounded-full inline-block" />
+          <span className="absolute -bottom-1.5 left-0 right-0 h-[3px] bg-gradient-to-l from-primary-500/40 to-transparent rounded-full" />
+        </span>
         <span className="relative">
           {title}
-          <span className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary-500/30 rounded-full" />
         </span>
       </h2>
       {href && (
-        <Link href={href} className="group text-xs text-primary-600 hover:text-primary-700 font-medium transition-colors flex items-center gap-1 bg-primary-50 dark:bg-primary-900/30 px-3 py-1.5 rounded-full hover:bg-primary-100 dark:hover:bg-primary-900/50">
+        <Link href={href} className="group text-xs text-primary-600 hover:text-primary-700 font-medium transition-all flex items-center gap-1.5 bg-primary-50 dark:bg-primary-900/30 px-3.5 py-1.5 rounded-full hover:bg-primary-100 dark:hover:bg-primary-900/50 hover:shadow-sm">
           <span>مزید</span>
           <svg className="w-3 h-3 rotate-180 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
         </Link>
