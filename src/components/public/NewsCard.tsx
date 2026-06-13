@@ -97,17 +97,17 @@ export default function NewsCard({
             className="object-cover group-hover:scale-105 transition-transform duration-500 relative z-[1]"
           />
         </div>
-        <div className="p-4">
-          <span className="inline-block bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 text-xs font-semibold px-2.5 py-0.5 rounded-full mb-2.5">
+        <div className="p-3.5">
+          <span className="inline-block bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 text-[10px] font-semibold px-2 py-0.5 rounded-full mb-2">
             {categoryName}
           </span>
-          <h3 className="font-bold text-base mb-1.5 leading-[1.6] text-gray-900 dark:text-gray-100 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors break-words line-clamp-2">
+          <h3 className="font-bold text-sm mb-1.5 leading-[1.6] text-gray-900 dark:text-gray-100 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors break-words line-clamp-2">
             {displayTitle}
           </h3>
           {excerpt && (
-            <p className="text-gray-500 dark:text-gray-400 text-sm mb-2.5 leading-[1.6] line-clamp-3">{excerpt}</p>
+            <p className="text-gray-500 dark:text-gray-400 text-xs mb-2 leading-[1.6] line-clamp-2">{excerpt}</p>
           )}
-          <div className="flex items-center gap-3 text-xs text-gray-400 dark:text-gray-500">
+          <div className="flex items-center gap-3 text-[11px] text-gray-400 dark:text-gray-500">
             {publishedAt && <span>{timeAgo(publishedAt)}</span>}
             {views > 0 && <span>{formatViews(views)} ملاحظات</span>}
           </div>

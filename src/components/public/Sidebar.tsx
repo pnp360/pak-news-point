@@ -34,8 +34,8 @@ const sidebarCategories = [
 
 function SectionTitle({ children }: { children: string }) {
   return (
-    <div className="flex items-center gap-2 mb-4 pb-2 border-b border-gray-100 dark:border-gray-700">
-      <span className="w-1.5 h-5 bg-gradient-to-b from-primary-500 to-primary-600 rounded-full" />
+    <div className="flex items-center gap-2 mb-3 pb-2 border-b border-gray-100 dark:border-gray-700">
+      <span className="w-1.5 h-4 bg-gradient-to-b from-primary-500 to-primary-600 rounded-full" />
       <h3 className="text-sm font-bold">{children}</h3>
     </div>
   );
