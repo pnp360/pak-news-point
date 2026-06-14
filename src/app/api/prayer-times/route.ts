@@ -20,26 +20,22 @@ const PRAYER_NAMES_URDU: Record<string, string> = {
   Isha: 'عشاء',
 };
 
-const HIJRI_MONTHS_URDU: Record<string, string> = {
-  'محرم': 'محرم', 'صفر': 'صفر', 'ربیع الاول': 'ربیع الاول', 'ربیع الثانی': 'ربیع الثانی',
-  'جمادی الاول': 'جمادی الاول', 'جمادی الثانی': 'جمادی الثانی', 'رجب': 'رجب',
-  'شعبان': 'شعبان', 'رمضان': 'رمضان', 'شوال': 'شوال', 'ذو القعدہ': 'ذو القعدہ',
-  'ذو الحجہ': 'ذو الحجہ',
-};
+function toUrduNumber(num: number): string {
+  const urduDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+  return num.toString().split('').map((d) => urduDigits[parseInt(d)]).join('');
+}
 
-function getHijriDate(date: Date): string {
+function getHijriDate(): string {
   try {
-    const parts = new Intl.DateTimeFormat('ar-SA-islamic', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-      timeZone: 'Asia/Karachi',
-    }).formatToParts(date);
-    const day = parts.find((p) => p.type === 'day')?.value || '';
-    const month = parts.find((p) => p.type === 'month')?.value || '';
-    const year = parts.find((p) => p.type === 'year')?.value || '';
-    const urduMonth = HIJRI_MONTHS_URDU[month] || month;
-    return `${urduMonth} ${day} ${year} ہجری`;
+    const date = new Date();
+    const hijriYear = Math.floor((date.getFullYear() - 622) * (365.25 / 354.367));
+    const hijriMonth = Math.floor(((date.getFullYear() - 622) * 12 + date.getMonth()) % 12) + 1;
+    const hijriDay = Math.floor((date.getDate() * 354.367) / 365.25) % 30;
+    const urduMonths = [
+      'محرم', 'صفر', 'ربیع الاول', 'ربیع الثانی', 'جمادی الاول', 'جمادی الثانی',
+      'رجب', 'شعبان', 'رمضان', 'شوال', 'ذوالقعدہ', 'ذوالحجہ',
+    ];
+    return `${toUrduNumber(hijriDay || 1)} ${urduMonths[hijriMonth - 1] || 'محرم'} ${toUrduNumber(hijriYear)} ہجری`;
   } catch {
     return '';
   }
@@ -88,13 +84,10 @@ export async function GET() {
     const sunni = calculatePrayerTimes('sunni');
     const jafari = calculatePrayerTimes('jafari');
 
-    const dateStr = new Date().toLocaleDateString('ur-PK', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-      timeZone: 'Asia/Karachi',
-    });
-    const hijriDate = getHijriDate(new Date());
+    const urduMonths = ['جنوری', 'فروری', 'مارچ', 'اپریل', 'مئی', 'جون', 'جولائی', 'اگست', 'ستمبر', 'اکتوبر', 'نومبر', 'دسمبر'];
+    const now = new Date();
+    const dateStr = `${now.getDate()} ${urduMonths[now.getMonth()]} ${now.getFullYear()}`;
+    const hijriDate = getHijriDate();
 
     return NextResponse.json({
       sunni: {

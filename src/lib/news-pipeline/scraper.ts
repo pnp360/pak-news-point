@@ -175,12 +175,16 @@ export async function scrapeSource(source: UrduFeedSource): Promise<ScrapedArtic
       }
       if (!publishedAt) continue; // skip items without a valid date
 
+      const excerptRaw = body.slice(0, 180);
+      const lastSpace = excerptRaw.lastIndexOf(' ');
+      const excerpt = lastSpace > 40 ? excerptRaw.slice(0, lastSpace) + '…' : excerptRaw + '…';
+
       articles.push({
         sourceName: source.name,
         sourceUrl: link,
         originalTitle: title,
         originalBody: body,
-        excerpt: body.slice(0, 200),
+        excerpt,
         imageUrl,
         category,
         publishedAt,

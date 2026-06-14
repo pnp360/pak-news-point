@@ -168,11 +168,19 @@ export default function WeatherWidget() {
           <span className="col-span-2">🌡️ محسوس {w.feels_like}°C</span>
         </div>
 
-        {singleCityData.forecast.length > 0 && (
+        {singleCityData.forecast.length > 0 && (() => {
+          /* Validate: if forecast max is way below current temp, it's stale data */
+          const currentTemp = parseFloat(w.temp_c);
+          const validForecast = singleCityData.forecast.filter((day) => {
+            const max = parseFloat(day.temp_max_c);
+            return !isNaN(max) && !isNaN(currentTemp) && max >= currentTemp - 15;
+          });
+          if (validForecast.length === 0) return null;
+          return (
           <div className="border-t border-blue-200 pt-2">
             <p className="text-xs font-bold text-gray-700 mb-1.5">اگلے دنوں کی پیش گوئی</p>
             <div className="flex gap-1.5 overflow-x-auto">
-              {singleCityData.forecast.map((day, i) => (
+              {validForecast.map((day, i) => (
                 <div key={i} className="flex-1 min-w-[60px] bg-white/60 rounded-lg p-1.5 text-center">
                   <p className="text-[10px] text-gray-500">{day.date}</p>
                   <span className="text-base">{getWeatherIcon(day.condition)}</span>
@@ -181,7 +189,8 @@ export default function WeatherWidget() {
               ))}
             </div>
           </div>
-        )}
+          );
+        })()}
       </div>
     );
   }

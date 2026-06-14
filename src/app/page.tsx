@@ -2,6 +2,7 @@ export const dynamic = 'force-dynamic';
 
 import { prisma } from '@/lib/prisma';
 import HomePageClient from '@/components/public/HomePageClient';
+import { classifyArticleCategory } from '@/lib/news-pipeline/sources';
 
 const RECENT_DAYS = 90;
 
@@ -11,21 +12,29 @@ function pickFallback(id: string, slug?: string): string {
   return `https://picsum.photos/seed/${seed}/800/600`;
 }
 
-/** Category keywords for homepage relevance filtering (prevents misclassified articles). */
-const CATEGORY_KEYWORDS: Record<string, RegExp[]> = {
-  sports: [
-    /کرکٹ|ورلڈ\s?کپ|ٹینس|فٹ\s?بال|اولمپک/i,
-    /بابر\s?اعظم|شاہین|فیڈرر|نڈال|جاکووچ|میسی|رونالڈو/i,
-    /کھیل|میچ|ٹیم|کپتان|وکٹ|رن|گیند/i,
-    /cricket|world\s+cup|psl|ipl|tennis|football|soccer|olympics/i,
-    /babar\s+azam|shaheen|federer|nadal|djokovic|messi|ronaldo/i,
-  ],
+/** Map home-page slugs → classifier category names */
+const SLUG_TO_CLASSIFIER: Record<string, string> = {
+  pakistan: 'Pakistan',
+  world: 'World',
+  sports: 'Sports',
+  business: 'Business',
+  entertainment: 'Entertainment',
+  technology: 'Technology',
+  health: 'Health',
+  education: 'Education',
 };
 
+/**
+ * Filters out articles whose title clearly belongs to a DIFFERENT category
+ * according to the ingestion classifier.  If the classifier returns null
+ * (ambiguous title), the article passes through.
+ */
 function isRelevantToCategory(slug: string, title: string): boolean {
-  const keywords = CATEGORY_KEYWORDS[slug];
-  if (!keywords) return true;
-  return keywords.some((re) => re.test(title));
+  const expected = SLUG_TO_CLASSIFIER[slug];
+  if (!expected) return true; // unknown slug → show all
+  const classified = classifyArticleCategory(title);
+  if (!classified) return true; // no classifier match → pass through
+  return classified === expected;
 }
 
 async function getHomepageData() {
@@ -112,7 +121,7 @@ async function getHomepageData() {
     });
     /* Filter out clearly misclassified articles for strict categories */
     articles = articles.filter((a) => isRelevantToCategory(cat.slug, a.title));
-    if (articles.length > 0) categoryArticles[cat.slug] = fillImage(articles);
+    categoryArticles[cat.slug] = fillImage(articles);
   }
 
   return { breakingArticles, featuredArticles, latestArticles, latestFeed, trendingArticles, categories, categoryArticles };

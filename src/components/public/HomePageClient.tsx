@@ -40,6 +40,11 @@ export default function HomePageClient({ data }: { data: HomePageData }) {
   const heroSideStories = hasFeatured
     ? data.featuredArticles.slice(1, 5)
     : data.latestArticles.slice(1, 5);
+  const heroId = mainFeatured?.id;
+  /* Exclude the hero article from the latest-feed grid to avoid duplication */
+  const latestFeedNoHero = heroId
+    ? data.latestFeed.filter((a) => a.id !== heroId)
+    : data.latestFeed;
 
   const mainFeaturedTitle = mainFeatured?.title || '';
   const mainFeaturedCategory = CATEGORY_URDU_NAMES[mainFeatured?.category?.slug] || mainFeatured?.category?.nameUrdu;
@@ -127,8 +132,7 @@ export default function HomePageClient({ data }: { data: HomePageData }) {
                   href={`/news/${article.slug}`}
                   className="ticker-item flex items-center gap-2"
                 >
-                  <span className="text-base font-bold text-white/50 tabular-nums">{String((i % data.trendingArticles.length) + 1).padStart(2, '0')}</span>
-                  <span className="text-sm font-medium">{cleanArticleTitle(article.title)}</span>
+                  <span className="text-sm font-medium whitespace-nowrap">{cleanArticleTitle(article.title)}</span>
                 </Link>
               ))}
             </div>
@@ -144,18 +148,18 @@ export default function HomePageClient({ data }: { data: HomePageData }) {
           {/* Latest News */}
           <section className="mb-8">
             <SectionHeader title="تازہ ترین خبریں" />
-            {data.latestFeed.length > 0 && (
+            {latestFeedNoHero.length > 0 && (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div className="sm:col-span-2 lg:col-span-2 lg:row-span-2">
-                  <NewsCard {...data.latestFeed[0]} variant="featured" />
+                  <NewsCard {...latestFeedNoHero[0]} variant="featured" />
                 </div>
                 <div className="hidden sm:block">
-                  <NewsCard {...data.latestFeed[1]} />
+                  <NewsCard {...latestFeedNoHero[1]} />
                 </div>
-                <NewsCard {...data.latestFeed[2]} />
-                <NewsCard {...data.latestFeed[3]} />
-                <NewsCard {...data.latestFeed[4]} />
-                {data.latestFeed.slice(5).map((article) => (
+                <NewsCard {...latestFeedNoHero[2]} />
+                <NewsCard {...latestFeedNoHero[3]} />
+                <NewsCard {...latestFeedNoHero[4]} />
+                {latestFeedNoHero.slice(5).map((article) => (
                   <NewsCard key={article.id} {...article} />
                 ))}
               </div>
@@ -171,9 +175,19 @@ export default function HomePageClient({ data }: { data: HomePageData }) {
           <div className="content-visibility-auto">
           {Object.entries(data.categoryArticles).slice(0, 6).map(([slug, articles], idx) => {
             const category = data.categories.find((c) => c.slug === slug);
-            if (!category || articles.length === 0) return null;
-            const sliceEnd = slug === 'pakistan' ? 7 : slug === 'world' ? 3 : 5;
+            if (!category) return null;
             const catTitle = CATEGORY_URDU_NAMES[slug] || category.nameUrdu;
+            if (articles.length === 0) {
+              return (
+                <section key={slug} className="mb-8">
+                  <SectionHeader title={catTitle} href={`/${slug}`} />
+                  <div className="text-center py-8 text-gray-400 dark:text-gray-500 text-sm border border-dashed border-gray-200 dark:border-gray-700 rounded-2xl">
+                    اس زمرے میں ابھی کوئی خبریں نہیں ہیں
+                  </div>
+                </section>
+              );
+            }
+            const sliceEnd = slug === 'pakistan' ? 7 : slug === 'world' ? 3 : 5;
             const useHeroLayout = idx % 2 === 0;
 
             return (

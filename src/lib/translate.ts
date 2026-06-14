@@ -2589,6 +2589,8 @@ export function cleanArticleTitle(title: string): string {
   /* Strip embedded date patterns from RSS titles e.g. "14 مارچ 2025" */
   result = result.replace(/[|]\s*\d{1,2}\s+(جنوری|فروری|مارچ|اپریل|مئی|جون|جولائی|اگست|ستمبر|اکتوبر|نومبر|دسمبر)\s+\d{4}\s*/g, '');
   result = result.replace(/\d{1,2}\s+(جنوری|فروری|مارچ|اپریل|مئی|جون|جولائی|اگست|ستمبر|اکتوبر|نومبر|دسمبر)\s+\d{4}\s*[|]/g, '');
+  /* Strip bare bracket artifacts e.g. [alt text] without a URL */
+  result = result.replace(/\[.*?\]/g, '').trim();
   return result.trim();
 }
 
