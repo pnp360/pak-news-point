@@ -89,6 +89,7 @@ export default function SafeImage({ src, alt, className, fill, sizes, width, hei
     onLoad,
     loading: priority ? 'eager' as const : 'lazy' as const,
     fetchPriority: priority ? 'high' as const : 'auto' as const,
+    decoding: 'async' as const,
   };
 
   if (fill) {

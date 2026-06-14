@@ -55,7 +55,7 @@ export default function HomePageClient({ data }: { data: HomePageData }) {
             <div className="lg:col-span-3">
               <Link href={`/news/${mainFeatured.slug}`} className="group relative block overflow-hidden rounded-2xl shadow-sm h-full min-h-[200px] md:min-h-[380px] lg:min-h-[440px]">
                 <SafeImage
-                  src={getWatermarkedUrl(mainFeatured.featuredImage || 'https://images.unsplash.com/photo-1555333145-deb2e18f22b0?w=1200&q=80')}
+                  src={getWatermarkedUrl(mainFeatured.featuredImage || '')}
                   alt={mainFeaturedTitle}
                   fill
                   priority
@@ -168,6 +168,7 @@ export default function HomePageClient({ data }: { data: HomePageData }) {
           </div>
 
           {/* Category Zones */}
+          <div className="content-visibility-auto">
           {Object.entries(data.categoryArticles).slice(0, 6).map(([slug, articles], idx) => {
             const category = data.categories.find((c) => c.slug === slug);
             if (!category || articles.length === 0) return null;
@@ -213,9 +214,12 @@ export default function HomePageClient({ data }: { data: HomePageData }) {
             );
           })}
 
+          </div>
+
           <hr className="section-divider" />
 
           {/* Newsletter CTA */}
+          <div className="content-visibility-auto">
           <section className="mb-8 relative overflow-hidden rounded-2xl shadow-md">
             <div className="absolute inset-0 bg-gradient-to-br from-primary-700 via-primary-600 to-red-800" />
             <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 20% 50%, white 0%, transparent 50%), radial-gradient(circle at 80% 50%, white 0%, transparent 50%)' }} />
@@ -232,8 +236,9 @@ export default function HomePageClient({ data }: { data: HomePageData }) {
             </div>
           </section>
         </div>
+        </div>
 
-        <div className="w-full lg:w-72 shrink-0">
+        <div className="w-full lg:w-72 shrink-0 content-visibility-auto">
           <Sidebar trending={data.trendingArticles} latest={data.latestArticles} />
         </div>
       </div>

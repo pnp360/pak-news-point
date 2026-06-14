@@ -1,11 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&display=swap');
+/* Font loaded via next/font in layout.tsx */
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --font-nastaliq: 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif;
   --bg-primary: #ffffff;
   --bg-secondary: #f8f9fb;
   --bg-card: #ffffff;
@@ -41,7 +40,7 @@ body {
 html[dir="rtl"] body {
   direction: rtl;
   text-align: right;
-  font-family: 'Noto Nastaliq Urdu', serif;
+  font-family: var(--font-nastaliq), 'Jameel Noori Nastaleeq', serif;
   line-height: 2.25;
 }
 
@@ -263,6 +262,19 @@ html[dir="rtl"] body {
     flex-direction: column;
     align-items: stretch;
   }
+}
+
+/* ── Aspect Ratio (CLS prevention) ───────────────── */
+
+.aspect-hero { aspect-ratio: 16 / 9; }
+.aspect-card { aspect-ratio: 16 / 10; }
+.aspect-square { aspect-ratio: 1 / 1; }
+
+/* ── Deferred Render ──────────────────────────────── */
+
+.content-visibility-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: 600px;
 }
 
 /* ── Utility ─────────────────────────────────────────── */
